@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace Chess.src
 {
@@ -14,27 +12,24 @@ namespace Chess.src
         Board board;
         Agent white;
         Agent black;
+        GUI gui;
         private bool turnWhite;
         private string newInput = "";
 
-        // Terminal deligates
-        public delegate void putString(string s);
-        //public delegate string readString();
-
-        putString put;
-        //readString read;
 
         //Methods
-        public Game(putString put)//, readString read)
+        public Game()
         {
-            this.put = put;
-            //this.read = read;
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
         }
 
         public void start(string p1, string p2)
         {
             turnWhite = true;
             board = new Board();
+            gui = new gui();
 
 
             if (p1 == "TA")
