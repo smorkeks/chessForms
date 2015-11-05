@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Collections;
 
-namespace Chess.src
+namespace ChessForms.src
 {
     public class Board
     {
