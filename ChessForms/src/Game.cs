@@ -28,6 +28,38 @@ namespace ChessForms.src
             gui.updateBoard(board);
         }
 
+        //D3bUG
+        public void printMoves(uint x, uint y)
+        {
+            Piece P;
+            List<Tuple<uint,uint>> tmp;
+            P = board.getPieceAt(x, y);
+            if (P != null)
+            {
+                tmp = P.getPossibleMoves(board.getSquareAt);
+                gui.putString("Prints all possible moves");
+                foreach (Tuple<uint, uint> item in tmp)
+                {
+                    string s1 = item.Item1.ToString();
+                    string s2 = item.Item2.ToString();
+                    gui.putString(s1 + " " + s2);
+                }
+                gui.putString("End of possible moves output.");
+            }
+        }
+
+        //D3bUG
+        public void printPieceAt(uint x, uint y)
+        {
+            Piece P;
+            P = board.getPieceAt(x, y);
+            if(P != null)
+            {
+                gui.putString("Piece at " + x.ToString() + y.ToString());
+                gui.putString(P.GetType().ToString());
+            }
+        }
+
         public void start(string p1, string p2)
         {
             turnWhite = true;
@@ -93,6 +125,8 @@ namespace ChessForms.src
                     if (white is TerminalAgent) // TODO not AI instead
                     {
                         tmp = white.getInput(board);
+                        printMoves(tmp.Item1, tmp.Item2);
+                        printPieceAt(tmp.Item1, tmp.Item2);
                         turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
                         if (board.blackLost())
                         {
@@ -107,6 +141,8 @@ namespace ChessForms.src
                     if (black is TerminalAgent) // TODO not AI instead
                     {
                         tmp = black.getInput(board);
+                        printMoves(tmp.Item1, tmp.Item2);
+                        printPieceAt(tmp.Item1, tmp.Item2);
                         turnWhite = board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
                         if (board.whiteLost())
                         {
