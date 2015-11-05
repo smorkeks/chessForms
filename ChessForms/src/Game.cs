@@ -12,7 +12,7 @@ namespace Chess.src
         Board board;
         Agent white;
         Agent black;
-        GUI gui;
+        ChessForms.GUI gui;
         private bool turnWhite;
         private string newInput = "";
 
@@ -22,35 +22,31 @@ namespace Chess.src
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new ChessForms.GUI());                  //start(dropdown1,dropdown2) ?
         }
 
         public void start(string p1, string p2)
         {
             turnWhite = true;
             board = new Board();
-            gui = new gui();
+            gui = new ChessForms.GUI();
 
 
             if (p1 == "TA")
             {
-                white = new TerminalAgent("white");
+                white = new TerminalAgent("white", gui.readString());
             }
-            put(p1);
+            gui.putString(p1);
 
 
             if (p2 == "TA")
             {
-                black = new TerminalAgent("black");
+                black = new TerminalAgent("black", gui.readString());
             }
-            put(p2);
+            gui.putString(p2);
             printBoard();
 
-            //run();
-            //Thread runThread = new Thread(new ThreadStart(run));
-            //runThread.IsBackground = false;
-            //runThread.Start();
-
+            run();
         }
 
         void printBoard()
@@ -90,83 +86,51 @@ namespace Chess.src
 
                     }
                 }
-                put(tmp);
+                gui.putString(tmp);
             }
         }
 
-        void run()
+
+        public void run()
         {
             Tuple<uint, uint, uint, uint> tmp;
-            //while (true)
-            //{
-                //while (turnWhite)
-                //{
-                    if (white is TerminalAgent) // TODO not AI instead
+
+            if (turnWhite)
+            {
+                if (white is TerminalAgent) // TODO not AI instead
+                {
+                    tmp = white.getInput(board, newInput);
+                    turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
+                    if (board.blackLost())
                     {
-                        if (newInput != "")
-                        {
-                            tmp = white.getInput(board, newInput);
-                            turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
-
-                            if (turnWhite)
-                            {
-                                // Move was not legal
-                                put("Move is not legal!");
-                            }
-                            else
-                            {
-                                // Move was legal
-                                if (board.blackLost())
-                                {
-                                    put("White player won!");
-                                    return;
-                                }
-
-                                printBoard();
-                            }
-
-                            // Reset player input
-                            newInput = "";
-                        }
+                        gui.putString("White player won!");
+                        return;
                     }
-                //}
+                    printBoard();
+                    newInput = "";
 
-                //Thread.Sleep(100);
+                }
+            }
 
-                //while (!turnWhite)
-                //{
-                    if (black is TerminalAgent) // TODO not AI instead
+            else if (!turnWhite)
+            {
+                if (black is TerminalAgent) // TODO not AI instead
+                {
+                    tmp = black.getInput(board, newInput);
+                    turnWhite = board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
+                    if (board.whiteLost())
                     {
-                        if (newInput != "")
-                        {
-                            tmp = black.getInput(board, newInput);
-                            turnWhite = board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
-
-                            if (!turnWhite)
-                            {
-                                // Move was not legal
-                                put("Move is not legal!");
-                            }
-                            else
-                            {
-                                // Move was legal
-                                if (board.whiteLost())
-                                {
-                                    put("Black player won!");
-                                    return;
-                                }
-                                printBoard();
-                            }
-
-                            // Reset player input
-                            newInput = "";
-                        }
+                        gui.putString("Black player won!");
+                        return;
                     }
-                //}
+                    printBoard();
+                    newInput = "";
 
-                //Thread.Sleep(100);
-            //}
+                }
+            }
+
         }
+
 
         public void setNewPlayerInput(string input)
         {
