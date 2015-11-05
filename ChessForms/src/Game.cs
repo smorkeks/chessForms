@@ -14,17 +14,13 @@ namespace ChessForms.src
         Agent black;
         ChessForms.GUI gui;
         private bool turnWhite;
-        private string newInput = "";
-
 
         //Methods
         public Game()
         {
-            board = new Board();
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            gui = new ChessForms.GUI(start, ref board);
+            gui = new ChessForms.GUI(start);
             Application.Run(gui);
             
         }
@@ -32,8 +28,10 @@ namespace ChessForms.src
         public void start(string p1, string p2)
         {
             turnWhite = true;
-            
-            
+            board = new Board();
+
+            gui.updateBoard(board);
+
             //if (p1 == "Terminal Agent")
             //{
                 white = new TerminalAgent("white", gui.readString);
@@ -97,7 +95,7 @@ namespace ChessForms.src
         public void run()
         {
             Tuple<uint, uint, uint, uint> tmp;
-            uint clk = 0;
+            bool oldTurnWhite = turnWhite;
             while (true)
             {
                 if (turnWhite)
@@ -133,16 +131,15 @@ namespace ChessForms.src
                 }
 
                 Application.DoEvents();
-                if (clk > 100000)
+
+                if (oldTurnWhite != turnWhite)
                 {
-                gui.Refresh();
-                    clk = 0;
+                    // Move accepted, new player.
+                    // Update board and player textboxes.
+                    oldTurnWhite = turnWhite;
+                    gui.updateBoard(board);
                 }
-                else
-                    clk++;
             }
         }
-
-
     }
 }

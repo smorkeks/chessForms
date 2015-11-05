@@ -17,27 +17,16 @@ namespace ChessForms
         public delegate void startGame(string p1Agent, string p2Agent);
         startGame startGameFunc;
 
-        src.Board board;
-
-        public GUI(startGame start, ref src.Board b)
+        public GUI(startGame start)
         {
             InitializeComponent();
             startGameFunc = start;
-            board = b;
         }
 
         private void GUI_Load(object sender, EventArgs e)
         {
             whiteAgentDropDown.SelectedIndex = 0;
             consoleInput.KeyDown += consoleInputOnKeyDown;
-
-            updateBoard();
-        }
-
-        public override void Refresh()
-        {
-            base.Refresh();
-            updateBoard();
         }
 
         // Console I/O
@@ -65,7 +54,7 @@ namespace ChessForms
 
         // Graphics interface
 
-        public void updateBoard()
+        public void updateBoard(src.Board board)
         {
             chessTextBox.Clear();
 
