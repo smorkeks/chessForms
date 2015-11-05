@@ -47,6 +47,17 @@ namespace ChessForms
             consoleOutput.AppendText(s + "\r\n");
         }
 
+        public void putPlayerTurn(bool whiteTurn)
+        {
+            string s1;
+            string s2 = " players turn";
+            if (whiteTurn)
+                s1 = "White";
+            else
+                s1 = "Black";
+            playerTurn.Text = s1 + s2;
+        }
+
         public string readString()
         {
             return lastInput;
@@ -114,11 +125,6 @@ namespace ChessForms
         private void startButton_Click(object sender, EventArgs e)
         {
             startGameFunc(whiteAgentDropDown.SelectedText, whiteAgentDropDown.SelectedText);
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

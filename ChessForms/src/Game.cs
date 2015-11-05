@@ -135,6 +135,7 @@ namespace ChessForms.src
                 Application.DoEvents();
                 if (clk > 100000)
                 {
+                    gui.putPlayerTurn(turnWhite);
                     gui.Refresh();
                     clk = 0;
                 }
