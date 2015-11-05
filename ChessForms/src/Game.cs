@@ -29,9 +29,9 @@ namespace ChessForms.src
         {
             turnWhite = true;
             board = new Board();
-
+            
             gui.updateBoard(board);
-
+            
             //if (p1 == "Terminal Agent")
             //{
                 white = new TerminalAgent("white", gui.readString);
@@ -138,6 +138,8 @@ namespace ChessForms.src
                     // Update board and player textboxes.
                     oldTurnWhite = turnWhite;
                     gui.updateBoard(board);
+                    gui.putPlayerTurn(turnWhite);
+                    
                 }
             }
         }
