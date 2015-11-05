@@ -49,9 +49,9 @@ namespace ChessForms.src
             //printBoard();
 
             // TODO: fix this plz
-            Thread runThread = new Thread(new ThreadStart(() => run(gui)));
-            runThread.Start();
-            //run();
+            //Thread runThread = new Thread(new ThreadStart(() => run(gui)));
+            //runThread.Start();
+            run();
         }
 
         void printBoard()
@@ -96,7 +96,7 @@ namespace ChessForms.src
         }
 
 
-        public void run(ChessForms.GUI gui)
+        public void run()
         {
             Tuple<uint, uint, uint, uint> tmp;
 
