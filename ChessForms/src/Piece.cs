@@ -44,7 +44,7 @@ namespace ChessForms.src
             tmp = this.getPossibleMoves(QF);
             foreach (Tuple<uint, uint> item in tmp)
             {
-                if ((item.Item1 == x) && (item.Item2 == 2))
+                if ((item.Item1 == x) && (item.Item2 == y))
                 {
                     return true;
                 }
