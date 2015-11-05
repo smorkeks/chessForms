@@ -57,7 +57,7 @@ namespace ChessForms.src
             squares[7, 0].setPiece(new Rook(7, 0, COLOUR_WHITE));
             for (uint x = 0; x < BOARD_SIZE_X; x++)
             {
-                squares[x, 1].setPiece(new Pawn(x, 0, COLOUR_WHITE));
+                squares[x, 1].setPiece(new Pawn(x, 1, COLOUR_WHITE));
             }
 
             // Create black pieces

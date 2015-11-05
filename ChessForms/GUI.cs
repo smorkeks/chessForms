@@ -80,7 +80,7 @@ namespace ChessForms
 
                     P = board.getPieceAt(j, (uint)i);
                     if (P == null)
-                        tmp = tmp + "0   ";
+                        tmp = tmp + ".   ";
                     else
                     {
                         if (P.getColour() == "white")
@@ -104,6 +104,26 @@ namespace ChessForms
                             tmp = tmp + "ERORR ERROR ERROR";
 
                     }
+                }
+
+                // Print one row
+                chessTextBox.Text += tmp + "\r\n";
+            }
+
+            chessTextBox.Text += "\r\n\r\n";
+
+
+            // Cover
+            for (int i = 7; i >= 0; i--)
+            {
+                string tmp = "";
+                for (uint j = 0; j < 8; j++)
+                {
+
+                    uint wc = board.getSquareAt(j, (uint)i).getWhiteCover();
+                    uint bc = board.getSquareAt(j, (uint)i).getBlackCover();
+
+                    tmp += wc + "," + bc + " ";
                 }
 
                 // Print one row
