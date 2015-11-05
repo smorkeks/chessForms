@@ -20,33 +20,38 @@ namespace ChessForms.src
         //Methods
         public Game()
         {
+            board = new Board();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ChessForms.GUI());                  //start(dropdown1,dropdown2) ?
+            gui = new ChessForms.GUI(start, ref board);
+            Application.Run(gui);
+            
         }
 
         public void start(string p1, string p2)
         {
             turnWhite = true;
-            board = new Board();
-            gui = new ChessForms.GUI();
-
-
-            if (p1 == "TA")
-            {
-                white = new TerminalAgent("white", gui.readString());
-            }
+            
+            
+            //if (p1 == "Terminal Agent")
+            //{
+                white = new TerminalAgent("white", gui.readString);
+            //}
             gui.putString(p1);
 
 
-            if (p2 == "TA")
-            {
-                black = new TerminalAgent("black", gui.readString());
-            }
+            //if (p2 == "Terminal Agent")
+            //{
+                black = new TerminalAgent("black", gui.readString);
+            //}
             gui.putString(p2);
-            printBoard();
+            //printBoard();
 
-            run();
+            // TODO: fix this plz
+            Thread runThread = new Thread(new ThreadStart(() => run(gui)));
+            runThread.Start();
+            //run();
         }
 
         void printBoard()
@@ -91,51 +96,49 @@ namespace ChessForms.src
         }
 
 
-        public void run()
+        public void run(ChessForms.GUI gui)
         {
             Tuple<uint, uint, uint, uint> tmp;
 
-            if (turnWhite)
+            while (true)
             {
-                if (white is TerminalAgent) // TODO not AI instead
+                if (turnWhite)
                 {
-                    tmp = white.getInput(board, newInput);
-                    turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
-                    if (board.blackLost())
+                    if (white is TerminalAgent) // TODO not AI instead
                     {
-                        gui.putString("White player won!");
-                        return;
+                        tmp = white.getInput(board);
+                        turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
+                        if (board.blackLost())
+                        {
+                            gui.putString("White player won!");
+                            return;
+                        }
+                        //printBoard();
+                        //gui.updateBoard(board);
                     }
-                    printBoard();
-                    newInput = "";
-
                 }
-            }
 
-            else if (!turnWhite)
-            {
-                if (black is TerminalAgent) // TODO not AI instead
+                else if (!turnWhite)
                 {
-                    tmp = black.getInput(board, newInput);
-                    turnWhite = board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
-                    if (board.whiteLost())
+                    if (black is TerminalAgent) // TODO not AI instead
                     {
-                        gui.putString("Black player won!");
-                        return;
+                        tmp = black.getInput(board);
+                        turnWhite = board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
+                        if (board.whiteLost())
+                        {
+                            gui.putString("Black player won!");
+                            return;
+                        }
+                        //printBoard();
+                        //gui.updateBoard(board);
                     }
-                    printBoard();
-                    newInput = "";
-
                 }
-            }
 
+                //gui.updateBoard(board);
+                gui.Refresh();
+            }
         }
 
 
-        public void setNewPlayerInput(string input)
-        {
-            newInput = input;
-            run();
-        }
     }
 }

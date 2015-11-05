@@ -18,13 +18,21 @@ namespace ChessForms.src
 
         public override Tuple<uint, uint, uint, uint> getInput(Board B)
         {
-            string inp = read();
-            uint xFrom = (uint)inp[0]-48;
-            uint yFrom = (uint)inp[1]-48;
-            uint xTo = (uint)inp[2]-48;
-            uint yTo = (uint)inp[3]-48;
-            return new Tuple<uint, uint, uint, uint>(xFrom, yFrom, xTo, yTo);
-        }
+            string inp;
+            do{
+                inp = read();
+                if (inp != "")
+                {
+                    uint xFrom = (uint)inp[0] - 48;
+                    uint yFrom = (uint)inp[1] - 48;
+                    uint xTo = (uint)inp[2] - 48;
+                    uint yTo = (uint)inp[3] - 48;
 
+                    return new Tuple<uint, uint, uint, uint>(xFrom, yFrom, xTo, yTo);
+                }
+            } while (inp == "");
+
+            return null;
+        }
     }
 }

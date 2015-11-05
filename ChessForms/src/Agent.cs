@@ -22,7 +22,7 @@ namespace ChessForms.src
         }
 
         //Promts the agent to make a move
-        public abstract Tuple<uint, uint, uint, uint> getInput(Board B, string inp);
+        public abstract Tuple<uint, uint, uint, uint> getInput(Board B);
 
         public string getColour()
         {

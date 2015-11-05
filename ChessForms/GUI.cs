@@ -13,11 +13,17 @@ namespace ChessForms
     public partial class GUI : Form
     {
         private string lastInput = "";
+        
+        public delegate void startGame(string p1Agent, string p2Agent);
+        startGame startGameFunc;
 
-        public GUI()
+        src.Board board;
+
+        public GUI(startGame start, ref src.Board b)
         {
             InitializeComponent();
-
+            startGameFunc = start;
+            board = b;
         }
 
         private void GUI_Load(object sender, EventArgs e)
@@ -25,7 +31,13 @@ namespace ChessForms
             whiteAgentDropDown.SelectedIndex = 0;
             consoleInput.KeyDown += consoleInputOnKeyDown;
 
-            updateBoard(new src.Board());
+            updateBoard();
+        }
+
+        public override void Refresh()
+        {
+            base.Refresh();
+            updateBoard();
         }
 
         // Console I/O
@@ -37,7 +49,7 @@ namespace ChessForms
 
         public string readString()
         {
-            return lastInput;
+           return lastInput;
         }
 
         private void consoleInputOnKeyDown(object sender, KeyEventArgs e)
@@ -53,8 +65,10 @@ namespace ChessForms
 
         // Graphics interface
 
-        public void updateBoard(src.Board board)
+        public void updateBoard()
         {
+            chessTextBox.Clear();
+
             src.Piece P;
             for (int i = 7; i >= 0; i--)
             {
@@ -93,6 +107,13 @@ namespace ChessForms
                 // Print one row
                 chessTextBox.Text += tmp + "\r\n";
             }
+        }
+
+        // Buttons
+
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            startGameFunc(whiteAgentDropDown.SelectedText, whiteAgentDropDown.SelectedText);
         }
     }
 }
