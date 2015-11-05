@@ -94,7 +94,7 @@ namespace ChessForms.src
         }
 
 
-        public void run()//ChessForms.GUI gui)
+        public void run()
         {
             Tuple<uint, uint, uint, uint> tmp;
             uint clk = 0;
