@@ -13,7 +13,7 @@ namespace ChessForms
     public partial class GUI : Form
     {
         private string lastInput = "";
-        
+
         public delegate void startGame(string p1Agent, string p2Agent);
         startGame startGameFunc;
 
@@ -49,7 +49,7 @@ namespace ChessForms
 
         public string readString()
         {
-           return lastInput;
+            return lastInput;
         }
 
         private void consoleInputOnKeyDown(object sender, KeyEventArgs e)
@@ -114,6 +114,11 @@ namespace ChessForms
         private void startButton_Click(object sender, EventArgs e)
         {
             startGameFunc(whiteAgentDropDown.SelectedText, whiteAgentDropDown.SelectedText);
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

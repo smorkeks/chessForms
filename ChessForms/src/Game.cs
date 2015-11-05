@@ -49,9 +49,7 @@ namespace ChessForms.src
             //printBoard();
 
             // TODO: fix this plz
-            Thread runThread = new Thread(new ThreadStart(() => run(gui)));
-            runThread.Start();
-            //run();
+            run();
         }
 
         void printBoard()
@@ -96,10 +94,10 @@ namespace ChessForms.src
         }
 
 
-        public void run(ChessForms.GUI gui)
+        public void run()//ChessForms.GUI gui)
         {
             Tuple<uint, uint, uint, uint> tmp;
-
+            uint clk = 0;
             while (true)
             {
                 if (turnWhite)
@@ -134,8 +132,14 @@ namespace ChessForms.src
                     }
                 }
 
-                //gui.updateBoard(board);
-                gui.Refresh();
+                Application.DoEvents();
+                if (clk > 100000)
+                {
+                    gui.Refresh();
+                    clk = 0;
+                }
+                else
+                    clk++;
             }
         }
 
