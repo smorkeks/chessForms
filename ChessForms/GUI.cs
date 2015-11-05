@@ -49,7 +49,9 @@ namespace ChessForms
 
         public string readString()
         {
-            return lastInput;
+            string tmp = lastInput;
+            lastInput = "";
+            return tmp;
         }
 
         private void consoleInputOnKeyDown(object sender, KeyEventArgs e)

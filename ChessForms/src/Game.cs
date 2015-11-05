@@ -18,35 +18,25 @@ namespace ChessForms.src
         //Methods
         public Game()
         {
+            board = new Board();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             gui = new ChessForms.GUI(start);
             Application.Run(gui);
-            
+
+            gui.updateBoard(board);
         }
 
         public void start(string p1, string p2)
         {
             turnWhite = true;
-            board = new Board();
-            
+            white = new TerminalAgent("white", gui.readString);
+            black = new TerminalAgent("black", gui.readString);
+
             gui.updateBoard(board);
-            
-            //if (p1 == "Terminal Agent")
-            //{
-                white = new TerminalAgent("white", gui.readString);
-            //}
-            gui.putString(p1);
+            gui.putPlayerTurn(turnWhite);
 
-
-            //if (p2 == "Terminal Agent")
-            //{
-                black = new TerminalAgent("black", gui.readString);
-            //}
-            gui.putString(p2);
-            //printBoard();
-
-            // TODO: fix this plz
             run();
         }
 
@@ -109,8 +99,6 @@ namespace ChessForms.src
                             gui.putString("White player won!");
                             return;
                         }
-                        //printBoard();
-                        //gui.updateBoard(board);
                     }
                 }
 
@@ -125,8 +113,6 @@ namespace ChessForms.src
                             gui.putString("Black player won!");
                             return;
                         }
-                        //printBoard();
-                        //gui.updateBoard(board);
                     }
                 }
 
@@ -139,7 +125,7 @@ namespace ChessForms.src
                     oldTurnWhite = turnWhite;
                     gui.updateBoard(board);
                     gui.putPlayerTurn(turnWhite);
-                    
+
                 }
             }
         }
