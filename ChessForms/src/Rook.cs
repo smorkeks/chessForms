@@ -133,6 +133,9 @@ namespace ChessForms.src
                 }
             }
 
+            // Filter for check situations
+            checkFilter(ref moves, QF);
+
             // Done, all moves found
             return moves;
         }

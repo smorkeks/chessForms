@@ -46,6 +46,9 @@ namespace ChessForms.src
                 }
             }
 
+            // Filter for check situations
+            checkFilter(ref tmpList, QF);
+
             return tmpList;
         }
 
