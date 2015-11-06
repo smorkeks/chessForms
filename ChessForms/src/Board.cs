@@ -183,6 +183,7 @@ namespace ChessForms.src
             Piece p = getPieceAt(x1, y1);
             Square s1 = getSquareAt(x1, y1);
             Square s2 = getSquareAt(x2, y2);
+            bool castling = false;
 
             // Check if squares are ok.
             if (s1 == null || s2 == null)
@@ -205,6 +206,13 @@ namespace ChessForms.src
             }
 
             // Move is legal
+
+            //Check if this is a castling
+            if ((p is King) && (((x1-x2) == 2) || ((x2-x1) == 2)))
+            {
+                castling = true;
+            }
+
 
             // If there is a piece at x2,y2 then remove its cover.
             //Piece p2 = s2.getPiece();
@@ -241,7 +249,7 @@ namespace ChessForms.src
 
             
             // Add to new position
-            getSquareAt(x2, y2).setPiece(p);
+            s2.setPiece(p);
             p.move(x2, y2);
             /*foreach (Tuple<uint, uint> t in p.getCover(getSquareAt))
             {
@@ -257,6 +265,29 @@ namespace ChessForms.src
             }*/
 
             updateCover();
+
+            if (castling)
+            {
+                uint x2rook;
+                uint x1rook;
+                if (x2 > x1)// Castling right
+                {
+                    x1rook = 7;
+                    x2rook = x2 - 1;
+                }
+                else
+                {
+                    x1rook = 0;
+                    x2rook = x2 + 1;
+                }
+                Square s3 = getSquareAt(x1rook, y1);
+                Piece p3 = s3.getPiece();
+                Square s4 = getSquareAt(x2rook, y1);
+                s3.removePiece();
+                s4.setPiece(p3);
+                p3.move(x2rook, y2);
+
+            }
 
             return true;
         }
