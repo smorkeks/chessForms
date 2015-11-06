@@ -164,8 +164,6 @@ namespace ChessForms.src
                     gui.updateBoard(board);
                     gui.putPlayerTurn(turnWhite);
                     gui.putTurn(board.getTurn());
-                    board.updateTurn();
-
                 }
             }
         }
