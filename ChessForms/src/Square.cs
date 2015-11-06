@@ -43,6 +43,12 @@ namespace ChessForms.src
         {
             return blackCover;
         }
+
+        //returns true if enemy of piece on square has cover there
+        public bool getEnemyCover(string col)
+        {
+            return (((col == "black") && (getWhiteCover() > 0)) || ((col == "white") && (getBlackCover() > 0)));
+        }
         public Piece getPiece()
         {
             return piece;
