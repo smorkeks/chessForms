@@ -34,6 +34,7 @@
             this.whiteAgentDropDown = new System.Windows.Forms.ComboBox();
             this.chessTextBox = new System.Windows.Forms.TextBox();
             this.playerTurn = new System.Windows.Forms.TextBox();
+            this.turnText = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // consoleInput
@@ -96,11 +97,21 @@
             this.playerTurn.TabIndex = 5;
             this.playerTurn.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // turnText
+            // 
+            this.turnText.Enabled = false;
+            this.turnText.Location = new System.Drawing.Point(406, 188);
+            this.turnText.Name = "turnText";
+            this.turnText.Size = new System.Drawing.Size(175, 20);
+            this.turnText.TabIndex = 6;
+            this.turnText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1033, 380);
+            this.Controls.Add(this.turnText);
             this.Controls.Add(this.playerTurn);
             this.Controls.Add(this.chessTextBox);
             this.Controls.Add(this.whiteAgentDropDown);
@@ -123,6 +134,7 @@
         private System.Windows.Forms.ComboBox whiteAgentDropDown;
         private System.Windows.Forms.TextBox chessTextBox;
         private System.Windows.Forms.TextBox playerTurn;
+        private System.Windows.Forms.TextBox turnText;
     }
 }
 

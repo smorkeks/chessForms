@@ -47,6 +47,12 @@ namespace ChessForms
             playerTurn.Text = s1 + s2;
         }
 
+        public void putTurn(uint turn)
+        {
+            string s1 = "Turn: ";
+            turnText.Text = s1 + turn.ToString();
+        }
+
         public string readString()
         {
             string tmp = lastInput;

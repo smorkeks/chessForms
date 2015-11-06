@@ -68,6 +68,7 @@ namespace ChessForms.src
 
             gui.updateBoard(board);
             gui.putPlayerTurn(turnWhite);
+            gui.putTurn(board.getTurn());
 
             run();
         }
@@ -158,9 +159,11 @@ namespace ChessForms.src
                 {
                     // Move accepted, new player.
                     // Update board and player textboxes.
+                    board.updateTurn();
                     oldTurnWhite = turnWhite;
                     gui.updateBoard(board);
                     gui.putPlayerTurn(turnWhite);
+                    gui.putTurn(board.getTurn());
                     board.updateTurn();
 
                 }
