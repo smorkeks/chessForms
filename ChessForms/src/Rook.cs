@@ -141,7 +141,97 @@ namespace ChessForms.src
         {
             List<Tuple<uint, uint>> cover = new List<Tuple<uint, uint>>() { };
 
-            // TODO: Do stuff
+            // Check left moves
+            int x = (int)getX();
+            int y = (int)getY();
+            while (true)
+            {
+                x--;
+                if (!withinBoard(x, y))
+                {
+                    break;
+                }
+
+                Piece p = QF((uint)x, (uint)y).getPiece();
+                if (p == null)
+                {
+                    cover.Add(new Tuple<uint, uint>((uint)x, (uint)y));
+                }
+                else
+                {
+                    cover.Add(new Tuple<uint, uint>((uint)x, (uint)y));
+                    break;
+                }
+            }
+
+            // Check right moves
+            x = (int)getX();
+            y = (int)getY();
+            while (true)
+            {
+                x++;
+                if (!withinBoard(x, y))
+                {
+                    break;
+                }
+
+                Piece p = QF((uint)x, (uint)y).getPiece();
+                if (p == null)
+                {
+                    cover.Add(new Tuple<uint, uint>((uint)x, (uint)y));
+                }
+                else
+                {
+                    cover.Add(new Tuple<uint, uint>((uint)x, (uint)y));
+                    break;
+                }
+            }
+
+            // Check up moves
+            x = (int)getX();
+            y = (int)getY();
+            while (true)
+            {
+                y++;
+                if (!withinBoard(x, y))
+                {
+                    break;
+                }
+
+                Piece p = QF((uint)x, (uint)y).getPiece();
+                if (p == null)
+                {
+                    cover.Add(new Tuple<uint, uint>((uint)x, (uint)y));
+                }
+                else
+                {
+                    cover.Add(new Tuple<uint, uint>((uint)x, (uint)y));
+                    break;
+                }
+            }
+
+            // Check left, up moves
+            x = (int)getX();
+            y = (int)getY();
+            while (true)
+            {
+                y--;
+                if (!withinBoard(x, y))
+                {
+                    break;
+                }
+
+                Piece p = QF((uint)x, (uint)y).getPiece();
+                if (p == null)
+                {
+                    cover.Add(new Tuple<uint, uint>((uint)x, (uint)y));
+                }
+                else
+                {
+                    cover.Add(new Tuple<uint, uint>((uint)x, (uint)y));
+                    break;
+                }
+            }
 
             return cover;
         }
