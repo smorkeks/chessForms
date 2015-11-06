@@ -64,6 +64,13 @@ namespace ChessForms.src
         {
             blackCover--;
         }
+        public void resetCover()
+        {
+            whiteCover = 0;
+            blackCover = 0;
+        }
+
+        // Piece
         public void setPiece(Piece p)
         {
             piece = p;

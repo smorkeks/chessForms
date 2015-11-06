@@ -71,10 +71,12 @@ namespace ChessForms
         {
             chessTextBox.Clear();
 
+            chessTextBox.Text = "    A   B   C   D   E   F   G   H\r\n";
+
             src.Piece P;
             for (int i = 7; i >= 0; i--)
             {
-                string tmp = "";
+                string tmp = (i+1) + "   ";
                 for (uint j = 0; j < 8; j++)
                 {
 
@@ -111,12 +113,13 @@ namespace ChessForms
             }
 
             chessTextBox.Text += "\r\n\r\n";
+            chessTextBox.Text += "    A   B   C   D   E   F   G   H\r\n";
 
 
             // Cover
             for (int i = 7; i >= 0; i--)
             {
-                string tmp = "";
+                string tmp = (i + 1) + "   ";
                 for (uint j = 0; j < 8; j++)
                 {
 

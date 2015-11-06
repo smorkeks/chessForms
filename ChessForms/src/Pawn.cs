@@ -74,5 +74,27 @@ namespace ChessForms.src
             }
             return tmpList;
         }
+
+        public override List<Tuple<uint, uint>> getCover(Board.QueryFunc QF)
+        {
+            int x, y;
+            int yMod = (colour == "white" ? 1 : -1);
+            List<Tuple<uint,uint>> cover = new List<Tuple<uint, uint>>();
+
+            x = (int) getX() - 1;
+            y = (int) getY() + yMod;
+            if (withinBoard(x, y))
+            {
+                cover.Add(new Tuple<uint, uint>((uint)x, (uint)y));
+            }
+
+            x = (int)getX() + 1;
+            if (withinBoard(x, y))
+            {
+                cover.Add(new Tuple<uint, uint>((uint)x, (uint)y));
+            }
+
+            return cover;
+        }
     }
 }

@@ -49,5 +49,14 @@ namespace ChessForms.src
             // Done, all moves found
             return moves;
         }
+
+        public override List<Tuple<uint, uint>> getCover(Board.QueryFunc QF)
+        {
+            List<Tuple<uint, uint>> cover = new List<Tuple<uint, uint>>() { };
+
+            // TODO: Do stuff
+
+            return cover;
+        }
     }
 }

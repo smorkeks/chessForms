@@ -34,8 +34,11 @@ namespace ChessForms.src
                 hasMoved = true;
         }
 
-        //returns a list of all possible moves
+        // Returns a list of all possible moves
         public abstract List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF);
+
+        // Returns a list of all covered squares
+        public abstract List<Tuple<uint, uint>> getCover(Board.QueryFunc QF);
 
         //Checks if move is possible
         public bool movePossible(uint x, uint y, Board.QueryFunc QF)

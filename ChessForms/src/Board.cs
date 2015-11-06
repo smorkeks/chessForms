@@ -75,14 +75,14 @@ namespace ChessForms.src
             }
 
             // Add cover
-            QueryFunc qf = getSquareAt;
+            /*QueryFunc qf = getSquareAt;
             foreach (Square s in squares)
             {
                 Piece p = s.getPiece();
 
                 if (p != null)
                 {
-                    List<Tuple<uint, uint>> cover = p.getPossibleMoves(qf);
+                    List<Tuple<uint, uint>> cover = p.getCover(qf);
                     foreach (Tuple<uint, uint> t in cover)
                     {
                         if (p.getColour() == COLOUR_WHITE)
@@ -96,7 +96,8 @@ namespace ChessForms.src
                         
                     }
                 }
-            }
+            }*/
+            updateCover();
         }
 
         // --- Methods ---
@@ -206,10 +207,10 @@ namespace ChessForms.src
             // Move is legal
 
             // If there is a piece at x2,y2 then remove its cover.
-            Piece p2 = s2.getPiece();
-            if (p2 != null)
+            //Piece p2 = s2.getPiece();
+            /*if (p2 != null)
             {
-                foreach (Tuple<uint, uint> t in p2.getPossibleMoves(getSquareAt))
+                foreach (Tuple<uint, uint> t in p2.getCover(getSquareAt))
                 {
                     // If moving piece is white, remove black cover, and vc.v.
                     if (col == COLOUR_WHITE)
@@ -221,11 +222,11 @@ namespace ChessForms.src
                         getSquareAt(t.Item1, t.Item2).removeWhiteCover();
                     }
                 }
-            }
+            }*/
 
             // Remove from old position
             s1.removePiece();
-            foreach (Tuple<uint, uint> t in p.getPossibleMoves(getSquareAt))
+            /*foreach (Tuple<uint, uint> t in p.getCover(getSquareAt))
             {
                 // If moving piece is white, remove white cover, and vc.v.
                 if (col == COLOUR_WHITE)
@@ -236,13 +237,13 @@ namespace ChessForms.src
                 {
                     getSquareAt(t.Item1, t.Item2).removeBlackCover();
                 }
-            }
+            }*/
 
             
             // Add to new position
             getSquareAt(x2, y2).setPiece(p);
             p.move(x2, y2);
-            foreach (Tuple<uint, uint> t in p.getPossibleMoves(getSquareAt))
+            /*foreach (Tuple<uint, uint> t in p.getCover(getSquareAt))
             {
                 // If moving piece is white, add white cover, and vc.v.
                 if (col == COLOUR_WHITE)
@@ -253,9 +254,80 @@ namespace ChessForms.src
                 {
                     getSquareAt(t.Item1, t.Item2).addBlackCover();
                 }
-            }
+            }*/
+
+            updateCover();
 
             return true;
+        }
+
+        // Update cover for all squares.
+        public void updateCover()
+        {
+            Piece p;
+            Piece kingWhite = null;
+            Piece kingBlack = null;
+            List<Tuple<uint, uint>> cover;
+
+            foreach (Square s in squares)
+            {
+                s.resetCover();
+            }
+
+            foreach (Square s in squares)
+            {
+                p = s.getPiece();
+                if (p != null)
+                {
+                    if (p is King)
+                    {
+                        // Save kings for last.
+                        if (p.getColour() == COLOUR_WHITE)
+                        {
+                            kingWhite = p;
+                        }
+                        else
+                        {
+                            kingBlack = p;
+                        }
+                    }
+                    else
+                    {
+                        // Update cover
+                        cover = p.getCover(getSquareAt);
+                        if (p.getColour() == COLOUR_WHITE) {
+                            foreach(Tuple<uint,uint> t in cover)
+                            {
+                                getSquareAt(t.Item1, t.Item2).addWhiteCover();
+                            }
+                        }
+                        else
+                        {
+                            foreach (Tuple<uint, uint> t in cover)
+                            {
+                                getSquareAt(t.Item1, t.Item2).addBlackCover();
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Cover from kings
+            if (kingWhite != null) {
+                cover = kingWhite.getCover(getSquareAt);
+                foreach (Tuple<uint, uint> t in cover)
+                {
+                    getSquareAt(t.Item1, t.Item2).addWhiteCover();
+                }
+            }
+            if (kingBlack != null)
+            {
+                cover = kingBlack.getCover(getSquareAt);
+                foreach (Tuple<uint, uint> t in cover)
+                {
+                    getSquareAt(t.Item1, t.Item2).addBlackCover();
+                }
+            }
         }
 
         // TODO
