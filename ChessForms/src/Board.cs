@@ -17,6 +17,7 @@ namespace ChessForms.src
         // Colours
         private const string COLOUR_WHITE = "white";
         private const string COLOUR_BLACK = "black";
+        private uint turn;
 
         // List of squares
         private Square[,] squares = new Square[BOARD_SIZE_X, BOARD_SIZE_Y];
@@ -37,6 +38,9 @@ namespace ChessForms.src
         // --- Constructor ---
         public Board()
         {
+            //Set turn
+            turn = 1;
+
             // Create squares
             for (uint y = 0; y < BOARD_SIZE_Y; y++)
             {
@@ -153,7 +157,7 @@ namespace ChessForms.src
                     Piece p = getPieceAt(x, y);
                     if (p != null && p.getColour() == col)
                     {
-                        List<Tuple<uint, uint>> newMoves = p.getPossibleMoves(getSquareAt);
+                        List<Tuple<uint, uint>> newMoves = p.getPossibleMoves(getSquareAt,turn);
 
                         foreach (Tuple<uint, uint> t in newMoves)
                         {
@@ -184,6 +188,7 @@ namespace ChessForms.src
             Square s1 = getSquareAt(x1, y1);
             Square s2 = getSquareAt(x2, y2);
             bool castling = false;
+            bool enPassant = false;
 
             // Check if squares are ok.
             if (s1 == null || s2 == null)
@@ -200,7 +205,7 @@ namespace ChessForms.src
             {
                 return false;
             }
-            if (!p.movePossible(x2, y2, getSquareAt))
+            if (!p.movePossible(x2, y2, getSquareAt,turn))
             {
                 return false;
             }
@@ -213,58 +218,17 @@ namespace ChessForms.src
                 castling = true;
             }
 
-
-            // If there is a piece at x2,y2 then remove its cover.
-            //Piece p2 = s2.getPiece();
-            /*if (p2 != null)
+            //Check if en passant
+            if ((p is Pawn) && (getSquareAt(x2, y2).getPiece() == null) && (x1 != x2))
             {
-                foreach (Tuple<uint, uint> t in p2.getCover(getSquareAt))
-                {
-                    // If moving piece is white, remove black cover, and vc.v.
-                    if (col == COLOUR_WHITE)
-                    {
-                        getSquareAt(t.Item1, t.Item2).removeBlackCover();
-                    }
-                    else
-                    {
-                        getSquareAt(t.Item1, t.Item2).removeWhiteCover();
-                    }
-                }
-            }*/
+                enPassant = true;
+            }
 
             // Remove from old position
             s1.removePiece();
-            /*foreach (Tuple<uint, uint> t in p.getCover(getSquareAt))
-            {
-                // If moving piece is white, remove white cover, and vc.v.
-                if (col == COLOUR_WHITE)
-                {
-                    getSquareAt(t.Item1, t.Item2).removeWhiteCover();
-                }
-                else
-                {
-                    getSquareAt(t.Item1, t.Item2).removeBlackCover();
-                }
-            }*/
-
-            
             // Add to new position
             s2.setPiece(p);
             p.move(x2, y2);
-            /*foreach (Tuple<uint, uint> t in p.getCover(getSquareAt))
-            {
-                // If moving piece is white, add white cover, and vc.v.
-                if (col == COLOUR_WHITE)
-                {
-                    getSquareAt(t.Item1, t.Item2).addWhiteCover();
-                }
-                else
-                {
-                    getSquareAt(t.Item1, t.Item2).addBlackCover();
-                }
-            }*/
-
-            updateCover();
 
             if (castling)
             {
@@ -289,7 +253,30 @@ namespace ChessForms.src
 
             }
 
+            if (enPassant)
+            {
+                int yMod;
+                if (p.getColour() == "white")
+                    yMod = -1;
+                else
+                    yMod = 1;
+                Square s3 = getSquareAt(x2,(uint)(y2+yMod));
+                Piece p3 = s3.getPiece();
+                s3.removePiece();
+            }
+
+            updateCover();
             return true;
+        }
+
+        public uint getTurn()
+        {
+            return turn;
+        }
+
+        public void updateTurn()
+        {
+            turn++;
         }
 
         // Update cover for all squares.

@@ -36,7 +36,7 @@ namespace ChessForms.src
             P = board.getPieceAt(x, y);
             if (P != null)
             {
-                tmp = P.getPossibleMoves(board.getSquareAt);
+                tmp = P.getPossibleMoves(board.getSquareAt,board.getTurn());
                 gui.putString("Prints all possible moves");
                 foreach (Tuple<uint, uint> item in tmp)
                 {
@@ -161,6 +161,7 @@ namespace ChessForms.src
                     oldTurnWhite = turnWhite;
                     gui.updateBoard(board);
                     gui.putPlayerTurn(turnWhite);
+                    board.updateTurn();
 
                 }
             }

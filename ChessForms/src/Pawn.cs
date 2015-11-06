@@ -8,17 +8,29 @@ namespace ChessForms.src
     public class Pawn : Piece
     {
 
-        public Pawn(uint x, uint y, string col) : base(x, y, 1, col) { }
+        uint didDoubleStepTurn;
 
-        public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF)
+        public Pawn(uint x, uint y, string col)
+            : base(x, y, 1, col)
+        {
+            didDoubleStepTurn = 0;
+        }
+
+        public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF, uint turn)
         {
             List<Tuple<uint, uint>> tmpList = new List<Tuple<uint, uint>>();
             short yMod;
-
+            short passantRow;
             if (this.colour == "white")
+            {
                 yMod = 1;
+                passantRow = 4;
+            }
             else
+            {
                 yMod = -1;
+                passantRow = 3;
+            }
 
             // Take left
             if (withinBoard((int)getX() - 1, (int)getY() + yMod))
@@ -69,9 +81,41 @@ namespace ChessForms.src
                     if (P == null)
                     {
                         tmpList.Add(new Tuple<uint, uint>(getX(), (uint)(getY() + 2 * yMod)));
+                        didDoubleStepTurn = turn;
                     }
                 }
             }
+
+            //En Passant
+            if (getY() == passantRow)
+            {
+                if ((getX() + 1) < 8)
+                {
+                    Piece P1 = QF(getX() + 1, getY()).getPiece();
+
+                    if (P1 != null)
+                    {
+                        if (P1 is Pawn)
+                            if (((Pawn)P1).getDoubleStepTurn() == turn - 1)
+                                tmpList.Add(new Tuple<uint, uint>(getX() + 1, (uint)(getY() + yMod)));
+                    }
+                }
+
+                if ((int)getX()-1 >= 0)
+                {
+                    Square S2 = QF(getX() - 1, getY());
+                    Piece P2 = S2.getPiece();
+                    if (P2 != null)
+                    {
+                        if (P2 is Pawn)
+                            if (((Pawn)P2).getDoubleStepTurn() == turn - 1)
+                                tmpList.Add(new Tuple<uint, uint>(getX() - 1, (uint)(getY() + yMod)));
+                    }
+                }
+
+            }
+
+
             return tmpList;
         }
 
@@ -79,10 +123,10 @@ namespace ChessForms.src
         {
             int x, y;
             int yMod = (colour == "white" ? 1 : -1);
-            List<Tuple<uint,uint>> cover = new List<Tuple<uint, uint>>();
+            List<Tuple<uint, uint>> cover = new List<Tuple<uint, uint>>();
 
-            x = (int) getX() - 1;
-            y = (int) getY() + yMod;
+            x = (int)getX() - 1;
+            y = (int)getY() + yMod;
             if (withinBoard(x, y))
             {
                 cover.Add(new Tuple<uint, uint>((uint)x, (uint)y));
@@ -95,6 +139,11 @@ namespace ChessForms.src
             }
 
             return cover;
+        }
+
+        public uint getDoubleStepTurn()
+        {
+            return didDoubleStepTurn;
         }
     }
 }

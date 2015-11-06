@@ -9,7 +9,7 @@ namespace ChessForms.src
     {
         public Knight(uint x, uint y, string col) : base(x, y, 3, col) { }
 
-        public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF)
+        public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF,uint turn)
         {
 
             List<Tuple<uint, uint>> tmpList = new List<Tuple<uint, uint>>();
