@@ -10,7 +10,7 @@ namespace ChessForms.src
         public King(uint x, uint y, string c) : base(x, y, 100, c) { }
 
 
-        public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF,uint turn)
+        public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF, uint turn)
         {
             List<Tuple<uint, uint>> moves = new List<Tuple<uint, uint>>();
 
@@ -83,7 +83,27 @@ namespace ChessForms.src
         {
             List<Tuple<uint, uint>> cover = new List<Tuple<uint, uint>>() { };
 
-            // TODO: Do stuff
+            // Check down moves
+            int x = (int)getX();
+            int y = (int)getY();
+
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    int nx = x + i;
+                    int ny = y + j;
+                    if (withinBoard(nx, ny))
+                    {
+                        Square s = QF((uint)nx, (uint)ny);
+                        if ((getColour() == "white" && s.getBlackCover() == 0) ||
+                           (getColour() == "black" && s.getWhiteCover() == 0))
+                        {
+                            cover.Add(new Tuple<uint, uint>((uint)nx, (uint)ny));
+                        }
+                    }
+                }
+            }
 
             return cover;
         }
