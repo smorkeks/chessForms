@@ -22,7 +22,7 @@ namespace ChessForms.src
 
             string inp = "";
             inp = read();
-            if (inp != "")
+            if (inp.Length > 3)
             {
                 uint xFrom = (uint)inp[0] - 48;
                 uint yFrom = (uint)inp[1] - 48;
