@@ -227,6 +227,11 @@ namespace ChessForms.src
             // Remove from old position
             s1.removePiece();
             // Add to new position
+            if ((p is Pawn && p.getColour() == "white" && y2 == 7) ||
+               (p is Pawn && p.getColour() == "black" && y2 == 0))
+            {
+                p = new Queen(x1, y1, p.getColour());
+            }
             s2.setPiece(p);
             p.move(x2, y2);
 
