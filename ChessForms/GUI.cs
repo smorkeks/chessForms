@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ChessForms.graphics;
 
 namespace ChessForms
 {
@@ -24,10 +25,13 @@ namespace ChessForms
         public delegate void startGame(string p1Agent, string p2Agent);
         startGame startGameFunc;
 
+        ImageHandler imageHandler;
+
         public GUI(startGame start)
         {
             InitializeComponent();
             startGameFunc = start;
+            imageHandler = new ImageHandler(AppDomain.CurrentDomain.BaseDirectory + "../../resources/", "png");
         }
 
         private void GUI_Load(object sender, EventArgs e)
@@ -217,15 +221,23 @@ namespace ChessForms
                     src.Square square = board.getSquareAt((uint)x, (uint)(7 - y));
                     if (square.getPiece() != null)
                     {
-                        // Draw image
-                        g.DrawString(square.getPiece().getColour().Replace('w', 'W').Replace('b', 'B'),
+                        // Draw piece
+                        /*g.DrawString(square.getPiece().getColour().Replace('w', 'W').Replace('b', 'B'),
                                      new Font("Arial", 10),
                                      brushText,
                                      new Point((int)(drawX + squareWidth * 0.2), (int)(drawY + squareHeight * 0.35)));
                         g.DrawString(square.getPiece().GetType().ToString().Substring(15),
                                      new Font("Arial", 10),
                                      brushText,
-                                     new Point((int)(drawX + squareWidth * 0.2), (int)(drawY + squareHeight * 0.55)));
+                                     new Point((int)(drawX + squareWidth * 0.2), (int)(drawY + squareHeight * 0.55)));*/
+                        src.Piece p = square.getPiece();
+                        string type = p.GetType().Name;
+                        string colour = p.getColour().Replace('w', 'W').Replace('b', 'B');
+                        string filename = type + "_" + colour;
+                        g.DrawImage(imageHandler.getImage(filename),
+                                    new Point[] {new Point(drawX + 8, drawY + 8),
+                                                 new Point(drawX + squareWidth - 8, drawY + 8),
+                                                 new Point(drawX + 8, drawY + squareHeight - 8)});
                     }
                 }
             }
