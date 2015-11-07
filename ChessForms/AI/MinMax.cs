@@ -4,67 +4,68 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ChessForms.src;
+using System.Windows.Forms;
 
 namespace ChessForms.AI
 {
     class MinMax
     {
-        public Tuple<Tuple<uint, uint, uint, uint>, int> runMinMax(Board board, string activePlayer, uint depth, ref TreeNode parent, bool max)
+        public Tuple<Tuple<uint, uint, uint, uint>, int> runMinMax(Board board, string activePlayer, uint depth, bool max)
         {
-            List<Tuple<uint, uint, uint, uint>> moves = new List<Tuple<uint, uint, uint, uint>>();
-            Board testBoard = new Board();
-            int score;
-            Tuple<Tuple<uint, uint, uint, uint>, int> result;
-
-            if ((max && activePlayer == "white") || (!max && activePlayer == "black"))
+            // First check if this is leaf node
+            if (depth <= 0)
             {
-                score = testBoard.getScore("white");
-                result = new Tuple<Tuple<uint, uint, uint, uint>, int>(null, score);
-                moves = testBoard.getWhiteMoves();
-                Tuple<Tuple<uint, uint, uint, uint>, int> tmpResult;
-                foreach (Tuple<uint, uint, uint, uint> move in moves)
-                {
-                    testBoard.Copy(board);
-                    tmpResult = new Tuple<Tuple<uint, uint, uint, uint>, int>(move, score);
-                    testBoard.makeMove("white", move.Item1, move.Item2, move.Item3, move.Item4);
-                    TreeNode child = new TreeNode(score, parent, move, testBoard);
-                    parent.addChild(child);//?
-                    if (depth > 0)
-                    {
-                        tmpResult = runMinMax(testBoard, activePlayer, depth - 1, ref child, !max);
-                    }
-                    if (tmpResult.Item2 > result.Item2 && max)
-                        result = tmpResult;
-                    else if (tmpResult.Item2 < result.Item2 && !max)
-                        result = tmpResult;
-                }
+                return new Tuple<Tuple<uint, uint, uint, uint>, int> (null, board.getScore(activePlayer));
+            }
+
+            // Not a leaf node, branch out
+
+            List<Tuple<uint, uint, uint, uint>> moves = new List<Tuple<uint, uint, uint, uint>>();
+            
+            string nonActivePlayer = "";
+
+            // Get moves from active player
+            if (activePlayer == "white")
+            {
+                nonActivePlayer = "black";
+                moves = board.getWhiteMoves();
             }
             else
             {
-                score = testBoard.getScore("black");
-                result = new Tuple<Tuple<uint, uint, uint, uint>, int>(null, score);
-                moves = testBoard.getBlackMoves();
-                Tuple<Tuple<uint, uint, uint, uint>, int> tmpResult;
-                foreach (Tuple<uint, uint, uint, uint> move in moves)
-                {
-                    testBoard.Copy(board);
-                    tmpResult = new Tuple<Tuple<uint, uint, uint, uint>, int>(move, score);
-                    testBoard.makeMove("black", move.Item1, move.Item2, move.Item3, move.Item4);
-                    TreeNode child = new TreeNode(score, parent, move, testBoard);
-                    parent.addChild(child);//?
-                    if (depth > 0)
-                    {
-                        tmpResult = runMinMax(testBoard, activePlayer, depth - 1, ref child, !max);
-                    }
-                    if (tmpResult.Item2 > result.Item2 && max)
-                        result = tmpResult;
-                    else if (tmpResult.Item2 < result.Item2 && !max)
-                        result = tmpResult;
-                }
+                nonActivePlayer = "white";
+                moves = board.getBlackMoves();
             }
 
+            // Check if no legal moves
+            if (moves.Count == 0)
+            {
+                return new Tuple<Tuple<uint, uint, uint, uint>, int>(null, board.getScore(activePlayer));
+            }
 
-            return result;
+            // Assume horrible best
+            int bestScore = (max ? -100000 : 100000);
+            Tuple<Tuple<uint, uint, uint, uint>, int> bestResult = new Tuple<Tuple<uint, uint, uint, uint>, int>(null, bestScore);
+
+            // Loop through all moves and minmax them
+            Board nextBoard = new Board();
+            Tuple<Tuple<uint, uint, uint, uint>, int> nextResult;
+            foreach (Tuple<uint, uint, uint, uint> move in moves)
+            {
+                nextBoard.Copy(board);
+                nextBoard.makeMove(activePlayer, move.Item1, move.Item2, move.Item3, move.Item4);
+                nextResult = runMinMax(nextBoard, nonActivePlayer, depth - 1, !max);
+                
+                // If max and more or min and less, then change bestResult.
+                if ((nextResult.Item2 > bestResult.Item2 && max) ||
+                    (nextResult.Item2 < bestResult.Item2 && !max))
+                {
+                    bestResult = new Tuple<Tuple<uint,uint,uint,uint>,int>(move, bestResult.Item2);
+                }
+
+                Application.DoEvents();
+            }
+
+            return bestResult;
         }
 
 

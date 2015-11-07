@@ -116,7 +116,7 @@ namespace ChessForms.src
                     //if (white is TerminalAgent) // TODO not AI instead
                     //{
                         tmp = white.getInput(board);
-                        if (tmp.Item1 != 10) gui.putString(tmp.ToString());
+                        gui.putString(tmp.ToString());
                         printMoves(tmp.Item1, tmp.Item2);
                         printPieceAt(tmp.Item1, tmp.Item2);
                         turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);

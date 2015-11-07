@@ -19,8 +19,12 @@ namespace ChessForms.src
         public override Tuple<uint, uint, uint, uint> getInput(Board B)
         {
             MinMax move = new MinMax();
-            TreeNode initial = new TreeNode(0);
-            return move.runMinMax(B, colour, 2,ref initial,true).Item1;
+            Tuple<uint,uint,uint,uint> bestMove = move.runMinMax(B, colour, 4, true).Item1;
+            if (bestMove != null) {
+                return bestMove;
+            } else {
+                return new Tuple<uint, uint, uint, uint>(10, 10, 10, 10);
+            }
         }
     }
 }

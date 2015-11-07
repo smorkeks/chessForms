@@ -46,7 +46,6 @@
   <ItemGroup>
     <Compile Include="graphics\ImageHandler.cs" />
     <Compile Include="AI\MinMax.cs" />
-    <Compile Include="AI\TreeNode.cs" />
     <Compile Include="src\Agent.cs" />
     <Compile Include="src\AiAgent.cs" />
     <Compile Include="src\Bishop.cs" />
