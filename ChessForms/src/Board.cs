@@ -383,7 +383,7 @@ namespace ChessForms.src
         public bool playerLost(string col)
         {
             List<Tuple<uint, uint, uint, uint>> moves = getBlackMoves();
-            return (moves == null && getCheck(col));
+            return (moves.Count == 0 && getCheck(col));
         }
     }
 }

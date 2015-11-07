@@ -93,12 +93,8 @@ namespace ChessForms.src
                         printMoves(tmp.Item1, tmp.Item2);
                         printPieceAt(tmp.Item1, tmp.Item2);
                         turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
-                        if (board.playerLost("black"))
-                        {
-                            gui.putString("White player won!");
-                            return;
-                        }
-                    //}
+                        
+                    
                 }
 
                 else if (!turnWhite)
@@ -121,8 +117,25 @@ namespace ChessForms.src
 
                 if (oldTurnWhite != turnWhite)
                 {
+                    if (board.playerLost("black"))
+                    {
+                        gui.putString("White player won!");
+                        return;
+                    }
+                    if (board.playerLost("white"))
+                    {
+                        gui.putString("Black player won!");
+                        return;
+                    }
                     // Move accepted, new player.
                     // Update board and player textboxes.
+                    string print = "";
+                    List<Tuple<uint,uint,uint,uint>> moves = board.getBlackMoves();
+                    foreach (Tuple<uint,uint,uint,uint> move in moves)
+                    {
+                        print += move.Item1.ToString() + move.Item2.ToString() + move.Item3.ToString() + move.Item4.ToString()+"\r\n";
+                    }
+                    gui.putString(print);
                     board.updateTurn();
                     oldTurnWhite = turnWhite;
                     gui.updateBoard(board);
