@@ -10,16 +10,19 @@ namespace ChessForms.src
     class AiAgent : Agent
     {
         uint difficulty;
-        public AiAgent(string col)
+        MinMax.putScore put;
+
+        public AiAgent(string col, MinMax.putScore put)
             : base(col)
         {
+            this.put = put;
             difficulty = 1;
         }
 
         public override Tuple<uint, uint, uint, uint> getInput(Board B)
         {
             MinMax move = new MinMax();
-            Tuple<uint,uint,uint,uint> bestMove = move.runMinMax(B, colour, 4, true).Item1;
+            Tuple<uint,uint,uint,uint> bestMove = move.runMinMax(B, colour, 2, true, put).Item1;
             if (bestMove != null) {
                 return bestMove;
             } else {

@@ -93,6 +93,11 @@ namespace ChessForms
             return tmp;
         }
 
+        public void putAiScore(int score)
+        {
+            AiScoreTextBox.Text = "" + score;
+        }
+
         // Graphics interface
 
         public void updateBoard(src.Board board)

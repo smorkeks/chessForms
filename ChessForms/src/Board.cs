@@ -107,6 +107,15 @@ namespace ChessForms.src
         public Board(uint turn)
         {
             this.turn = turn;
+
+            // Create squares
+            for (uint y = 0; y < BOARD_SIZE_Y; y++)
+            {
+                for (uint x = 0; x < BOARD_SIZE_X; x++)
+                {
+                    squares[x, y] = new Square(x, y, reward[x, y]);
+                }
+            }
         }
 
         // --- Methods ---

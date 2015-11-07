@@ -40,6 +40,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.drawingArea = new System.Windows.Forms.PictureBox();
+            this.AiScoreTextBox = new System.Windows.Forms.TextBox();
             this.graphicsTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -168,11 +169,19 @@
             this.drawingArea.TabStop = false;
             this.drawingArea.MouseClick += new System.Windows.Forms.MouseEventHandler(this.onDrawingClick);
             // 
+            // AiScoreTextBox
+            // 
+            this.AiScoreTextBox.Location = new System.Drawing.Point(406, 170);
+            this.AiScoreTextBox.Name = "AiScoreTextBox";
+            this.AiScoreTextBox.Size = new System.Drawing.Size(175, 20);
+            this.AiScoreTextBox.TabIndex = 9;
+            // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1158, 594);
+            this.Controls.Add(this.AiScoreTextBox);
             this.Controls.Add(this.graphicsTab);
             this.Controls.Add(this.blackAgentDropDown);
             this.Controls.Add(this.turnText);
@@ -210,6 +219,7 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.PictureBox drawingArea;
+        private System.Windows.Forms.TextBox AiScoreTextBox;
     }
 }
 

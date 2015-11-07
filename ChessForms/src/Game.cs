@@ -31,11 +31,11 @@ namespace ChessForms.src
         public void printMoves(uint x, uint y)
         {
             Piece P;
-            List<Tuple<uint,uint>> tmp;
+            List<Tuple<uint, uint>> tmp;
             P = board.getPieceAt(x, y);
             if (P != null)
             {
-                tmp = P.getPossibleMoves(board.getSquareAt,board.getTurn());
+                tmp = P.getPossibleMoves(board.getSquareAt, board.getTurn());
                 gui.putString("Prints all possible moves");
                 foreach (Tuple<uint, uint> item in tmp)
                 {
@@ -52,7 +52,7 @@ namespace ChessForms.src
         {
             Piece P;
             P = board.getPieceAt(x, y);
-            if(P != null)
+            if (P != null)
             {
                 gui.putString("Piece at " + x.ToString() + y.ToString());
                 gui.putString(P.GetType().ToString());
@@ -75,7 +75,7 @@ namespace ChessForms.src
                     white = new GraphicsAgent("white", gui.readSelectedMove);
                     break;
                 case "AI":
-                    white = new AiAgent("white");
+                    white = new AiAgent("white", gui.putAiScore);
                     break;
             }
 
@@ -89,7 +89,7 @@ namespace ChessForms.src
                     black = new GraphicsAgent("black", gui.readSelectedMove);
                     break;
                 case "AI":
-                    black = new AiAgent("black");
+                    black = new AiAgent("black", gui.putAiScore);
                     break;
             }
             //white = new TerminalAgent("white", gui.readString);
@@ -113,31 +113,20 @@ namespace ChessForms.src
             {
                 if (turnWhite)
                 {
-                    //if (white is TerminalAgent) // TODO not AI instead
-                    //{
-                        tmp = white.getInput(board);
-                        gui.putString(tmp.ToString());
-                        printMoves(tmp.Item1, tmp.Item2);
-                        printPieceAt(tmp.Item1, tmp.Item2);
-                        turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
-                        
-                    
+                    tmp = white.getInput(board);
+                    gui.putString(tmp.ToString());
+                    //printMoves(tmp.Item1, tmp.Item2);
+                    //printPieceAt(tmp.Item1, tmp.Item2);
+                    turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
                 }
 
                 else if (!turnWhite)
                 {
-                    //if (black is TerminalAgent) // TODO not AI instead
-                    //{
-                        tmp = black.getInput(board);
-                        printMoves(tmp.Item1, tmp.Item2);
-                        printPieceAt(tmp.Item1, tmp.Item2);
-                        turnWhite = board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
-                        if (board.playerLost("white"))
-                        {
-                            gui.putString("Black player won!");
-                            return;
-                        }
-                    //}
+                    tmp = black.getInput(board);
+                    gui.putString(tmp.ToString());
+                    //printMoves(tmp.Item1, tmp.Item2);
+                    //printPieceAt(tmp.Item1, tmp.Item2);
+                    turnWhite = board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
                 }
 
                 Application.DoEvents();
@@ -156,13 +145,13 @@ namespace ChessForms.src
                     }
                     // Move accepted, new player.
                     // Update board and player textboxes.
-                    string print = "";
-                    List<Tuple<uint,uint,uint,uint>> moves = board.getBlackMoves();
-                    foreach (Tuple<uint,uint,uint,uint> move in moves)
+                    /*string print = "";
+                    List<Tuple<uint, uint, uint, uint>> moves = board.getBlackMoves();
+                    foreach (Tuple<uint, uint, uint, uint> move in moves)
                     {
-                        print += move.Item1.ToString() + move.Item2.ToString() + move.Item3.ToString() + move.Item4.ToString()+"\r\n";
+                        print += move.Item1.ToString() + move.Item2.ToString() + move.Item3.ToString() + move.Item4.ToString() + "\r\n";
                     }
-                    gui.putString(print);
+                    gui.putString(print);*/
                     board.updateTurn();
                     oldTurnWhite = turnWhite;
                     gui.updateBoard(board);
