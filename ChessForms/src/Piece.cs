@@ -71,6 +71,11 @@ namespace ChessForms.src
                         break;
                     }
                 }
+                if (kingSquare.getPiece() is King &&
+                        kingSquare.getPiece().getColour() == colour)
+                {
+                    break;
+                }
             }
 
             // Get king position
@@ -109,15 +114,20 @@ namespace ChessForms.src
                                 }
                             }
                         }
+                        if (threat != null)
+                            break;
                     }
+                    if (threat != null)
+                        break;
                 }
 
                 // Remove all moves that do not resolve the check
+                List<Tuple<uint, uint>> tmpMoves = new List<Tuple<uint, uint>>(moves);
                 Piece p = threat.getPiece();
                 if (p is Knight || p is Pawn)
                 {
                     // Must take threat
-                    foreach (Tuple<uint, uint> move in moves)
+                    foreach (Tuple<uint, uint> move in tmpMoves)
                     {
                         if (move.Item1 != threat.getX() ||
                             move.Item2 != threat.getY())
@@ -128,10 +138,12 @@ namespace ChessForms.src
                     }
                 }
 
+                // Seems like a bro
+                tmpMoves = new List<Tuple<uint, uint>>(moves);
                 if (p is Rook || p is Queen)
                 {
                     // Must take or block threat
-                    foreach (Tuple<uint, uint> move in moves)
+                    foreach (Tuple<uint, uint> move in tmpMoves)
                     {
                         if (xKing == p.getX())
                         {
@@ -158,7 +170,8 @@ namespace ChessForms.src
                     }
                 }
 
-                if (p is Bishop || p is Queen)
+                tmpMoves = new List<Tuple<uint, uint>>(moves);
+                if ((p is Bishop || p is Queen) && !(xKing == p.getX() || yKing == p.getY()))
                 {
                     // Must take or block threat
                     int xMod = (xKing > p.getX() ? -1 : 1);
@@ -166,7 +179,7 @@ namespace ChessForms.src
 
                     // Step from King to Threat
                     int steps = (int)Math.Abs(xKing - p.getX());
-                    foreach (Tuple<uint, uint> move in moves)
+                    foreach (Tuple<uint, uint> move in tmpMoves)
                     {
                         // Search for any blocking or taking moves
                         int x = (int)xKing;
@@ -213,7 +226,7 @@ namespace ChessForms.src
                             {
                                 continue;
                             }
-
+                            
                             // Enemy piece, check if threat
                             List<Tuple<uint, uint>> cover = s.getPiece().getCover(QF);
                             foreach (Tuple<uint, uint> t in cover)
@@ -233,13 +246,20 @@ namespace ChessForms.src
                 {
                     Piece p = square.getPiece();
 
-                    int xMod, yMod;
+                    int xMod = 0, yMod = 0;
 
                     if (p.getX() == xKing || p.getY() == yKing)
                     {
                         // Not diagonal
-                        xMod = (p.getX() == xKing ? Math.Sign(p.getX() - xKing) : 0);
-                        yMod = (p.getY() == yKing ? Math.Sign(p.getY() - yKing) : 0);
+                        if ((int)p.getX() - (int)xKing > 0)
+                            xMod = 1;
+                        else if ((int)p.getX() - (int)xKing < 0)
+                            xMod = -1;
+
+                        if ((int)p.getY() - ((int)yKing) > 0)
+                            yMod = 1;
+                        else if ((int)p.getY() - ((int)yKing) < 0)
+                            yMod = -1;
                     }
                     else
                     {
@@ -253,7 +273,7 @@ namespace ChessForms.src
                     int y = (int)yKing;
                     int numBlocks = 0;
                     bool foundSelf = false;
-                    for (int i = 0; i < steps; i++)
+                    for (int i = 0; i < steps-1; i++)
                     {
                         x += xMod;
                         y += yMod;
