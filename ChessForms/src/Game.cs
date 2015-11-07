@@ -65,10 +65,37 @@ namespace ChessForms.src
             gui.putString(p2);
 
             turnWhite = true;
+            // Set white agent
+            switch (p1)
+            {
+                case "Terminal Agent":
+                    white = new TerminalAgent("white", gui.readString);
+                    break;
+                case "Graphics Agent":
+                    white = new GraphicsAgent("white", gui.readSelectedMove);
+                    break;
+                case "AI":
+                    white = new AiAgent("white");
+                    break;
+            }
+
+            // Set black agent
+            switch (p2)
+            {
+                case "Terminal Agent":
+                    black = new TerminalAgent("black", gui.readString);
+                    break;
+                case "Graphics Agent":
+                    black = new GraphicsAgent("black", gui.readSelectedMove);
+                    break;
+                case "AI":
+                    black = new AiAgent("black");
+                    break;
+            }
             //white = new TerminalAgent("white", gui.readString);
             //black = new TerminalAgent("black", gui.readString);
-            white = new GraphicsAgent("white", gui.readSelectedMove);
-            black = new GraphicsAgent("black", gui.readSelectedMove);
+            //white = new GraphicsAgent("white", gui.readSelectedMove);
+            //black = new GraphicsAgent("black", gui.readSelectedMove);
 
             gui.updateBoard(board);
             gui.putPlayerTurn(turnWhite);
