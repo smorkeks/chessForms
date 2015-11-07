@@ -178,7 +178,7 @@ namespace ChessForms.src
                     int yMod = (yKing > p.getY() ? -1 : 1);
 
                     // Step from King to Threat
-                    int steps = (int)Math.Abs(xKing - p.getX());
+                    int steps = (int)Math.Abs((int)xKing - (uint)p.getX());
                     foreach (Tuple<uint, uint> move in tmpMoves)
                     {
                         // Search for any blocking or taking moves
