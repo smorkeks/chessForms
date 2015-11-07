@@ -16,6 +16,8 @@ namespace ChessForms.src
             didDoubleStepTurn = 0;
         }
 
+        public Pawn() : base() { }
+
         public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF, uint turn)
         {
             List<Tuple<uint, uint>> tmpList = new List<Tuple<uint, uint>>();
@@ -146,6 +148,11 @@ namespace ChessForms.src
         public uint getDoubleStepTurn()
         {
             return didDoubleStepTurn;
+        }
+
+        public override Piece getCopyPiece()
+        {
+            return new Pawn();
         }
     }
 }

@@ -19,6 +19,7 @@ namespace ChessForms.AI
         {
             this.score = score;
             this.parent = null;
+            this.children = new List<TreeNode>();
         }
 
         public TreeNode(int score, TreeNode parent, Tuple<uint, uint, uint, uint> move, Board board)
@@ -27,6 +28,7 @@ namespace ChessForms.AI
             this.parent = parent;
             this.move = move;
             this.board = board;
+            this.children = new List<TreeNode>();
         }
 
         public TreeNode(int score, TreeNode parent, List<TreeNode> children, Tuple<uint, uint, uint, uint> move, Board board)

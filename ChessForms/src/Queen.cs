@@ -9,6 +9,8 @@ namespace ChessForms.src
     {
         public Queen(uint x, uint y, string c) : base(x, y, 9, c) {}
 
+        public Queen() : base() { }
+
         public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF, uint turn)
         {
             List<Tuple<uint, uint>> moves = new List<Tuple<uint, uint>>();
@@ -465,6 +467,11 @@ namespace ChessForms.src
             }
 
             return cover;
+        }
+
+        public override Piece getCopyPiece()
+        {
+            return new Queen();
         }
     }
 }

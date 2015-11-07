@@ -25,6 +25,8 @@ namespace ChessForms.src
             this.hasMoved = false;
         }
 
+        public Piece() { }
+
         public void move(uint x, uint y)
         {
             this.xCoord = x;
@@ -350,5 +352,7 @@ namespace ChessForms.src
             colour = oldPiece.colour;
             score = oldPiece.score;
         }
+
+        public abstract Piece getCopyPiece();
     }
 }

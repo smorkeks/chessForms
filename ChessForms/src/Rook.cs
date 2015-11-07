@@ -7,27 +7,30 @@ namespace ChessForms.src
 {
     public class Rook : Piece
     {
-        public Rook(uint x, uint y, string c) : base(x, y, 5, c) {}
+        public Rook(uint x, uint y, string c) : base(x, y, 5, c) { }
 
-        public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF,uint turn)
+        public Rook() : base() { }
+
+
+        public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF, uint turn)
         {
             List<Tuple<uint, uint>> moves = new List<Tuple<uint, uint>>();
 
             // Check down moves
-            int x = (int) getX();
-            int y = (int) getY();
-            while(true)
+            int x = (int)getX();
+            int y = (int)getY();
+            while (true)
             {
                 y--;
-                if (!withinBoard(x,y))
+                if (!withinBoard(x, y))
                 {
                     break;
                 }
 
-                Piece p = QF((uint) x, (uint) y).getPiece();
+                Piece p = QF((uint)x, (uint)y).getPiece();
                 if (p == null)
                 {
-                    moves.Add(new Tuple<uint, uint>((uint) x, (uint) y));
+                    moves.Add(new Tuple<uint, uint>((uint)x, (uint)y));
                 }
                 else
                 {
@@ -44,8 +47,8 @@ namespace ChessForms.src
             }
 
             // Check up moves
-            x = (int) getX();
-            y = (int) getY();
+            x = (int)getX();
+            y = (int)getY();
             while (true)
             {
                 y++;
@@ -74,8 +77,8 @@ namespace ChessForms.src
             }
 
             // Check right moves
-            x = (int) getX();
-            y = (int) getY();
+            x = (int)getX();
+            y = (int)getY();
             while (true)
             {
                 x++;
@@ -104,8 +107,8 @@ namespace ChessForms.src
             }
 
             // Check left moves
-            x = (int) getX();
-            y = (int) getY();
+            x = (int)getX();
+            y = (int)getY();
             while (true)
             {
                 x--;
@@ -237,6 +240,11 @@ namespace ChessForms.src
             }
 
             return cover;
+        }
+
+        public override Piece getCopyPiece()
+        {
+            return new Rook();
         }
     }
 }

@@ -86,6 +86,8 @@ namespace ChessForms.src
             piece = null;
         }
 
+        
+
         public void Copy(Square oldSquare)
         {
             posX = oldSquare.posX;
@@ -93,7 +95,12 @@ namespace ChessForms.src
             reward = oldSquare.reward;
             whiteCover = oldSquare.whiteCover;
             blackCover = oldSquare.blackCover;
-            piece.Copy(oldSquare.piece);
+            if (oldSquare.piece != null)
+            {
+                piece = oldSquare.piece.getCopyPiece();
+                piece.Copy(oldSquare.piece);
+            }
+                
         }
     }
 }

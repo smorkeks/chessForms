@@ -67,8 +67,10 @@ namespace ChessForms.src
             turnWhite = true;
             //white = new TerminalAgent("white", gui.readString);
             //black = new TerminalAgent("black", gui.readString);
-            white = new GraphicsAgent("white", gui.readSelectedMove);
-            black = new GraphicsAgent("black", gui.readSelectedMove);
+            //white = new GraphicsAgent("white", gui.readSelectedMove);
+            //black = new GraphicsAgent("black", gui.readSelectedMove);
+            white = new AiAgent("white");
+            black = new AiAgent("black");
 
             gui.updateBoard(board);
             gui.putPlayerTurn(turnWhite);

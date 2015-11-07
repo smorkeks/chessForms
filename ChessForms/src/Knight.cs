@@ -9,6 +9,8 @@ namespace ChessForms.src
     {
         public Knight(uint x, uint y, string col) : base(x, y, 3, col) { }
 
+        public Knight() : base() { }
+
         public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF, uint turn)
         {
 
@@ -72,12 +74,17 @@ namespace ChessForms.src
                 int y = item.Item2;
                 if (withinBoard((int)getX() + x, (int)getY() + y))
                 {
-                    
+
                     cover.Add(new Tuple<uint, uint>((uint)(getX() + x), (uint)(getY() + y)));
                 }
             }
 
             return cover;
+        }
+
+        public override Piece getCopyPiece()
+        {
+            return new Knight();
         }
     }
 }
