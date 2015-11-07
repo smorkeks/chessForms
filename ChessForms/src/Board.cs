@@ -46,7 +46,7 @@ namespace ChessForms.src
             {
                 for (uint x = 0; x < BOARD_SIZE_X; x++)
                 {
-                    squares[x, y] = new Square(x, y, reward[x,y]);
+                    squares[x, y] = new Square(x, y, reward[x, y]);
                 }
             }
 
@@ -110,7 +110,8 @@ namespace ChessForms.src
         public Square getSquareAt(uint x, uint y)
         {
             // Check if outside board
-            if (x >= BOARD_SIZE_X || y >= BOARD_SIZE_Y){
+            if (x >= BOARD_SIZE_X || y >= BOARD_SIZE_Y)
+            {
                 return null;
             }
 
@@ -134,7 +135,7 @@ namespace ChessForms.src
         // Check if white piece at x, y
         public bool isWhite(uint x, uint y)
         {
-            Piece p = getPieceAt(x,y);
+            Piece p = getPieceAt(x, y);
             return (p != null && p.getColour() == COLOUR_WHITE);
         }
 
@@ -157,7 +158,7 @@ namespace ChessForms.src
                     Piece p = getPieceAt(x, y);
                     if (p != null && p.getColour() == col)
                     {
-                        List<Tuple<uint, uint>> newMoves = p.getPossibleMoves(getSquareAt,turn);
+                        List<Tuple<uint, uint>> newMoves = p.getPossibleMoves(getSquareAt, turn);
 
                         foreach (Tuple<uint, uint> t in newMoves)
                         {
@@ -205,7 +206,7 @@ namespace ChessForms.src
             {
                 return false;
             }
-            if (!p.movePossible(x2, y2, getSquareAt,turn))
+            if (!p.movePossible(x2, y2, getSquareAt, turn))
             {
                 return false;
             }
@@ -213,7 +214,7 @@ namespace ChessForms.src
             // Move is legal
 
             //Check if this is a castling
-            if ((p is King) && (((x1-x2) == 2) || ((x2-x1) == 2)))
+            if ((p is King) && (((x1 - x2) == 2) || ((x2 - x1) == 2)))
             {
                 castling = true;
             }
@@ -265,7 +266,7 @@ namespace ChessForms.src
                     yMod = -1;
                 else
                     yMod = 1;
-                Square s3 = getSquareAt(x2,(uint)(y2+yMod));
+                Square s3 = getSquareAt(x2, (uint)(y2 + yMod));
                 Piece p3 = s3.getPiece();
                 s3.removePiece();
             }
@@ -318,8 +319,9 @@ namespace ChessForms.src
                     {
                         // Update cover
                         cover = p.getCover(getSquareAt);
-                        if (p.getColour() == COLOUR_WHITE) {
-                            foreach(Tuple<uint,uint> t in cover)
+                        if (p.getColour() == COLOUR_WHITE)
+                        {
+                            foreach (Tuple<uint, uint> t in cover)
                             {
                                 getSquareAt(t.Item1, t.Item2).addWhiteCover();
                             }
@@ -336,7 +338,8 @@ namespace ChessForms.src
             }
 
             // Cover from kings
-            if (kingWhite != null) {
+            if (kingWhite != null)
+            {
                 cover = kingWhite.getCover(getSquareAt);
                 foreach (Tuple<uint, uint> t in cover)
                 {
@@ -353,16 +356,34 @@ namespace ChessForms.src
             }
         }
 
-        // TODO
-        public bool blackLost()
+        //returns true if cover on black king
+        public bool getCheck(string col)
         {
-            return false;
+            Square kingSquare = null;
+            for (uint j = 0; j < 8; j++)
+            {
+                for (uint i = 0; i < 8; i++)
+                {
+                    kingSquare = getSquareAt(i, j);
+                    if (kingSquare.getPiece() is King &&
+                        kingSquare.getPiece().getColour() == col)
+                    {
+                        break;
+                    }
+                }
+                if (kingSquare.getPiece() is King &&
+                        kingSquare.getPiece().getColour() == col)
+                {
+                    break;
+                }
+            }
+            return (kingSquare.getEnemyCover(col));
         }
 
-        //TODO
-        public bool whiteLost()
+        public bool playerLost(string col)
         {
-            return false;
+            List<Tuple<uint, uint, uint, uint>> moves = getBlackMoves();
+            return (moves == null && getCheck(col));
         }
     }
 }
