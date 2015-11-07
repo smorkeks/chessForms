@@ -113,7 +113,7 @@ namespace ChessForms.src
                                     threat = s;
                                     break;
                                 }
-                            } 
+                            }
                         }
                         if (threat != null)
                             break;
