@@ -261,7 +261,7 @@ namespace ChessForms
                     // Mark selected square
                     drawBorder(g, brushSelect, drawX, drawY, squareWidth, squareHeight, 5);
 
-                    foreach (Tuple<uint, uint> t in s.getPiece().getPossibleMoves(board.getSquareAt, turn))
+                    foreach (Tuple<uint, uint> t in s.getPiece().getPossibleMoves(board.getSquareAt, board.getPieces, turn))
                     {
                         drawX = (int)(t.Item1 + 1) * squareWidth;
                         drawY = (int)(7 - t.Item2 + 1) * squareHeight;
@@ -334,7 +334,7 @@ namespace ChessForms
                 List<Tuple<uint, uint>> moves;
                 if (selectedSquareX != -1 && selectedSquareY != -1)
                 {
-                    moves = board.getSquareAt((uint)selectedSquareX, (uint)selectedSquareY).getPiece().getPossibleMoves(board.getSquareAt, turn);
+                    moves = board.getSquareAt((uint)selectedSquareX, (uint)selectedSquareY).getPiece().getPossibleMoves(board.getSquareAt, board.getPieces, turn);
 
                     foreach (Tuple<uint, uint> t in moves)
                     {

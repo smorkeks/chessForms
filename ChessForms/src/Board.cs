@@ -21,6 +21,8 @@ namespace ChessForms.src
 
         // List of squares
         private Square[,] squares = new Square[BOARD_SIZE_X, BOARD_SIZE_Y];
+        private List<Piece> whitePieces = new List<Piece>();
+        private List<Piece> blackPieces = new List<Piece>();
 
         // Reward function for board position.
         private int[,] reward = new int[,] { { 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -34,6 +36,7 @@ namespace ChessForms.src
 
         // Passed to Pieces to limit access to board.
         public delegate Square QueryFunc(uint x, uint y);
+        public delegate List<Piece> ListFunc(string col, bool invertColor);
 
         // --- Constructor ---
         public Board()
@@ -78,29 +81,23 @@ namespace ChessForms.src
                 squares[x, BOARD_SIZE_Y - 2].setPiece(new Pawn(x, BOARD_SIZE_Y - 2, COLOUR_BLACK));
             }
 
-            // Add cover
-            /*QueryFunc qf = getSquareAt;
+            // Add pieces to lists
             foreach (Square s in squares)
             {
                 Piece p = s.getPiece();
-
                 if (p != null)
                 {
-                    List<Tuple<uint, uint>> cover = p.getCover(qf);
-                    foreach (Tuple<uint, uint> t in cover)
+                    if (p.getColour() == COLOUR_WHITE)
                     {
-                        if (p.getColour() == COLOUR_WHITE)
-                        {
-                            squares[t.Item1, t.Item2].addWhiteCover();
-                        }
-                        else
-                        {
-                            squares[t.Item1, t.Item2].addBlackCover();
-                        }
-                        
+                        whitePieces.Add(p);
+                    }
+                    else
+                    {
+                        blackPieces.Add(p);
                     }
                 }
-            }*/
+            }
+
             updateCover();
         }
 
@@ -164,6 +161,18 @@ namespace ChessForms.src
         private List<Tuple<uint, uint, uint, uint>> getMoves(string col)
         {
             List<Tuple<uint, uint, uint, uint>> moves = new List<Tuple<uint, uint, uint, uint>>();
+            List<Tuple<uint, uint>> newMoves;
+            /*List<Piece> list = getPieces(col, false);
+            
+            foreach (Piece p in list)
+            {
+                newMoves = p.getPossibleMoves(getSquareAt, getPieces, turn);
+
+                foreach (Tuple<uint, uint> t in newMoves)
+                {
+                    moves.Add(new Tuple<uint, uint, uint, uint>(p.getX(), p.getY(), t.Item1, t.Item2));
+                }
+            }*/
 
             for (uint y = 0; y < BOARD_SIZE_Y; y++)
             {
@@ -172,7 +181,7 @@ namespace ChessForms.src
                     Piece p = getPieceAt(x, y);
                     if (p != null && p.getColour() == col)
                     {
-                        List<Tuple<uint, uint>> newMoves = p.getPossibleMoves(getSquareAt, turn);
+                        newMoves = p.getPossibleMoves(getSquareAt, getPieces, turn);
 
                         foreach (Tuple<uint, uint> t in newMoves)
                         {
@@ -195,6 +204,19 @@ namespace ChessForms.src
         public List<Tuple<uint, uint, uint, uint>> getBlackMoves()
         {
             return getMoves(COLOUR_BLACK);
+        }
+
+        // Returns a list of all pieces of the specified colour.
+        public List<Piece> getPieces(string col, bool invertColor)
+        {
+            if (invertColor)
+            {
+                return (col == COLOUR_BLACK ? whitePieces : blackPieces);
+            }
+            else
+            {
+                return (col == COLOUR_WHITE ? whitePieces : blackPieces);
+            }
         }
 
         public bool makeMove(string col, uint x1, uint y1, uint x2, uint y2)
@@ -220,7 +242,7 @@ namespace ChessForms.src
             {
                 return false;
             }
-            if (!p.movePossible(x2, y2, getSquareAt, turn))
+            if (!p.movePossible(x2, y2, getSquareAt, getPieces, turn))
             {
                 return false;
             }
@@ -243,10 +265,21 @@ namespace ChessForms.src
             s1.removePiece();
             // Add to new position
             if ((p is Pawn && p.getColour() == "white" && y2 == 7) ||
-               (p is Pawn && p.getColour() == "black" && y2 == 0))
+                (p is Pawn && p.getColour() == "black" && y2 == 0))
             {
+                List<Piece> list = getPieces(p.getColour(), false);
+                list.Remove(p);
                 p = new Queen(x1, y1, p.getColour());
+                list.Add(p);
             }
+
+            // Check if there is an enemy piece to remove
+            Piece p2 = getPieceAt(x2, y2);
+            if (p2 != null)
+            {
+                getPieces(p2.getColour(), false).Remove(p2);
+            }
+
             s2.setPiece(p);
             p.move(x2, y2);
 
@@ -283,6 +316,7 @@ namespace ChessForms.src
                 Square s3 = getSquareAt(x2, (uint)(y2 + yMod));
                 Piece p3 = s3.getPiece();
                 s3.removePiece();
+                getPieces(p3.getColour(), false).Remove(p3);
             }
 
             updateCover();
@@ -407,14 +441,14 @@ namespace ChessForms.src
             {
                 for (uint j = 0; j < BOARD_SIZE_Y; j++)
                 {
-                    if (col == "white")
+                    if (col == COLOUR_WHITE)
                     {
                         score += (int)getSquareAt(i, j).getWhiteCover() - (int)getSquareAt(i, j).getBlackCover();
                         if (getSquareAt(i, j).getPiece() != null)
                             if (getSquareAt(i, j).getPiece().getColour() == col)
                                 score = score + (int)getSquareAt(i, j).getPiece().getScore() + reward[i, j];
                             else
-                                score = score - (int)getSquareAt(i, j).getPiece().getScore() - reward[i,j];
+                                score = score - (int)getSquareAt(i, j).getPiece().getScore() - reward[i, j];
                     }
                     else
                     {
@@ -441,6 +475,23 @@ namespace ChessForms.src
                 }
             }
             turn = oldBoard.turn;
+
+            // Add pieces to lists
+            foreach (Square s in squares)
+            {
+                Piece p = s.getPiece();
+                if (p != null)
+                {
+                    if (p.getColour() == COLOUR_WHITE)
+                    {
+                        whitePieces.Add(p);
+                    }
+                    else
+                    {
+                        blackPieces.Add(p);
+                    }
+                }
+            }
         }
     }
 }

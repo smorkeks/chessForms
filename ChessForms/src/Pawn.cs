@@ -18,7 +18,7 @@ namespace ChessForms.src
 
         public Pawn() : base() { }
 
-        public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF, uint turn)
+        public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF, Board.ListFunc LF, uint turn)
         {
             List<Tuple<uint, uint>> tmpList = new List<Tuple<uint, uint>>();
             short yMod;
@@ -118,7 +118,7 @@ namespace ChessForms.src
             }
 
             // Filter for check situations
-            checkFilter(ref tmpList, QF);
+            checkFilter(ref tmpList, QF, LF);
 
             return tmpList;
         }

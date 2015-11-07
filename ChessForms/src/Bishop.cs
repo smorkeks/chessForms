@@ -11,7 +11,7 @@ namespace ChessForms.src
 
         public Bishop() : base() { }
 
-        public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF,uint turn)
+        public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF, Board.ListFunc LF, uint turn)
         {
             List<Tuple<uint, uint>> moves = new List<Tuple<uint, uint>>();
 
@@ -144,7 +144,7 @@ namespace ChessForms.src
             }
 
             // Filter for check situations
-            checkFilter(ref moves, QF);
+            checkFilter(ref moves, QF, LF);
 
             // Done, all moves found
             return moves;

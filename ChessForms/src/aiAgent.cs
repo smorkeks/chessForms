@@ -22,7 +22,7 @@ namespace ChessForms.src
         public override Tuple<uint, uint, uint, uint> getInput(Board B)
         {
             MinMax move = new MinMax();
-            Tuple<uint,uint,uint,uint> bestMove = move.runMinMax(B, colour, 2, true, put).Item1;
+            Tuple<uint,uint,uint,uint> bestMove = move.runMinMax(B, colour, 5, true, put).Item1;
             if (bestMove != null) {
                 return bestMove;
             } else {

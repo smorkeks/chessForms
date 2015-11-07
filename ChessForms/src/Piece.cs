@@ -36,16 +36,16 @@ namespace ChessForms.src
         }
 
         // Returns a list of all possible moves
-        public abstract List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF, uint turn);
+        public abstract List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF, Board.ListFunc LF, uint turn);
 
         // Returns a list of all covered squares
         public abstract List<Tuple<uint, uint>> getCover(Board.QueryFunc QF);
 
         //Checks if move is possible
-        public bool movePossible(uint x, uint y, Board.QueryFunc QF, uint turn)
+        public bool movePossible(uint x, uint y, Board.QueryFunc QF, Board.ListFunc LF, uint turn)
         {
             List<Tuple<uint, uint>> tmp;
-            tmp = this.getPossibleMoves(QF, turn);
+            tmp = this.getPossibleMoves(QF, LF, turn);
             foreach (Tuple<uint, uint> item in tmp)
             {
                 if ((item.Item1 == x) && (item.Item2 == y))
@@ -57,11 +57,22 @@ namespace ChessForms.src
         }
 
         // Filter if check
-        protected virtual void checkFilter(ref List<Tuple<uint, uint>> moves, Board.QueryFunc QF)
+        protected virtual void checkFilter(ref List<Tuple<uint, uint>> moves, Board.QueryFunc QF, Board.ListFunc LF)
         {
             // Find king square
             Square kingSquare = null;
-            for (uint j = 0; j < 8; j++)
+            List<Piece> friendlyPieces = LF(colour, false);
+
+            foreach (Piece p in friendlyPieces)
+            {
+                if (p is King)
+                {
+                    kingSquare = QF(p.getX(), p.getY());
+                    break;
+                }
+            }
+
+            /*for (uint j = 0; j < 8; j++)
             {
                 for (uint i = 0; i < 8; i++)
                 {
@@ -77,7 +88,7 @@ namespace ChessForms.src
                 {
                     break;
                 }
-            }
+            }*/
 
             // Get king position
             uint xKing = kingSquare.getX();
@@ -95,8 +106,25 @@ namespace ChessForms.src
                 Square threat = null;
 
                 // Get all squares with cover of king
-                Square s;
-                for (uint j = 0; j < 8; j++)
+                //Square s;
+                List<Piece> enemyPieces = LF(colour, true);
+
+                foreach (Piece ep in enemyPieces)
+                {
+                    // Enemy piece, check if threat
+                    List<Tuple<uint, uint>> cover = ep.getCover(QF);
+                    foreach (Tuple<uint, uint> t in cover)
+                    {
+                        if (t.Item1 == xKing && t.Item2 == yKing)
+                        {
+                            // Threat
+                            threat = QF(ep.getX(), ep.getY());
+                            break;
+                        }
+                    }
+                }
+
+                /*for (uint j = 0; j < 8; j++)
                 {
                     for (uint i = 0; i < 8; i++)
                     {
@@ -120,7 +148,7 @@ namespace ChessForms.src
                     }
                     if (threat != null)
                         break;
-                }
+                }*/
 
                 // Remove all moves that do not resolve the check
                 List<Tuple<uint, uint>> tmpMoves = new List<Tuple<uint, uint>>(moves);
@@ -214,8 +242,28 @@ namespace ChessForms.src
                 List<Square> threats = new List<Square>();
 
                 // Get all squares with cover of king
-                Square s;
-                for (uint j = 0; j < 8; j++)
+                //Square s;
+                foreach (Piece p in friendlyPieces)
+                {
+                    // Remove impossible cases
+                    if (p is King || p is Knight || p is Pawn)
+                    {
+                        continue;
+                    }
+
+                    // Enemy piece, check if threat
+                    List<Tuple<uint, uint>> cover = p.getCover(QF);
+                    foreach (Tuple<uint, uint> t in cover)
+                    {
+                        if (t.Item1 == getX() && t.Item2 == getY())
+                        {
+                            // Threat
+                            threats.Add(QF(p.getX(), p.getY()));
+                        }
+                    }
+                }
+
+                /*for (uint j = 0; j < 8; j++)
                 {
                     for (uint i = 0; i < 8; i++)
                     {
@@ -240,7 +288,7 @@ namespace ChessForms.src
                             }
                         }
                     }
-                }
+                }*/
 
                 // Check each threat for possible new check
                 foreach (Square square in threats)

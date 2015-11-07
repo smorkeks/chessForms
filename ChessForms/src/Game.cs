@@ -35,7 +35,7 @@ namespace ChessForms.src
             P = board.getPieceAt(x, y);
             if (P != null)
             {
-                tmp = P.getPossibleMoves(board.getSquareAt, board.getTurn());
+                tmp = P.getPossibleMoves(board.getSquareAt, board.getPieces, board.getTurn());
                 gui.putString("Prints all possible moves");
                 foreach (Tuple<uint, uint> item in tmp)
                 {

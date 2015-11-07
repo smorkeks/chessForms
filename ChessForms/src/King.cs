@@ -11,7 +11,7 @@ namespace ChessForms.src
 
         public King() : base() { }
 
-        public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF, uint turn)
+        public override List<Tuple<uint, uint>> getPossibleMoves(Board.QueryFunc QF, Board.ListFunc LF, uint turn)
         {
             List<Tuple<uint, uint>> moves = new List<Tuple<uint, uint>>();
 
