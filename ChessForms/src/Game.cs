@@ -23,9 +23,8 @@ namespace ChessForms.src
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             gui = new ChessForms.GUI(start);
-            Application.Run(gui);
-
             gui.updateBoard(board);
+            Application.Run(gui);
         }
 
         //D3bUG
