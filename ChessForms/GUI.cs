@@ -14,6 +14,12 @@ namespace ChessForms
     {
         private string lastInput = "";
         private src.Board board;
+        private uint turn = 0;
+
+        int selectedSquareX = -1;
+        int selectedSquareY = -1;
+        int selectedMoveX = -1;
+        int selectedMoveY = -1;
 
         public delegate void startGame(string p1Agent, string p2Agent);
         startGame startGameFunc;
@@ -51,9 +57,12 @@ namespace ChessForms
 
         public void putTurn(uint turn)
         {
+            this.turn = turn;
             string s1 = "Turn: ";
             turnText.Text = s1 + turn.ToString();
         }
+
+        // Agent interface
 
         public string readString()
         {
@@ -62,22 +71,32 @@ namespace ChessForms
             return tmp;
         }
 
-        private void consoleInputOnKeyDown(object sender, KeyEventArgs e)
+        public Tuple<int,int,int,int> readSelectedMove()
         {
-            if (e.KeyCode == Keys.Enter)
+            Tuple<int,int,int, int> tmp = new Tuple<int, int, int, int>(selectedSquareX,
+                                                                        selectedSquareY,
+                                                                        selectedMoveX,
+                                                                        selectedMoveY);
+            // If correct move, reset selection
+            if (selectedMoveX != -1 && selectedMoveY != -1)
             {
-                lastInput = consoleInput.Text;
-                consoleInput.Text = "";
-                putString(lastInput);
+                selectedMoveX = -1;
+                selectedMoveY = -1;
+                selectedSquareX = -1;
+                selectedSquareY = -1;
             }
-        }
 
+            return tmp;
+        }
 
         // Graphics interface
 
         public void updateBoard(src.Board board)
         {
             this.board = board;
+
+            selectedSquareX = -1;
+            selectedSquareY = -1;
 
             renderGUI();
         }
@@ -159,7 +178,7 @@ namespace ChessForms
         {
             // Setup graphics objects
             Graphics g = drawingArea.CreateGraphics();
-            
+
             // Calculate size parameters
             int squareWidth = drawingArea.Width / 9;
             int squareHeight = drawingArea.Height / 9;
@@ -168,7 +187,7 @@ namespace ChessForms
             SolidBrush brushText = new SolidBrush(Color.Black);
             for (int i = 1; i <= 8; i++)
             {
-                g.DrawString((char) (i + 'A' - 1) + "", new Font("Arial", 20), brushText, new Point((int)((i + 0.25) * squareWidth), (int) (squareHeight * 0.3)));
+                g.DrawString((char)(i + 'A' - 1) + "", new Font("Arial", 20), brushText, new Point((int)((i + 0.25) * squareWidth), (int)(squareHeight * 0.3)));
                 g.DrawString((9 - i).ToString(), new Font("Arial", 20), brushText, new Point((int)(squareWidth * 0.3), (int)((i + 0.2) * squareHeight)));
             }
 
@@ -195,7 +214,7 @@ namespace ChessForms
                         g.FillRectangle(brushBlack, rect);
                     }
 
-                    src.Square square = board.getSquareAt((uint) x, (uint) (7 - y));
+                    src.Square square = board.getSquareAt((uint)x, (uint)(7 - y));
                     if (square.getPiece() != null)
                     {
                         // Draw image
@@ -206,17 +225,48 @@ namespace ChessForms
                         g.DrawString(square.getPiece().GetType().ToString().Substring(15),
                                      new Font("Arial", 10),
                                      brushText,
-                                     new Point((int) (drawX + squareWidth * 0.2), (int) (drawY + squareHeight * 0.55)));
+                                     new Point((int)(drawX + squareWidth * 0.2), (int)(drawY + squareHeight * 0.55)));
                     }
                 }
             }
-            
+
+            // Selection, moves and cover
+            SolidBrush brushSelect = new SolidBrush(Color.Green);
+            SolidBrush brushMoves = new SolidBrush(Color.Red);
+            if (selectedSquareX != -1 && selectedSquareY != -1)
+            {
+                src.Square s = board.getSquareAt((uint)selectedSquareX, (uint)selectedSquareY);
+                if (s.getPiece() != null)
+                {
+                    int drawX = (selectedSquareX + 1) * squareWidth;
+                    int drawY = (7 - selectedSquareY + 1) * squareHeight;
+
+                    // Mark selected square
+                    drawBorder(g, brushSelect, drawX, drawY, squareWidth, squareHeight, 5);
+
+                    foreach (Tuple<uint, uint> t in s.getPiece().getPossibleMoves(board.getSquareAt, turn))
+                    {
+                        drawX = (int)(t.Item1 + 1) * squareWidth;
+                        drawY = (int)(7 - t.Item2 + 1) * squareHeight;
+                        drawBorder(g, brushMoves, drawX, drawY, squareWidth, squareHeight, 5);
+                    }
+                }
+            }
+
             brushWhite.Dispose();
             brushBlack.Dispose();
             g.Dispose();
         }
 
-        // Buttons
+        private void drawBorder(Graphics g, SolidBrush b, int x, int y, int w, int h, int t)
+        {
+            g.FillRectangle(b, x, y, w, t);
+            g.FillRectangle(b, x, y, t, h);
+            g.FillRectangle(b, x, y + h - t, w, t);
+            g.FillRectangle(b, x + w - t, y, t, h);
+        }
+
+        // Events
 
         private void startButton_Click(object sender, EventArgs e)
         {
@@ -227,7 +277,7 @@ namespace ChessForms
             lastInput = "";
             consoleInput.Focus();
 
-            startGameFunc(whiteAgentDropDown.SelectedText, whiteAgentDropDown.SelectedText);
+            startGameFunc(whiteAgentDropDown.SelectedItem.ToString(), blackAgentDropDown.SelectedItem.ToString());
         }
 
         private void onFormClosing(object sender, FormClosingEventArgs e)
@@ -237,7 +287,84 @@ namespace ChessForms
 
         private void onPaint(object sender, PaintEventArgs e)
         {
-            renderGUI();
+            renderGraphicsGUI();
+        }
+
+        private void onDrawingClick(object sender, MouseEventArgs e)
+        {
+            if (selectedMoveX != -1 && selectedMoveY != -1)
+            {
+                // A move has already been selected.
+                return;
+            }
+
+            int newClickX = e.X / (drawingArea.Width / 9) - 1;
+            int newClickY = 7 - (e.Y / (drawingArea.Height / 9) - 1);
+
+            // Clicked outside of the board
+            if (newClickX == -1 || newClickY == 8)
+            {
+                return;
+            }
+
+            if (newClickX == selectedSquareX && newClickY == selectedSquareY)
+            {
+                selectedSquareX = -1;
+                selectedSquareY = -1;
+            }
+            else
+            {
+                List<Tuple<uint, uint>> moves;
+                if (selectedSquareX != -1 && selectedSquareY != -1)
+                {
+                    moves = board.getSquareAt((uint)selectedSquareX, (uint)selectedSquareY).getPiece().getPossibleMoves(board.getSquareAt, turn);
+
+                    foreach (Tuple<uint, uint> t in moves)
+                    {
+                        putString(t.ToString());
+                    }
+                }
+                else
+                {
+                    moves = new List<Tuple<uint, uint>>();
+                }
+
+                // Check if part of possible moves.
+                if (moves.Contains(new Tuple<uint, uint>((uint)newClickX, (uint)newClickY)))
+                {
+                    // Move selected
+                    selectedMoveX = newClickX;
+                    selectedMoveY = newClickY;
+                }
+                else
+                {
+                    // Move not selected, check if new piece clicked
+                    src.Piece p = board.getSquareAt((uint)newClickX, (uint)newClickY).getPiece();
+                    if (p != null)
+                    {
+                        selectedSquareX = newClickX;
+                        selectedSquareY = newClickY;
+                    }
+                    else
+                    {
+                        selectedSquareX = -1;
+                        selectedSquareY = -1;
+                    }
+                }
+            }
+            renderGraphicsGUI();
+
+            //putString(selectedSquareX + ", " + selectedSquareY);
+        }
+
+        private void consoleInputOnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                lastInput = consoleInput.Text;
+                consoleInput.Text = "";
+                putString(lastInput);
+            }
         }
     }
 }

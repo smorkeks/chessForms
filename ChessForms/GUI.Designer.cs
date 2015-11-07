@@ -166,6 +166,7 @@
             this.drawingArea.Size = new System.Drawing.Size(520, 520);
             this.drawingArea.TabIndex = 0;
             this.drawingArea.TabStop = false;
+            this.drawingArea.MouseClick += new System.Windows.Forms.MouseEventHandler(this.onDrawingClick);
             // 
             // GUI
             // 
