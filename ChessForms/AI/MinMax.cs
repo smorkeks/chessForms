@@ -13,20 +13,26 @@ namespace ChessForms.AI
         {
             List<Tuple<uint, uint, uint, uint>> moves = new List<Tuple<uint, uint, uint, uint>>();
             Board testBoard = new Board();
-            int score;
+            int score = 0;
             Tuple<Tuple<uint, uint, uint, uint>, int> result;
+            result = new Tuple<Tuple<uint, uint, uint, uint>, int>(null, score);
 
             if ((max && activePlayer == "white") || (!max && activePlayer == "black"))
             {
-                score = testBoard.getScore("white");
-                result = new Tuple<Tuple<uint, uint, uint, uint>, int>(null, score);
-                moves = testBoard.getWhiteMoves();
+                bool first = true;
+                moves = board.getWhiteMoves();
                 Tuple<Tuple<uint, uint, uint, uint>, int> tmpResult;
                 foreach (Tuple<uint, uint, uint, uint> move in moves)
                 {
+                    if (first)
+                    {
+                        result = new Tuple<Tuple<uint, uint, uint, uint>, int>(move, score);
+                        first = false;
+                    }
                     testBoard.Copy(board);
-                    tmpResult = new Tuple<Tuple<uint, uint, uint, uint>, int>(move, score);
                     testBoard.makeMove("white", move.Item1, move.Item2, move.Item3, move.Item4);
+                    score = testBoard.getScore("white");
+                    tmpResult = new Tuple<Tuple<uint, uint, uint, uint>, int>(move, score); 
                     TreeNode child = new TreeNode(score, parent, move, testBoard);
                     parent.addChild(child);//?
                     if (depth > 0)
@@ -41,15 +47,20 @@ namespace ChessForms.AI
             }
             else
             {
-                score = testBoard.getScore("black");
-                result = new Tuple<Tuple<uint, uint, uint, uint>, int>(null, score);
-                moves = testBoard.getBlackMoves();
+                bool first = true;
+                moves = board.getBlackMoves();
                 Tuple<Tuple<uint, uint, uint, uint>, int> tmpResult;
                 foreach (Tuple<uint, uint, uint, uint> move in moves)
                 {
+                    if (first)
+                    {
+                        result = new Tuple<Tuple<uint, uint, uint, uint>, int>(move, score);
+                        first = false;
+                    }
                     testBoard.Copy(board);
-                    tmpResult = new Tuple<Tuple<uint, uint, uint, uint>, int>(move, score);
                     testBoard.makeMove("black", move.Item1, move.Item2, move.Item3, move.Item4);
+                    score = testBoard.getScore("black");
+                    tmpResult = new Tuple<Tuple<uint, uint, uint, uint>, int>(move, score);
                     TreeNode child = new TreeNode(score, parent, move, testBoard);
                     parent.addChild(child);//?
                     if (depth > 0)
