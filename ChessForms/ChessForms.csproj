@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="graphics\ImageHandler.cs" />
     <Compile Include="AI\MinMax.cs" />
     <Compile Include="AI\TreeNode.cs" />
     <Compile Include="src\Agent.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="GUI.Designer.cs">
       <DependentUpon>GUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\GraphicsAgent.cs" />
     <Compile Include="src\Game.cs" />
     <Compile Include="src\King.cs" />
     <Compile Include="src\Knight.cs" />
@@ -91,6 +93,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="resources\Bishop_Black.png" />
+    <Content Include="resources\Bishop_White.png" />
+    <Content Include="resources\King_Black.png" />
+    <Content Include="resources\King_White.png" />
+    <Content Include="resources\Knight_Black.png" />
+    <Content Include="resources\Knight_White.png" />
+    <Content Include="resources\Pawn_Black.png" />
+    <Content Include="resources\Pawn_White.png" />
+    <Content Include="resources\Queen_White.png" />
+    <Content Include="resources\Queen_Black.png" />
+    <Content Include="resources\Rook_Black.png" />
+    <Content Include="resources\Rook_White.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

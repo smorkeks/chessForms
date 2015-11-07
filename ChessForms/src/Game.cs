@@ -61,9 +61,14 @@ namespace ChessForms.src
 
         public void start(string p1, string p2)
         {
+            gui.putString(p1);
+            gui.putString(p2);
+
             turnWhite = true;
-            white = new TerminalAgent("white", gui.readString);
-            black = new TerminalAgent("black", gui.readString);
+            //white = new TerminalAgent("white", gui.readString);
+            //black = new TerminalAgent("black", gui.readString);
+            white = new GraphicsAgent("white", gui.readSelectedMove);
+            black = new GraphicsAgent("black", gui.readSelectedMove);
 
             gui.updateBoard(board);
             gui.putPlayerTurn(turnWhite);
@@ -72,48 +77,7 @@ namespace ChessForms.src
             run();
         }
 
-        void printBoard()
-        {
-
-            Piece P;
-            for (int i = 7; i >= 0; i--)
-            {
-                string tmp = "";
-                for (uint j = 0; j < 8; j++)
-                {
-
-                    P = board.getPieceAt(j, (uint)i);
-                    if (P == null)
-                        tmp = tmp + "0   ";
-                    else
-                    {
-                        if (P.getColour() == "white")
-                            tmp = tmp + "W";
-                        else
-                            tmp = tmp + "B";
-
-                        if (P is Pawn)
-                            tmp = tmp + "p  ";
-                        else if (P is Rook)
-                            tmp = tmp + "r  ";
-                        else if (P is Knight)
-                            tmp = tmp + "kn ";
-                        else if (P is Bishop)
-                            tmp = tmp + "b  ";
-                        else if (P is Queen)
-                            tmp = tmp + "q  ";
-                        else if (P is King)
-                            tmp = tmp + "k  ";
-                        else
-                            tmp = tmp + "ERORR ERROR ERROR";
-
-                    }
-                }
-                gui.putString(tmp);
-            }
-        }
-
-
+        // The main game loop
         public void run()
         {
             Tuple<uint, uint, uint, uint> tmp;
@@ -122,20 +86,21 @@ namespace ChessForms.src
             {
                 if (turnWhite)
                 {
-                    if (white is TerminalAgent) // TODO not AI instead
-                    {
+                    //if (white is TerminalAgent) // TODO not AI instead
+                    //{
                         tmp = white.getInput(board);
+                        if (tmp.Item1 != 10) gui.putString(tmp.ToString());
                         printMoves(tmp.Item1, tmp.Item2);
                         printPieceAt(tmp.Item1, tmp.Item2);
                         turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
                         
-                    }
+                    
                 }
 
                 else if (!turnWhite)
                 {
-                    if (black is TerminalAgent) // TODO not AI instead
-                    {
+                    //if (black is TerminalAgent) // TODO not AI instead
+                    //{
                         tmp = black.getInput(board);
                         printMoves(tmp.Item1, tmp.Item2);
                         printPieceAt(tmp.Item1, tmp.Item2);
@@ -145,7 +110,7 @@ namespace ChessForms.src
                             gui.putString("Black player won!");
                             return;
                         }
-                    }
+                    //}
                 }
 
                 Application.DoEvents();
