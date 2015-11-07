@@ -44,7 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\MinMax.cs" />
+    <Compile Include="AI\TreeNode.cs" />
     <Compile Include="src\Agent.cs" />
+    <Compile Include="src\AiAgent.cs" />
     <Compile Include="src\Bishop.cs" />
     <Compile Include="src\Board.cs" />
     <Compile Include="GUI.cs">

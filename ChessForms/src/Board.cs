@@ -104,6 +104,11 @@ namespace ChessForms.src
             updateCover();
         }
 
+        public Board(uint turn)
+        {
+            this.turn = turn;
+        }
+
         // --- Methods ---
 
         // Get the square at x, y
@@ -384,6 +389,49 @@ namespace ChessForms.src
         {
             List<Tuple<uint, uint, uint, uint>> moves = getBlackMoves();
             return (moves.Count == 0 && getCheck(col));
+        }
+
+        public int getScore(string col)
+        {
+            int score = 0;
+            for (uint i = 0; i < BOARD_SIZE_X; i++)
+            {
+                for (uint j = 0; j < BOARD_SIZE_Y; j++)
+                {
+                    if (col == "white")
+                    {
+                        score += (int)getSquareAt(i, j).getWhiteCover() - (int)getSquareAt(i, j).getBlackCover();
+                        if (getSquareAt(i, j).getPiece() != null)
+                            if (getSquareAt(i, j).getPiece().getColour() == col)
+                                score = score + (int)getSquareAt(i, j).getPiece().getScore() + reward[i, j];
+                            else
+                                score = score - (int)getSquareAt(i, j).getPiece().getScore() - reward[i,j];
+                    }
+                    else
+                    {
+                        score += (int)getSquareAt(i, j).getBlackCover() - (int)getSquareAt(i, j).getWhiteCover();
+                        if (getSquareAt(i, j).getPiece() != null)
+                            if (getSquareAt(i, j).getPiece().getColour() == col)
+                                score = score + (int)getSquareAt(i, j).getPiece().getScore() + reward[i, j];
+                            else
+                                score = score - (int)getSquareAt(i, j).getPiece().getScore() - reward[i, j];
+                    }
+                }
+
+            }
+            return score;
+        }
+
+        public void Copy(Board oldBoard)
+        {
+            for (int i = 0; i < BOARD_SIZE_X; i++)
+            {
+                for (int j = 0; j < BOARD_SIZE_Y; j++)
+                {
+                    squares[i, j].Copy(oldBoard.squares[i, j]);
+                }
+            }
+            turn = oldBoard.turn;
         }
     }
 }

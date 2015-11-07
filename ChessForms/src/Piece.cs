@@ -25,7 +25,6 @@ namespace ChessForms.src
             this.hasMoved = false;
         }
 
-
         public void move(uint x, uint y)
         {
             this.xCoord = x;
@@ -336,6 +335,20 @@ namespace ChessForms.src
         public uint getY()
         {
             return yCoord;
+        }
+
+        public uint getScore()
+        {
+            return score;
+        }
+
+        public void Copy(Piece oldPiece)
+        {
+            xCoord = oldPiece.xCoord;
+            yCoord = oldPiece.yCoord;
+            hasMoved = oldPiece.hasMoved;
+            colour = oldPiece.colour;
+            score = oldPiece.score;
         }
     }
 }
