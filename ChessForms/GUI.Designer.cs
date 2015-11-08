@@ -58,11 +58,11 @@
             // 
             // consoleOutput
             // 
-            this.consoleOutput.Enabled = false;
             this.consoleOutput.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.consoleOutput.Location = new System.Drawing.Point(24, 12);
             this.consoleOutput.Multiline = true;
             this.consoleOutput.Name = "consoleOutput";
+            this.consoleOutput.ReadOnly = true;
             this.consoleOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.consoleOutput.Size = new System.Drawing.Size(363, 534);
             this.consoleOutput.TabIndex = 1;
