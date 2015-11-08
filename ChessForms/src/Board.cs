@@ -22,16 +22,6 @@ namespace ChessForms.src
         // List of squares
         private Square[,] squares = new Square[BOARD_SIZE_X, BOARD_SIZE_Y];
 
-        // Reward function for board position.
-        private int[,] reward = new int[,] { { 0, 0, 0, 0, 0, 0, 0, 0 },
-                                             { 0, 1, 1, 1, 1, 1, 1, 0 },
-                                             { 0, 1, 2, 2, 2, 2, 1, 0 },
-                                             { 0, 1, 2, 3, 3, 2, 1, 0 },
-                                             { 0, 1, 2, 3, 3, 2, 1, 0 },
-                                             { 0, 1, 2, 2, 2, 2, 1, 0 },
-                                             { 0, 1, 1, 1, 1, 1, 1, 0 },
-                                             { 0, 0, 0, 0, 0, 0, 0, 0 } };
-
         // Passed to Pieces to limit access to board.
         public delegate Square QueryFunc(uint x, uint y);
 
@@ -46,7 +36,7 @@ namespace ChessForms.src
             {
                 for (uint x = 0; x < BOARD_SIZE_X; x++)
                 {
-                    squares[x, y] = new Square(x, y, reward[x, y]);
+                    squares[x, y] = new Square(x, y);
                 }
             }
 
@@ -78,29 +68,6 @@ namespace ChessForms.src
                 squares[x, BOARD_SIZE_Y - 2].setPiece(new Pawn(x, BOARD_SIZE_Y - 2, COLOUR_BLACK));
             }
 
-            // Add cover
-            /*QueryFunc qf = getSquareAt;
-            foreach (Square s in squares)
-            {
-                Piece p = s.getPiece();
-
-                if (p != null)
-                {
-                    List<Tuple<uint, uint>> cover = p.getCover(qf);
-                    foreach (Tuple<uint, uint> t in cover)
-                    {
-                        if (p.getColour() == COLOUR_WHITE)
-                        {
-                            squares[t.Item1, t.Item2].addWhiteCover();
-                        }
-                        else
-                        {
-                            squares[t.Item1, t.Item2].addBlackCover();
-                        }
-                        
-                    }
-                }
-            }*/
             updateCover();
         }
 
@@ -113,7 +80,7 @@ namespace ChessForms.src
             {
                 for (uint x = 0; x < BOARD_SIZE_X; x++)
                 {
-                    squares[x, y] = new Square(x, y, reward[x, y]);
+                    squares[x, y] = new Square(x, y);
                 }
             }
         }
@@ -412,18 +379,18 @@ namespace ChessForms.src
                         score += (int)getSquareAt(i, j).getWhiteCover() - (int)getSquareAt(i, j).getBlackCover();
                         if (getSquareAt(i, j).getPiece() != null)
                             if (getSquareAt(i, j).getPiece().getColour() == col)
-                                score = score + (int)getSquareAt(i, j).getPiece().getScore() + reward[i, j];
+                                score = score + (int)getSquareAt(i, j).getPiece().getValue();
                             else
-                                score = score - (int)getSquareAt(i, j).getPiece().getScore() - reward[i, j];
+                                score = score - (int)getSquareAt(i, j).getPiece().getValue();
                     }
                     else
                     {
                         score += (int)getSquareAt(i, j).getBlackCover() - (int)getSquareAt(i, j).getWhiteCover();
                         if (getSquareAt(i, j).getPiece() != null)
                             if (getSquareAt(i, j).getPiece().getColour() == col)
-                                score = score + (int)getSquareAt(i, j).getPiece().getScore() + reward[i, j];
+                                score = score + (int)getSquareAt(i, j).getPiece().getValue();
                             else
-                                score = score - (int)getSquareAt(i, j).getPiece().getScore() - reward[i, j];
+                                score = score - (int)getSquareAt(i, j).getPiece().getValue();
                     }
                 }
 

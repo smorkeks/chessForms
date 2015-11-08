@@ -12,8 +12,8 @@ namespace ChessForms.AI
     class MinMax
     {
         public delegate void putScore(int score);
-        public const int MINIMUM = -100000;
-        public const int MAXIMUM = 100000;
+        public const int MINIMUM = -10000000;
+        public const int MAXIMUM = 10000000;
 
         public Tuple<Tuple<uint, uint, uint, uint>, int> runMinMax(Board board, string activePlayer, uint depth, bool max, int alpha, int beta, putScore put)
         {
