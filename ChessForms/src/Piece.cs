@@ -10,9 +10,10 @@ namespace ChessForms.src
         // fields
         protected uint xCoord;
         protected uint yCoord;
-        protected uint score;         //Value of the piece
-        protected bool hasMoved;      //Determines if the piece has moved from initial pos
-        protected string colour;      //White or black
+        protected uint score;                   //Value of the piece
+        protected bool hasMoved;                //Determines if the piece has moved from initial pos
+        protected string colour;                //White or black
+        abstract private int[,] reward;         //Determines how good a square is to be on
 
 
         // methods
@@ -374,5 +375,13 @@ namespace ChessForms.src
         }
 
         public abstract Piece getCopyPiece();
+
+        public int getValue()
+        {
+            if (colour == "white")
+                return (int)score + reward[xCoord, yCoord];
+            else
+                return (int)score + reward[xCoord, 7 - yCoord];
+        }
     }
 }

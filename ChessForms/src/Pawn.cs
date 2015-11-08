@@ -7,11 +7,18 @@ namespace ChessForms.src
 {
     public class Pawn : Piece
     {
-
+        private int[,] reward = new int[,] { { 0,   0,  0,  0,  0,  0,  0,  0 },
+                                             { 50, 50, 50, 50, 50, 50, 50, 50 },
+                                             { 10, 10, 20, 30, 30, 20, 10, 10 },
+                                             {  5,  5, 10, 25, 25, 10,  5,  5 },
+                                             {  0,  0,  0, 20, 20,  0,  0,  0 },
+                                             {  5, -5,-10,  0,  0,-10, -5,  5 },
+                                             {  5, 10, 10,-20,-20, 10, 10,  5 },
+                                             {  0,  0,  0,  0,  0,  0,  0,  0 } };
         uint didDoubleStepTurn;
 
         public Pawn(uint x, uint y, string col)
-            : base(x, y, 1, col)
+            : base(x, y, 100, col)
         {
             didDoubleStepTurn = 0;
         }
@@ -105,7 +112,7 @@ namespace ChessForms.src
                     }
                 }
 
-                if ((int)getX()-1 >= 0)
+                if ((int)getX() - 1 >= 0)
                 {
                     Square S2 = QF(getX() - 1, getY());
                     Piece P2 = S2.getPiece();
@@ -156,5 +163,6 @@ namespace ChessForms.src
         {
             return new Pawn();
         }
+
     }
 }
