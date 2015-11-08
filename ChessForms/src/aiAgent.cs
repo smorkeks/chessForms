@@ -28,27 +28,30 @@ namespace ChessForms.src
         {
             MinMax move = new MinMax();
             Tuple<uint, uint, uint, uint> bestMove;
-            
-            put((int)repetitionMod);
+
+            put(0);
+
             bestMove = move.runMinMax(B, colour, getSearchDepth(B), true, MinMax.MINIMUM, MinMax.MAXIMUM, put).Item1;
-            if (bestMove.Equals(secondToLastMove))
-            {
-                repetitionMod += 1;
-            }
-            else
-            {
-                repetitionMod = 0;
-            }
-
-            secondToLastMove = lastMove;
-            lastMove = bestMove;
-
+            
             if (bestMove != null)
             {
+                if (bestMove.Equals(secondToLastMove))
+                {
+                    repetitionMod += 1;
+                }
+                else
+                {
+                    repetitionMod = 0;
+                }
+
+                secondToLastMove = lastMove;
+                lastMove = bestMove;
+
                 return bestMove;
             }
             else
             {
+                repetitionMod += 1;
                 return new Tuple<uint, uint, uint, uint>(10, 10, 10, 10);
             }
         }

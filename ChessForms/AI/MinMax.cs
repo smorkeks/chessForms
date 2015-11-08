@@ -17,6 +17,9 @@ namespace ChessForms.AI
 
         public Tuple<Tuple<uint, uint, uint, uint>, int> runMinMax(Board board, string activePlayer, uint depth, bool max, int alpha, int beta, putScore put)
         {
+            // TODO: Test, remove when done
+            put(1);
+
             // First check if this is leaf node
             if (depth <= 0)
             {

@@ -136,9 +136,19 @@ namespace ChessForms
             return tmp;
         }
 
+        int score = 0;
+        int max = 0;
         public void putAiScore(int score)
         {
-            AiScoreTextBox.Text = "" + score;
+            if (score == 0)
+            {
+                this.score = 0;
+            } else
+            {
+                this.score++;
+            }
+            max = Math.Max(max, this.score);
+            AiScoreTextBox.Text = "Max: " + max + ", now: " + this.score;
         }
 
         // Graphics interface
