@@ -12,7 +12,7 @@ namespace ChessForms.src
         private uint blackCover;
         private Piece piece;
 
-        public Square(uint x, uint y, int r)
+        public Square(uint x, uint y)
         {
             posX = x;
             posY = y;
