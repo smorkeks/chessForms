@@ -79,8 +79,10 @@ namespace ChessForms.src
                 if (withinBoard((int)getX(), (int)getY() + 2 * yMod))
                 {
                     Square S = QF(getX(), (uint)(getY() + 2 * yMod));
+                    Square S2 = QF(getX(), (uint)(getY() + yMod));
                     Piece P = S.getPiece();
-                    if (P == null)
+                    Piece P2 = S2.getPiece();
+                    if (P == null && P2 == null)
                     {
                         tmpList.Add(new Tuple<uint, uint>(getX(), (uint)(getY() + 2 * yMod)));
                         didDoubleStepTurn = turn;
