@@ -171,6 +171,7 @@ namespace ChessForms.src
                     oldTurnWhite = turnWhite;
                     gui.putPlayerTurn(turnWhite);
                     gui.putTurn(board.getTurn());
+                    gui.putScore(board.getScore("white"));
                 }
             }
         }
