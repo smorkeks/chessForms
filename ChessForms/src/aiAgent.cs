@@ -10,6 +10,11 @@ namespace ChessForms.src
     class AiAgent : Agent
     {
         uint difficulty;
+        uint repetitionMod = 0;
+        bool lateGameMod = false;
+        Tuple<uint, uint, uint, uint> lastMove;
+        Tuple<uint, uint, uint, uint> secondToLastMove;
+
         MinMax.putScore put;
 
         public AiAgent(string col, uint diff, MinMax.putScore put)
@@ -21,19 +26,49 @@ namespace ChessForms.src
 
         public override Tuple<uint, uint, uint, uint> getInput(Board B)
         {
-            uint diffMod = 0;
-            if (B.getNumPieces() < 10)
+            MinMax move = new MinMax();
+            Tuple<uint, uint, uint, uint> bestMove;
+            
+            put((int)repetitionMod);
+            bestMove = move.runMinMax(B, colour, getSearchDepth(B), true, MinMax.MINIMUM, MinMax.MAXIMUM, put).Item1;
+            if (bestMove.Equals(secondToLastMove))
             {
-                diffMod = 2;
+                repetitionMod += 1;
+            }
+            else
+            {
+                repetitionMod = 0;
             }
 
-            MinMax move = new MinMax();
-            Tuple<uint,uint,uint,uint> bestMove = move.runMinMax(B, colour, difficulty + diffMod, true, MinMax.MINIMUM, MinMax.MAXIMUM, put).Item1;
-            if (bestMove != null) {
+            secondToLastMove = lastMove;
+            lastMove = bestMove;
+
+            if (bestMove != null)
+            {
                 return bestMove;
-            } else {
+            }
+            else
+            {
                 return new Tuple<uint, uint, uint, uint>(10, 10, 10, 10);
             }
+        }
+
+        private uint getSearchDepth(Board B)
+        {
+            if (!lateGameMod && B.getNumPieces() < 10)
+            {
+                lateGameMod = true;
+            }
+
+            uint depth = difficulty;
+            if (lateGameMod)
+            {
+                depth += 2;
+            }
+
+            depth += repetitionMod;
+
+            return depth;
         }
     }
 }
