@@ -147,6 +147,11 @@ namespace ChessForms.src
                     {
                         gui.putString("Black player won!");
                         return;
+                    } 
+                    if (board.remi())
+                    {
+                        gui.putString("Remi!");
+                        return;
                     }
 
                     // Update turn GUI

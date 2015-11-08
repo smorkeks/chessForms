@@ -44,7 +44,7 @@ namespace ChessForms.AI
             // Check if no legal moves
             if (moves.Count == 0)
             {
-                return new Tuple<Tuple<uint, uint, uint, uint>, int>(null, board.getScore(activePlayer));
+                return new Tuple<Tuple<uint, uint, uint, uint>, int>(null, (max ? MINIMUM : MAXIMUM));
             }
 
             // Assume horrible best
