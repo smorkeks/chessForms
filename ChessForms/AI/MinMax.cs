@@ -12,9 +12,10 @@ namespace ChessForms.AI
     class MinMax
     {
         public delegate void putScore(int score);
+        public const int MINIMUM = -100000;
+        public const int MAXIMUM = 100000;
 
-
-        public Tuple<Tuple<uint, uint, uint, uint>, int> runMinMax(Board board, string activePlayer, uint depth, bool max, putScore put)
+        public Tuple<Tuple<uint, uint, uint, uint>, int> runMinMax(Board board, string activePlayer, uint depth, bool max, int alpha, int beta, putScore put)
         {
             // First check if this is leaf node
             if (depth <= 0)
@@ -47,7 +48,7 @@ namespace ChessForms.AI
             }
 
             // Assume horrible best
-            int bestScore = (max ? -100000 : 100000);
+            int bestScore = (max ? MINIMUM : MAXIMUM);
             Tuple<Tuple<uint, uint, uint, uint>, int> bestResult = new Tuple<Tuple<uint, uint, uint, uint>, int>(null, bestScore);
 
             // Loop through all moves and minmax them
@@ -57,20 +58,39 @@ namespace ChessForms.AI
             {
                 nextBoard.Copy(board);
                 nextBoard.makeMove(activePlayer, move.Item1, move.Item2, move.Item3, move.Item4);
-                nextResult = runMinMax(nextBoard, nonActivePlayer, depth - 1, !max, put);
 
-                // If max and more or min and less, then change bestResult.
+                // DEBUG!!!
+                //gui.updateBoard(nextBoard);
+
+                nextResult = runMinMax(nextBoard, nonActivePlayer, depth - 1, !max, alpha, beta, put);
+
+                // If new best result, then change bestResult.
                 if ((nextResult.Item2 > bestResult.Item2 && max) ||
                     (nextResult.Item2 < bestResult.Item2 && !max))
                 {
                     bestResult = new Tuple<Tuple<uint, uint, uint, uint>, int>(move, nextResult.Item2);
                 }
+
+                // Alpha-Beta pruning
+                if (max)
+                {
+                    alpha = Math.Max(alpha, bestResult.Item2);
+                }
+                else
+                {
+                    beta = Math.Min(beta, bestResult.Item2);
+                }
+                if (beta <= alpha)
+                {
+                    // Need not explore subtree.
+                    break;
+                }
                
+                // Run events to not stall the entire application while searching.
                 Application.DoEvents();
             }
 
-            if (bestResult.Item2 != 100000 && bestResult.Item2 != -100000)
-                put(bestResult.Item2);
+            put(bestResult.Item2);
 
             return bestResult;
         }

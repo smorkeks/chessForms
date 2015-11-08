@@ -107,14 +107,13 @@ namespace ChessForms.src
         // The main game loop
         public void run()
         {
-            Tuple<uint, uint, uint, uint> tmp;
+            Tuple<uint, uint, uint, uint> tmp = null;
             bool oldTurnWhite = turnWhite;
             while (true)
             {
                 if (turnWhite)
                 {
                     tmp = white.getInput(board);
-                    gui.putString(tmp.ToString());
                     //printMoves(tmp.Item1, tmp.Item2);
                     //printPieceAt(tmp.Item1, tmp.Item2);
                     turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
@@ -123,7 +122,6 @@ namespace ChessForms.src
                 else if (!turnWhite)
                 {
                     tmp = black.getInput(board);
-                    gui.putString(tmp.ToString());
                     //printMoves(tmp.Item1, tmp.Item2);
                     //printPieceAt(tmp.Item1, tmp.Item2);
                     turnWhite = board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
@@ -133,6 +131,13 @@ namespace ChessForms.src
 
                 if (oldTurnWhite != turnWhite)
                 {
+                    // Print accepted move
+                    gui.putString(tmp.ToString());
+
+                    // Update graphics
+                    gui.updateBoard(board);
+
+                    // Check if win
                     if (board.playerLost("black"))
                     {
                         gui.putString("White player won!");
@@ -143,18 +148,10 @@ namespace ChessForms.src
                         gui.putString("Black player won!");
                         return;
                     }
-                    // Move accepted, new player.
-                    // Update board and player textboxes.
-                    /*string print = "";
-                    List<Tuple<uint, uint, uint, uint>> moves = board.getBlackMoves();
-                    foreach (Tuple<uint, uint, uint, uint> move in moves)
-                    {
-                        print += move.Item1.ToString() + move.Item2.ToString() + move.Item3.ToString() + move.Item4.ToString() + "\r\n";
-                    }
-                    gui.putString(print);*/
+
+                    // Update turn GUI
                     board.updateTurn();
                     oldTurnWhite = turnWhite;
-                    gui.updateBoard(board);
                     gui.putPlayerTurn(turnWhite);
                     gui.putTurn(board.getTurn());
                 }

@@ -100,6 +100,10 @@ namespace ChessForms.src
                 piece = oldSquare.piece.getCopyPiece();
                 piece.Copy(oldSquare.piece);
             }
+            else
+            {
+                piece = null;
+            }
                 
         }
     }

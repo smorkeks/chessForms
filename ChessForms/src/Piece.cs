@@ -213,7 +213,7 @@ namespace ChessForms.src
                 // Empty list of squares with cover of this square
                 List<Square> threats = new List<Square>();
 
-                // Get all squares with cover of king
+                // Get all squares with cover of self
                 Square s;
                 for (uint j = 0; j < 8; j++)
                 {
@@ -274,6 +274,8 @@ namespace ChessForms.src
                     int y = (int)yKing;
                     int numBlocks = 0;
                     bool foundSelf = false;
+                    bool foundThreat = false;
+                    bool oob = false;
                     for (int i = 0; i < steps-1; i++)
                     {
                         x += xMod;
@@ -284,13 +286,31 @@ namespace ChessForms.src
                             foundSelf = true;
                             numBlocks++;
                         }
-                        else if (QF((uint)x, (uint)y).getPiece() != null)
+                        else if (x == square.getX() && y == square.getY())
                         {
-                            numBlocks++;
+                            foundThreat = true;
+                        }
+                        else
+                        {
+                            Square sq = QF((uint)x, (uint)y);
+                            if (sq == null)
+                            {
+                                oob = true;
+                                break;
+                            }
+                            if (sq.getPiece() != null)
+                            {
+                                numBlocks++;
+                            }
                         }
                     }
 
                     // Must have at least two blocks to be a possible move
+                    if (oob && !foundThreat)
+                    {
+                        // OK
+                        return;
+                    } 
                     if (foundSelf && numBlocks < 2)
                     {
                         moves.Clear();
