@@ -76,16 +76,46 @@ namespace ChessForms.src
                             moves.Add(new Tuple<uint, uint>((uint)(x + 2), (uint)y));
 
                 }
+            }
 
-
+            // Remove squares with enemy king reach
+            foreach (Tuple<uint, uint> reach in getEnemyKingReach(QF))
+            {
+                moves.Remove(reach);
             }
 
             // Done, all moves found
             return moves;
         }
 
+        private List<Tuple<uint, uint>> getEnemyKingReach(Board.QueryFunc QF)
+        {
+            // Find enemy king
+            List<Tuple<uint, uint>> enemyKingReach = new List<Tuple<uint, uint>>();
+            bool found = false;
+            for (uint j = 0; j < 8; j++)
+            {
+                for (uint i = 0; i < 8; i++)
+                {
+                    Piece p = QF(i, j).getPiece();
+                    if (p != null && p is King && p.getColour() != colour)
+                    {
+                        found = true;
+                        enemyKingReach = ((King)p).getReach(QF);
+                        break;
+                    }
+                    if (found)
+                    {
+                        break;
+                    }
+                }
+            }
+            return enemyKingReach;
+        }
+
         public override List<Tuple<uint, uint>> getCover(Board.QueryFunc QF)
         {
+            // Get cover
             List<Tuple<uint, uint>> cover = new List<Tuple<uint, uint>>();
 
             int x = (int)getX();
@@ -108,13 +138,46 @@ namespace ChessForms.src
                         if ((getColour() == "white" && s.getBlackCover() == 0) ||
                             (getColour() == "black" && s.getWhiteCover() == 0))
                         {
-                            cover.Add(new Tuple<uint, uint>((uint)nx, (uint)ny));
+                            Tuple<uint, uint> t = new Tuple<uint, uint>((uint)nx, (uint)ny);
+                            if (!getEnemyKingReach(QF).Contains(t))
+                            {
+                                cover.Add(t);
+                            }
                         }
                     }
                 }
             }
 
             return cover;
+        }
+
+        // Returns a list of all reeachable squares, disregarding cover.
+        public List<Tuple<uint, uint>> getReach(Board.QueryFunc QF)
+        {
+            List<Tuple<uint, uint>> reach = new List<Tuple<uint, uint>>();
+
+            int x = (int)getX();
+            int y = (int)getY();
+
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    if (i == 0 && j == 0)
+                    {
+                        // Do not have reach to self
+                        continue;
+                    }
+                    int nx = x + i;
+                    int ny = y + j;
+                    if (withinBoard(nx, ny))
+                    {
+                        reach.Add(new Tuple<uint, uint>((uint)nx, (uint)ny));
+                    }
+                }
+            }
+
+            return reach;
         }
 
         public override Piece getCopyPiece()
