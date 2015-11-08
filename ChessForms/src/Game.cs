@@ -15,17 +15,21 @@ namespace ChessForms.src
         ChessForms.GUI gui;
         private bool turnWhite;
 
-        //Methods
+        private bool running = false;
+        private bool paused = false;
+        
         public Game()
         {
             board = new Board();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            gui = new ChessForms.GUI(start);
+            gui = new ChessForms.GUI(start, pauseUnpause, reset);
             gui.updateBoard(board);
             Application.Run(gui);
         }
+
+        // -- Debug ---
 
         //D3bUG
         public void printMoves(uint x, uint y)
@@ -59,14 +63,19 @@ namespace ChessForms.src
             }
         }
 
-        public void start(string p1, string p2)
-        {
-            gui.putString(p1);
-            gui.putString(p2);
+        // --- Control functions ---
 
-            turnWhite = true;
+        // Start a new game
+        public void start()
+        {
+            //gui.putString(p1);
+            //gui.putString(p2);
+
+            // Reset the game before starting
+            reset();
+
             // Set white agent
-            switch (p1)
+            switch (gui.getWhiteAgentType())
             {
                 case "Terminal Agent":
                     white = new TerminalAgent("white", gui.readString);
@@ -86,7 +95,7 @@ namespace ChessForms.src
             }
 
             // Set black agent
-            switch (p2)
+            switch (gui.getBlackAgentType())
             {
                 case "Terminal Agent":
                     black = new TerminalAgent("black", gui.readString);
@@ -104,76 +113,169 @@ namespace ChessForms.src
                     black = new AiAgent("black", 6, gui.putAiScore);
                     break;
             }
-            //white = new TerminalAgent("white", gui.readString);
-            //black = new TerminalAgent("black", gui.readString);
-            //white = new GraphicsAgent("white", gui.readSelectedMove);
-            //black = new GraphicsAgent("black", gui.readSelectedMove);
 
-            gui.updateBoard(board);
-            gui.putPlayerTurn(turnWhite);
-            gui.putTurn(board.getTurn());
-
+            // Start main loop
+            running = true;
             run();
         }
 
-        // The main game loop
+        // Reset the game
+        public void reset()
+        {
+            // Stop the game
+            running = false;
+            paused = false;
+
+            // Create a new board and update the GUI
+            board = new Board();
+            gui.updateBoard(board);
+
+            // White allways starts
+            turnWhite = true;
+
+            // Update GUI fields
+            gui.putPlayerTurn(turnWhite);
+            gui.putTurn(board.getTurn());
+            gui.putScore(0);
+        }
+
+        // Pause or unpause the game
+        public void pauseUnpause()
+        {
+            paused = !paused;
+            if (!paused)
+            {
+                // Change white agent if necessary
+                switch (gui.getWhiteAgentType())
+                {
+                    case "Terminal Agent":
+                        if (!(white is TerminalAgent))
+                            white = new TerminalAgent("white", gui.readString);
+                        break;
+                    case "Graphics Agent":
+                        if (!(white is GraphicsAgent))
+                            white = new GraphicsAgent("white", gui.readSelectedMove);
+                        break;
+                    case "AI Easy":
+                        if (!(white is AiAgent && ((AiAgent)white).getDifficulty() == 2))
+                            white = new AiAgent("white", 2, gui.putAiScore);
+                        break;
+                    case "AI Medium":
+                        if (!(white is AiAgent && ((AiAgent)white).getDifficulty() == 4))
+                            white = new AiAgent("white", 4, gui.putAiScore);
+                        break;
+                    case "AI Hard":
+                        if (!(white is AiAgent && ((AiAgent)white).getDifficulty() == 6))
+                            white = new AiAgent("white", 6, gui.putAiScore);
+                        break;
+                }
+
+                // Set black agent
+                switch (gui.getBlackAgentType())
+                {
+                    case "Terminal Agent":
+                        if (!(black is TerminalAgent))
+                            black = new TerminalAgent("black", gui.readString);
+                        break;
+                    case "Graphics Agent":
+                        if (!(black is TerminalAgent))
+                        black = new GraphicsAgent("black", gui.readSelectedMove);
+                        break;
+                    case "AI Easy":
+                        if (!(black is AiAgent && ((AiAgent)black).getDifficulty() == 2))
+                            black = new AiAgent("black", 2, gui.putAiScore);
+                        break;
+                    case "AI Medium":
+                        if (!(black is AiAgent && ((AiAgent)black).getDifficulty() == 4))
+                            black = new AiAgent("black", 4, gui.putAiScore);
+                        break;
+                    case "AI Hard":
+                        if (!(black is AiAgent && ((AiAgent)black).getDifficulty() == 6))
+                            black = new AiAgent("black", 6, gui.putAiScore);
+                        break;
+                }
+            }
+        }
+
+        // --- The main game loop ---
+
         public void run()
         {
             Tuple<uint, uint, uint, uint> tmp = null;
             bool oldTurnWhite = turnWhite;
-            while (true)
-            {
-                if (turnWhite)
-                {
-                    tmp = white.getInput(board);
-                    //printMoves(tmp.Item1, tmp.Item2);
-                    //printPieceAt(tmp.Item1, tmp.Item2);
-                    turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
-                }
 
-                else if (!turnWhite)
+            while (running)
+            {
+                if (paused)
                 {
-                    tmp = black.getInput(board);
-                    //printMoves(tmp.Item1, tmp.Item2);
-                    //printPieceAt(tmp.Item1, tmp.Item2);
-                    turnWhite = board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
+                    gui.putString("Pause");
+                    Thread.Sleep(100);
+                }
+                else
+                {
+                    if (turnWhite)
+                    {
+                        tmp = white.getInput(board);
+                        //printMoves(tmp.Item1, tmp.Item2);
+                        //printPieceAt(tmp.Item1, tmp.Item2);
+                        turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
+                    }
+                    else
+                    {
+                        tmp = black.getInput(board);
+                        //printMoves(tmp.Item1, tmp.Item2);
+                        //printPieceAt(tmp.Item1, tmp.Item2);
+                        turnWhite = board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
+                    }
+
+                    // New move accepted, update GUI and check for winner.
+                    if (oldTurnWhite != turnWhite)
+                    {
+                        // Print accepted move
+                        gui.putString(tmp.ToString());
+
+                        // Update graphics
+                        gui.updateBoard(board);
+
+                        // Check if game over
+                        if (checkGameOver())
+                        {
+                            return;
+                        }
+
+                        // Update turn GUI
+                        board.updateTurn();
+                        oldTurnWhite = turnWhite;
+                        gui.putPlayerTurn(turnWhite);
+                        gui.putTurn(board.getTurn());
+                        gui.putScore(board.getScore("white"));
+                    }
                 }
 
                 Application.DoEvents();
-
-                if (oldTurnWhite != turnWhite)
-                {
-                    // Print accepted move
-                    gui.putString(tmp.ToString());
-
-                    // Update graphics
-                    gui.updateBoard(board);
-
-                    // Check if win
-                    if (board.playerLost("black"))
-                    {
-                        gui.putString("White player won!");
-                        return;
-                    }
-                    if (board.playerLost("white"))
-                    {
-                        gui.putString("Black player won!");
-                        return;
-                    }
-                    if (board.remi())
-                    {
-                        gui.putString("Remi!");
-                        return;
-                    }
-
-                    // Update turn GUI
-                    board.updateTurn();
-                    oldTurnWhite = turnWhite;
-                    gui.putPlayerTurn(turnWhite);
-                    gui.putTurn(board.getTurn());
-                    gui.putScore(board.getScore("white"));
-                }
             }
+        }
+
+        private bool checkGameOver()
+        {
+            // Check if win
+            if (board.playerLost("black"))
+            {
+                gui.gameOver(true, false);
+                return true;
+            }
+            if (board.playerLost("white"))
+            {
+                gui.gameOver(false, false);
+                return true;
+            }
+            if (board.remi())
+            {
+                gui.gameOver(false, true);
+                return true;
+            }
+
+            return false;
         }
     }
 }

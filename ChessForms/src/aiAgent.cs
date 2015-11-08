@@ -70,5 +70,10 @@ namespace ChessForms.src
 
             return depth;
         }
+
+        public uint getDifficulty()
+        {
+            return difficulty;
+        }
     }
 }
