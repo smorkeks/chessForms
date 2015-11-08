@@ -58,10 +58,6 @@ namespace ChessForms.AI
             {
                 nextBoard.Copy(board);
                 nextBoard.makeMove(activePlayer, move.Item1, move.Item2, move.Item3, move.Item4);
-
-                // DEBUG!!!
-                //gui.updateBoard(nextBoard);
-
                 nextResult = runMinMax(nextBoard, nonActivePlayer, depth - 1, !max, alpha, beta, put);
 
                 // If new best result, then change bestResult.
@@ -90,7 +86,7 @@ namespace ChessForms.AI
                 Application.DoEvents();
             }
 
-            put(bestResult.Item2);
+            //put(bestResult.Item2);
 
             return bestResult;
         }
