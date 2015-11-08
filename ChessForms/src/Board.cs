@@ -363,8 +363,15 @@ namespace ChessForms.src
 
         public bool playerLost(string col)
         {
-            List<Tuple<uint, uint, uint, uint>> moves = getBlackMoves();
+            List<Tuple<uint, uint, uint, uint>> moves = getMoves(col);
             return (moves.Count == 0 && getCheck(col));
+        }
+
+        public bool remi()
+        {
+            List<Tuple<uint, uint, uint, uint>> movesW = getWhiteMoves();
+            List<Tuple<uint, uint, uint, uint>> movesB = getBlackMoves();
+            return ((movesW.Count == 0 && !getCheck("white") || (movesB.Count == 0 && !getCheck("black"))));
         }
 
         public int getScore(string col)
@@ -376,7 +383,7 @@ namespace ChessForms.src
                 {
                     if (col == "white")
                     {
-                        score += (int)getSquareAt(i, j).getWhiteCover() - (int)getSquareAt(i, j).getBlackCover();
+                        score += ((int)getSquareAt(i, j).getWhiteCover() - (int)getSquareAt(i, j).getBlackCover()) * 10;
                         if (getSquareAt(i, j).getPiece() != null)
                             if (getSquareAt(i, j).getPiece().getColour() == col)
                                 score = score + (int)getSquareAt(i, j).getPiece().getValue();
@@ -385,7 +392,7 @@ namespace ChessForms.src
                     }
                     else
                     {
-                        score += (int)getSquareAt(i, j).getBlackCover() - (int)getSquareAt(i, j).getWhiteCover();
+                        score += ((int)getSquareAt(i, j).getBlackCover() - (int)getSquareAt(i, j).getWhiteCover()) * 10;
                         if (getSquareAt(i, j).getPiece() != null)
                             if (getSquareAt(i, j).getPiece().getColour() == col)
                                 score = score + (int)getSquareAt(i, j).getPiece().getValue();

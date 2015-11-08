@@ -66,6 +66,12 @@ namespace ChessForms
             turnText.Text = s1 + turn.ToString();
         }
 
+        public void putScore(int score)
+        {
+            string s1 = "White leading by: ";
+            scoreBoard.Text = s1 + score.ToString();
+        }
+
         // Agent interface
 
         public string readString()
@@ -75,9 +81,9 @@ namespace ChessForms
             return tmp;
         }
 
-        public Tuple<int,int,int,int> readSelectedMove()
+        public Tuple<int, int, int, int> readSelectedMove()
         {
-            Tuple<int,int,int, int> tmp = new Tuple<int, int, int, int>(selectedSquareX,
+            Tuple<int, int, int, int> tmp = new Tuple<int, int, int, int>(selectedSquareX,
                                                                         selectedSquareY,
                                                                         selectedMoveX,
                                                                         selectedMoveY);

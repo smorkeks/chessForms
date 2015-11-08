@@ -41,6 +41,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.drawingArea = new System.Windows.Forms.PictureBox();
             this.AiScoreTextBox = new System.Windows.Forms.TextBox();
+            this.scoreBoard = new System.Windows.Forms.TextBox();
             this.graphicsTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -82,7 +83,9 @@
             this.whiteAgentDropDown.Items.AddRange(new object[] {
             "Terminal Agent",
             "Graphics Agent",
-            "AI"});
+            "AI Easy",
+            "AI Medium",
+            "AI Hard"});
             this.whiteAgentDropDown.Location = new System.Drawing.Point(406, 41);
             this.whiteAgentDropDown.Name = "whiteAgentDropDown";
             this.whiteAgentDropDown.Size = new System.Drawing.Size(175, 21);
@@ -122,7 +125,9 @@
             this.blackAgentDropDown.Items.AddRange(new object[] {
             "Terminal Agent",
             "Graphics Agent",
-            "AI"});
+            "AI Easy",
+            "AI Medium",
+            "AI Hard"});
             this.blackAgentDropDown.Location = new System.Drawing.Point(406, 68);
             this.blackAgentDropDown.Name = "blackAgentDropDown";
             this.blackAgentDropDown.Size = new System.Drawing.Size(175, 21);
@@ -176,11 +181,21 @@
             this.AiScoreTextBox.Size = new System.Drawing.Size(175, 20);
             this.AiScoreTextBox.TabIndex = 9;
             // 
+            // scoreBoard
+            // 
+            this.scoreBoard.Enabled = false;
+            this.scoreBoard.Location = new System.Drawing.Point(406, 337);
+            this.scoreBoard.Name = "scoreBoard";
+            this.scoreBoard.Size = new System.Drawing.Size(175, 20);
+            this.scoreBoard.TabIndex = 10;
+            this.scoreBoard.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1158, 594);
+            this.Controls.Add(this.scoreBoard);
             this.Controls.Add(this.AiScoreTextBox);
             this.Controls.Add(this.graphicsTab);
             this.Controls.Add(this.blackAgentDropDown);
@@ -220,6 +235,7 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.PictureBox drawingArea;
         private System.Windows.Forms.TextBox AiScoreTextBox;
+        private System.Windows.Forms.TextBox scoreBoard;
     }
 }
 
