@@ -13,7 +13,7 @@ namespace ChessForms.src
         protected uint score;                   //Value of the piece
         protected bool hasMoved;                //Determines if the piece has moved from initial pos
         protected string colour;                //White or black
-        abstract private int[,] reward;         //Determines how good a square is to be on
+        protected int[,] reward;         //Determines how good a square is to be on
 
 
         // methods
@@ -372,6 +372,7 @@ namespace ChessForms.src
             hasMoved = oldPiece.hasMoved;
             colour = oldPiece.colour;
             score = oldPiece.score;
+            reward = oldPiece.reward;
         }
 
         public abstract Piece getCopyPiece();
