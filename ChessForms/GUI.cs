@@ -335,11 +335,6 @@ namespace ChessForms
                 if (selectedSquareX != -1 && selectedSquareY != -1)
                 {
                     moves = board.getSquareAt((uint)selectedSquareX, (uint)selectedSquareY).getPiece().getPossibleMoves(board.getSquareAt, turn);
-
-                    foreach (Tuple<uint, uint> t in moves)
-                    {
-                        putString(t.ToString());
-                    }
                 }
                 else
                 {

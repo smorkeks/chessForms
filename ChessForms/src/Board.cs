@@ -414,7 +414,7 @@ namespace ChessForms.src
                             if (getSquareAt(i, j).getPiece().getColour() == col)
                                 score = score + (int)getSquareAt(i, j).getPiece().getScore() + reward[i, j];
                             else
-                                score = score - (int)getSquareAt(i, j).getPiece().getScore() - reward[i,j];
+                                score = score - (int)getSquareAt(i, j).getPiece().getScore() - reward[i, j];
                     }
                     else
                     {
