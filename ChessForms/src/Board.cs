@@ -442,5 +442,21 @@ namespace ChessForms.src
             }
             turn = oldBoard.turn;
         }
+
+
+        public int getNumPieces()
+        {
+            int num = 0;
+            for (uint i = 0; i < BOARD_SIZE_X; i++)
+            {
+                for (uint j = 0; j < BOARD_SIZE_Y; j++)
+                {
+                    if (getPieceAt(i, j) != null)
+                        num++;
+                }
+            }
+            return num;
+        }
+
     }
 }
