@@ -90,7 +90,7 @@ namespace ChessForms.AI
                 Application.DoEvents();
             }
 
-            put(bestResult.Item2);
+            //put(bestResult.Item2);
 
             return bestResult;
         }
