@@ -82,7 +82,9 @@
             this.whiteAgentDropDown.Items.AddRange(new object[] {
             "Terminal Agent",
             "Graphics Agent",
-            "AI"});
+            "AI Easy",
+            "AI Medium",
+            "AI Hard"});
             this.whiteAgentDropDown.Location = new System.Drawing.Point(406, 41);
             this.whiteAgentDropDown.Name = "whiteAgentDropDown";
             this.whiteAgentDropDown.Size = new System.Drawing.Size(175, 21);
@@ -122,7 +124,9 @@
             this.blackAgentDropDown.Items.AddRange(new object[] {
             "Terminal Agent",
             "Graphics Agent",
-            "AI"});
+            "AI Easy",
+            "AI Medium",
+            "AI Hard"});
             this.blackAgentDropDown.Location = new System.Drawing.Point(406, 68);
             this.blackAgentDropDown.Name = "blackAgentDropDown";
             this.blackAgentDropDown.Size = new System.Drawing.Size(175, 21);

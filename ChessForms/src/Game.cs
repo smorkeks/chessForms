@@ -74,8 +74,14 @@ namespace ChessForms.src
                 case "Graphics Agent":
                     white = new GraphicsAgent("white", gui.readSelectedMove);
                     break;
-                case "AI":
+                case "AI Easy":
                     white = new AiAgent("white", 2, gui.putAiScore);
+                    break;
+                case "AI Medium":
+                    white = new AiAgent("white", 4, gui.putAiScore);
+                    break;
+                case "AI Hard":
+                    white = new AiAgent("white", 6, gui.putAiScore);
                     break;
             }
 
@@ -88,8 +94,14 @@ namespace ChessForms.src
                 case "Graphics Agent":
                     black = new GraphicsAgent("black", gui.readSelectedMove);
                     break;
-                case "AI":
+                case "AI Easy":
+                    black = new AiAgent("black", 2, gui.putAiScore);
+                    break;
+                case "AI Medium":
                     black = new AiAgent("black", 4, gui.putAiScore);
+                    break;
+                case "AI Hard":
+                    black = new AiAgent("black", 6, gui.putAiScore);
                     break;
             }
             //white = new TerminalAgent("white", gui.readString);
