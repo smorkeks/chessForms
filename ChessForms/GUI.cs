@@ -22,15 +22,19 @@ namespace ChessForms
         int selectedMoveX = -1;
         int selectedMoveY = -1;
 
-        public delegate void startGame(string p1Agent, string p2Agent);
-        startGame startGameFunc;
+        public delegate void gameInterfaceFunc();
+        gameInterfaceFunc startGameFunc;
+        gameInterfaceFunc pauseGameFunc;
+        gameInterfaceFunc resetGameFunc;
 
         ImageHandler imageHandler;
 
-        public GUI(startGame start)
+        public GUI(gameInterfaceFunc start, gameInterfaceFunc pause, gameInterfaceFunc reset)
         {
             InitializeComponent();
             startGameFunc = start;
+            pauseGameFunc = pause;
+            resetGameFunc = reset;
             imageHandler = new ImageHandler(AppDomain.CurrentDomain.BaseDirectory + "../../resources/", "png");
         }
 
@@ -41,7 +45,7 @@ namespace ChessForms
             consoleInput.KeyDown += consoleInputOnKeyDown;
         }
 
-        // Console I/O
+        // GUI I/O
 
         public void putString(string s)
         {
@@ -66,6 +70,45 @@ namespace ChessForms
             turnText.Text = s1 + turn.ToString();
         }
 
+        public void putScore(int score)
+        {
+            string s1 = "White leading by: ";
+            scoreBoard.Text = s1 + score.ToString();
+        }
+
+        public string getWhiteAgentType()
+        {
+            return whiteAgentDropDown.SelectedItem.ToString();
+        }
+
+        public string getBlackAgentType()
+        {
+            return blackAgentDropDown.SelectedItem.ToString();
+        }
+
+        public bool getPlaybackEnabled()
+        {
+            return playbackCheckBox.Checked;
+        }
+
+        public void gameOver(bool whiteWon, bool remi)
+        {
+            if (remi)
+            {
+                putString("Remi!");
+            }
+            else if (whiteWon)
+            {
+                putString("White player won!");
+            }
+            else
+            {
+                putString("Black player won!");
+            }
+
+            pauseButton.Enabled = false;
+        }
+
         // Agent interface
 
         public string readString()
@@ -75,9 +118,9 @@ namespace ChessForms
             return tmp;
         }
 
-        public Tuple<int,int,int,int> readSelectedMove()
+        public Tuple<int, int, int, int> readSelectedMove()
         {
-            Tuple<int,int,int, int> tmp = new Tuple<int, int, int, int>(selectedSquareX,
+            Tuple<int, int, int, int> tmp = new Tuple<int, int, int, int>(selectedSquareX,
                                                                         selectedSquareY,
                                                                         selectedMoveX,
                                                                         selectedMoveY);
@@ -93,9 +136,19 @@ namespace ChessForms
             return tmp;
         }
 
+        int score = 0;
+        int max = 0;
         public void putAiScore(int score)
         {
-            AiScoreTextBox.Text = "" + score;
+            if (score == 0)
+            {
+                this.score = 0;
+            } else
+            {
+                this.score++;
+        }
+            max = Math.Max(max, this.score);
+            AiScoreTextBox.Text = "Max: " + max + ", now: " + this.score;
         }
 
         // Graphics interface
@@ -287,14 +340,54 @@ namespace ChessForms
 
         private void startButton_Click(object sender, EventArgs e)
         {
-            startButton.Enabled = false;
+            if (startButton.Text == "Start Game")
+            {
+                // Enable and disable controls
+                pauseButton.Enabled = true;
+                loadButton.Enabled = false;
+                saveButton.Enabled = false;
+                playbackCheckBox.Enabled = false;
             whiteAgentDropDown.Enabled = false;
             blackAgentDropDown.Enabled = false;
+
+                // Clear console
             consoleOutput.Clear();
             lastInput = "";
-            consoleInput.Focus();
 
-            startGameFunc(whiteAgentDropDown.SelectedItem.ToString(), blackAgentDropDown.SelectedItem.ToString());
+                if (getWhiteAgentType() == "Terminal Agent" ||
+                    getBlackAgentType() == "Terminal Agent")
+                {
+            consoleInput.Focus();
+                    consoleInput.Enabled = true;
+                }
+
+                // Change text of this button
+                startButton.Text = "Reset Game";
+
+                // Start new game
+                startGameFunc();
+            }
+            else
+            {
+                // Enable and disable controls
+                pauseButton.Enabled = false;
+                loadButton.Enabled = true;
+                saveButton.Enabled = true;
+                playbackCheckBox.Enabled = true;
+                whiteAgentDropDown.Enabled = true;
+                blackAgentDropDown.Enabled = true;
+                
+                // Clear console
+                consoleOutput.Clear();
+                lastInput = "";
+                consoleInput.Enabled = false;
+                
+                // Change text of this button
+                startButton.Text = "Start Game";
+
+                // Reset game
+                resetGameFunc();
+            }
         }
 
         private void onFormClosing(object sender, FormClosingEventArgs e)
@@ -335,11 +428,6 @@ namespace ChessForms
                 if (selectedSquareX != -1 && selectedSquareY != -1)
                 {
                     moves = board.getSquareAt((uint)selectedSquareX, (uint)selectedSquareY).getPiece().getPossibleMoves(board.getSquareAt, board.getPieces, turn);
-
-                    foreach (Tuple<uint, uint> t in moves)
-                    {
-                        putString(t.ToString());
-                    }
                 }
                 else
                 {
@@ -381,6 +469,38 @@ namespace ChessForms
                 lastInput = consoleInput.Text;
                 consoleInput.Text = "";
                 putString(lastInput);
+            }
+        }
+
+        private void pauseButton_Click(object sender, EventArgs e)
+        {
+            if (pauseButton.Text == "Pause Game")
+            {
+                // Enable and disable controls
+                saveButton.Enabled = true;
+                loadButton.Enabled = true;
+                whiteAgentDropDown.Enabled = true;
+                blackAgentDropDown.Enabled = true;
+
+                // Set button text
+                pauseButton.Text = "Unpause Game";
+
+                // Pause game
+                pauseGameFunc();
+            }
+            else
+            {
+                // Enable and disable controls
+                saveButton.Enabled = false;
+                loadButton.Enabled = false;
+                whiteAgentDropDown.Enabled = false;
+                blackAgentDropDown.Enabled = false;
+
+                // Set button text
+                pauseButton.Text = "Pause Game";
+
+                // Unpause game
+                pauseGameFunc();
             }
         }
     }

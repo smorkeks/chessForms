@@ -37,18 +37,29 @@
             this.turnText = new System.Windows.Forms.TextBox();
             this.blackAgentDropDown = new System.Windows.Forms.ComboBox();
             this.graphicsTab = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.drawingArea = new System.Windows.Forms.PictureBox();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.AiScoreTextBox = new System.Windows.Forms.TextBox();
+            this.scoreBoard = new System.Windows.Forms.TextBox();
+            this.pauseButton = new System.Windows.Forms.Button();
+            this.loadButton = new System.Windows.Forms.Button();
+            this.saveButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.blackPlayerLabel = new System.Windows.Forms.Label();
+            this.whitePlayerLabel = new System.Windows.Forms.Label();
+            this.playbackCheckBox = new System.Windows.Forms.CheckBox();
             this.graphicsTab.SuspendLayout();
-            this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingArea)).BeginInit();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // consoleInput
             // 
+            this.consoleInput.Enabled = false;
             this.consoleInput.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.consoleInput.Location = new System.Drawing.Point(24, 552);
             this.consoleInput.Name = "consoleInput";
@@ -57,18 +68,18 @@
             // 
             // consoleOutput
             // 
-            this.consoleOutput.Enabled = false;
             this.consoleOutput.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.consoleOutput.Location = new System.Drawing.Point(24, 12);
             this.consoleOutput.Multiline = true;
             this.consoleOutput.Name = "consoleOutput";
+            this.consoleOutput.ReadOnly = true;
             this.consoleOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.consoleOutput.Size = new System.Drawing.Size(363, 534);
             this.consoleOutput.TabIndex = 1;
             // 
             // startButton
             // 
-            this.startButton.Location = new System.Drawing.Point(406, 12);
+            this.startButton.Location = new System.Drawing.Point(406, 166);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(175, 23);
             this.startButton.TabIndex = 2;
@@ -82,8 +93,10 @@
             this.whiteAgentDropDown.Items.AddRange(new object[] {
             "Terminal Agent",
             "Graphics Agent",
-            "AI"});
-            this.whiteAgentDropDown.Location = new System.Drawing.Point(406, 41);
+            "AI Easy",
+            "AI Medium",
+            "AI Hard"});
+            this.whiteAgentDropDown.Location = new System.Drawing.Point(406, 511);
             this.whiteAgentDropDown.Name = "whiteAgentDropDown";
             this.whiteAgentDropDown.Size = new System.Drawing.Size(175, 21);
             this.whiteAgentDropDown.TabIndex = 3;
@@ -100,18 +113,18 @@
             // 
             // playerTurn
             // 
-            this.playerTurn.Enabled = false;
-            this.playerTurn.Location = new System.Drawing.Point(406, 285);
+            this.playerTurn.Location = new System.Drawing.Point(406, 224);
             this.playerTurn.Name = "playerTurn";
+            this.playerTurn.ReadOnly = true;
             this.playerTurn.Size = new System.Drawing.Size(175, 20);
             this.playerTurn.TabIndex = 5;
             this.playerTurn.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // turnText
             // 
-            this.turnText.Enabled = false;
-            this.turnText.Location = new System.Drawing.Point(406, 311);
+            this.turnText.Location = new System.Drawing.Point(406, 250);
             this.turnText.Name = "turnText";
+            this.turnText.ReadOnly = true;
             this.turnText.Size = new System.Drawing.Size(175, 20);
             this.turnText.TabIndex = 6;
             this.turnText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -122,32 +135,23 @@
             this.blackAgentDropDown.Items.AddRange(new object[] {
             "Terminal Agent",
             "Graphics Agent",
-            "AI"});
-            this.blackAgentDropDown.Location = new System.Drawing.Point(406, 68);
+            "AI Easy",
+            "AI Medium",
+            "AI Hard"});
+            this.blackAgentDropDown.Location = new System.Drawing.Point(406, 70);
             this.blackAgentDropDown.Name = "blackAgentDropDown";
             this.blackAgentDropDown.Size = new System.Drawing.Size(175, 21);
             this.blackAgentDropDown.TabIndex = 7;
             // 
             // graphicsTab
             // 
-            this.graphicsTab.Controls.Add(this.tabPage1);
             this.graphicsTab.Controls.Add(this.tabPage2);
+            this.graphicsTab.Controls.Add(this.tabPage1);
             this.graphicsTab.Location = new System.Drawing.Point(598, 12);
             this.graphicsTab.Name = "graphicsTab";
             this.graphicsTab.SelectedIndex = 0;
             this.graphicsTab.Size = new System.Drawing.Size(539, 560);
             this.graphicsTab.TabIndex = 8;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.chessTextBox);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(531, 534);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Text GUI";
-            this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
@@ -169,18 +173,132 @@
             this.drawingArea.TabStop = false;
             this.drawingArea.MouseClick += new System.Windows.Forms.MouseEventHandler(this.onDrawingClick);
             // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.chessTextBox);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(531, 534);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Text GUI";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
             // AiScoreTextBox
             // 
-            this.AiScoreTextBox.Location = new System.Drawing.Point(406, 170);
+            this.AiScoreTextBox.Location = new System.Drawing.Point(406, 302);
             this.AiScoreTextBox.Name = "AiScoreTextBox";
             this.AiScoreTextBox.Size = new System.Drawing.Size(175, 20);
             this.AiScoreTextBox.TabIndex = 9;
+            // 
+            // scoreBoard
+            // 
+            this.scoreBoard.Location = new System.Drawing.Point(406, 276);
+            this.scoreBoard.Name = "scoreBoard";
+            this.scoreBoard.ReadOnly = true;
+            this.scoreBoard.Size = new System.Drawing.Size(175, 20);
+            this.scoreBoard.TabIndex = 10;
+            this.scoreBoard.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // pauseButton
+            // 
+            this.pauseButton.Enabled = false;
+            this.pauseButton.Location = new System.Drawing.Point(406, 195);
+            this.pauseButton.Name = "pauseButton";
+            this.pauseButton.Size = new System.Drawing.Size(175, 23);
+            this.pauseButton.TabIndex = 11;
+            this.pauseButton.Text = "Pause Game";
+            this.pauseButton.UseVisualStyleBackColor = true;
+            this.pauseButton.Click += new System.EventHandler(this.pauseButton_Click);
+            // 
+            // loadButton
+            // 
+            this.loadButton.Location = new System.Drawing.Point(406, 357);
+            this.loadButton.Name = "loadButton";
+            this.loadButton.Size = new System.Drawing.Size(175, 23);
+            this.loadButton.TabIndex = 12;
+            this.loadButton.Text = "Load Snapshot";
+            this.loadButton.UseVisualStyleBackColor = true;
+            // 
+            // saveButton
+            // 
+            this.saveButton.Location = new System.Drawing.Point(406, 386);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(175, 23);
+            this.saveButton.TabIndex = 13;
+            this.saveButton.Text = "Save Snapshot";
+            this.saveButton.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label1.Location = new System.Drawing.Point(406, 128);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(175, 2);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "label1";
+            // 
+            // label2
+            // 
+            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label2.Location = new System.Drawing.Point(406, 340);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(175, 2);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "label2";
+            // 
+            // label3
+            // 
+            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label3.Location = new System.Drawing.Point(406, 448);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(175, 2);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "label3";
+            // 
+            // blackPlayerLabel
+            // 
+            this.blackPlayerLabel.AutoSize = true;
+            this.blackPlayerLabel.Location = new System.Drawing.Point(403, 40);
+            this.blackPlayerLabel.Name = "blackPlayerLabel";
+            this.blackPlayerLabel.Size = new System.Drawing.Size(107, 13);
+            this.blackPlayerLabel.TabIndex = 17;
+            this.blackPlayerLabel.Text = "Black Player Settings";
+            // 
+            // whitePlayerLabel
+            // 
+            this.whitePlayerLabel.AutoSize = true;
+            this.whitePlayerLabel.Location = new System.Drawing.Point(403, 481);
+            this.whitePlayerLabel.Name = "whitePlayerLabel";
+            this.whitePlayerLabel.Size = new System.Drawing.Size(108, 13);
+            this.whitePlayerLabel.TabIndex = 18;
+            this.whitePlayerLabel.Text = "White Player Settings";
+            // 
+            // playbackCheckBox
+            // 
+            this.playbackCheckBox.AutoSize = true;
+            this.playbackCheckBox.Location = new System.Drawing.Point(407, 415);
+            this.playbackCheckBox.Name = "playbackCheckBox";
+            this.playbackCheckBox.Size = new System.Drawing.Size(148, 17);
+            this.playbackCheckBox.TabIndex = 19;
+            this.playbackCheckBox.Text = "Enable continuous saving";
+            this.playbackCheckBox.UseVisualStyleBackColor = true;
             // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1158, 594);
+            this.Controls.Add(this.playbackCheckBox);
+            this.Controls.Add(this.whitePlayerLabel);
+            this.Controls.Add(this.blackPlayerLabel);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.saveButton);
+            this.Controls.Add(this.loadButton);
+            this.Controls.Add(this.pauseButton);
+            this.Controls.Add(this.scoreBoard);
             this.Controls.Add(this.AiScoreTextBox);
             this.Controls.Add(this.graphicsTab);
             this.Controls.Add(this.blackAgentDropDown);
@@ -196,10 +314,10 @@
             this.Load += new System.EventHandler(this.GUI_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.onPaint);
             this.graphicsTab.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.drawingArea)).EndInit();
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -220,6 +338,16 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.PictureBox drawingArea;
         private System.Windows.Forms.TextBox AiScoreTextBox;
+        private System.Windows.Forms.TextBox scoreBoard;
+        private System.Windows.Forms.Button pauseButton;
+        private System.Windows.Forms.Button loadButton;
+        private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label blackPlayerLabel;
+        private System.Windows.Forms.Label whitePlayerLabel;
+        private System.Windows.Forms.CheckBox playbackCheckBox;
     }
 }
 

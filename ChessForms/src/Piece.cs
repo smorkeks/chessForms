@@ -10,9 +10,10 @@ namespace ChessForms.src
         // fields
         protected uint xCoord;
         protected uint yCoord;
-        protected uint score;         //Value of the piece
-        protected bool hasMoved;      //Determines if the piece has moved from initial pos
-        protected string colour;      //White or black
+        protected uint score;                   //Value of the piece
+        protected bool hasMoved;                //Determines if the piece has moved from initial pos
+        protected string colour;                //White or black
+        protected int[,] reward;         //Determines how good a square is to be on
 
 
         // methods
@@ -322,6 +323,8 @@ namespace ChessForms.src
                     int y = (int)yKing;
                     int numBlocks = 0;
                     bool foundSelf = false;
+                    bool foundThreat = false;
+                    bool oob = false;
                     for (int i = 0; i < steps-1; i++)
                     {
                         x += xMod;
@@ -332,13 +335,31 @@ namespace ChessForms.src
                             foundSelf = true;
                             numBlocks++;
                         }
-                        else if (QF((uint)x, (uint)y).getPiece() != null)
+                        else if (x == square.getX() && y == square.getY())
+                        {
+                            foundThreat = true;
+                        }
+                        else
+                        {
+                            Square sq = QF((uint)x, (uint)y);
+                            if (sq == null)
+                            {
+                                oob = true;
+                                break;
+                            }
+                            if (sq.getPiece() != null)
                         {
                             numBlocks++;
                         }
                     }
+                    }
 
                     // Must have at least two blocks to be a possible move
+                    if (oob && !foundThreat)
+                    {
+                        // OK
+                        return;
+                    } 
                     if (foundSelf && numBlocks < 2)
                     {
                         moves.Clear();
@@ -399,8 +420,17 @@ namespace ChessForms.src
             hasMoved = oldPiece.hasMoved;
             colour = oldPiece.colour;
             score = oldPiece.score;
+            reward = oldPiece.reward;
         }
 
         public abstract Piece getCopyPiece();
+
+        public int getValue()
+        {
+            if (colour == "white")
+                return (int)score + reward[xCoord, yCoord];
+            else
+                return (int)score + reward[xCoord, 7 - yCoord];
+        }
     }
 }

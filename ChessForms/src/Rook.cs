@@ -7,7 +7,18 @@ namespace ChessForms.src
 {
     public class Rook : Piece
     {
-        public Rook(uint x, uint y, string c) : base(x, y, 5, c) { }
+        public Rook(uint x, uint y, string c)
+            : base(x, y, 500, c)
+        {
+            this.reward = new int[,] { {  0,  0,  0,  0,  0,  0,  0, 0 },
+                                       {  5, 10, 10, 10, 10, 10, 10, 5 },
+                                       { -5,  0,  0,  0,  0,  0,  0,-5 },
+                                       { -5,  0,  0,  0,  0,  0,  0,-5 },
+                                       { -5,  0,  0,  0,  0,  0,  0,-5 },
+                                       { -5,  0,  0,  0,  0,  0,  0,-5 },
+                                       { -5,  0,  0,  0,  0,  0,  0,-5 },
+                                       {  0,  0,  0,  5,  5,  0,  0, 0 },};
+        }
 
         public Rook() : base() { }
 

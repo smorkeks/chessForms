@@ -8,16 +8,14 @@ namespace ChessForms.src
     public class Square
     {
         private uint posX, posY;
-        private int reward;
         private uint whiteCover;
         private uint blackCover;
         private Piece piece;
 
-        public Square(uint x, uint y, int r)
+        public Square(uint x, uint y)
         {
             posX = x;
             posY = y;
-            reward = r;
             whiteCover = 0;
             blackCover = 0;
         }
@@ -31,10 +29,7 @@ namespace ChessForms.src
         {
             return posY;
         }
-        public int getReward()
-        {
-            return reward;
-        }
+
         public uint getWhiteCover()
         {
             return whiteCover;
@@ -92,13 +87,16 @@ namespace ChessForms.src
         {
             posX = oldSquare.posX;
             posY = oldSquare.posY;
-            reward = oldSquare.reward;
             whiteCover = oldSquare.whiteCover;
             blackCover = oldSquare.blackCover;
             if (oldSquare.piece != null)
             {
                 piece = oldSquare.piece.getCopyPiece();
                 piece.Copy(oldSquare.piece);
+            }
+            else
+            {
+                piece = null;
             }
                 
         }

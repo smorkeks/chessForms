@@ -24,16 +24,6 @@ namespace ChessForms.src
         private List<Piece> whitePieces = new List<Piece>();
         private List<Piece> blackPieces = new List<Piece>();
 
-        // Reward function for board position.
-        private int[,] reward = new int[,] { { 0, 0, 0, 0, 0, 0, 0, 0 },
-                                             { 0, 1, 1, 1, 1, 1, 1, 0 },
-                                             { 0, 1, 2, 2, 2, 2, 1, 0 },
-                                             { 0, 1, 2, 3, 3, 2, 1, 0 },
-                                             { 0, 1, 2, 3, 3, 2, 1, 0 },
-                                             { 0, 1, 2, 2, 2, 2, 1, 0 },
-                                             { 0, 1, 1, 1, 1, 1, 1, 0 },
-                                             { 0, 0, 0, 0, 0, 0, 0, 0 } };
-
         // Passed to Pieces to limit access to board.
         public delegate Square QueryFunc(uint x, uint y);
         public delegate List<Piece> ListFunc(string col, bool invertColor);
@@ -49,7 +39,7 @@ namespace ChessForms.src
             {
                 for (uint x = 0; x < BOARD_SIZE_X; x++)
                 {
-                    squares[x, y] = new Square(x, y, reward[x, y]);
+                    squares[x, y] = new Square(x, y);
                 }
             }
 
@@ -110,7 +100,7 @@ namespace ChessForms.src
             {
                 for (uint x = 0; x < BOARD_SIZE_X; x++)
                 {
-                    squares[x, y] = new Square(x, y, reward[x, y]);
+                    squares[x, y] = new Square(x, y);
                 }
             }
         }
@@ -265,7 +255,7 @@ namespace ChessForms.src
             s1.removePiece();
             // Add to new position
             if ((p is Pawn && p.getColour() == "white" && y2 == 7) ||
-                (p is Pawn && p.getColour() == "black" && y2 == 0))
+               (p is Pawn && p.getColour() == "black" && y2 == 0))
             {
                 List<Piece> list = getPieces(p.getColour(), false);
                 list.Remove(p);
@@ -430,8 +420,15 @@ namespace ChessForms.src
 
         public bool playerLost(string col)
         {
-            List<Tuple<uint, uint, uint, uint>> moves = getBlackMoves();
+            List<Tuple<uint, uint, uint, uint>> moves = getMoves(col);
             return (moves.Count == 0 && getCheck(col));
+        }
+
+        public bool remi()
+        {
+            List<Tuple<uint, uint, uint, uint>> movesW = getWhiteMoves();
+            List<Tuple<uint, uint, uint, uint>> movesB = getBlackMoves();
+            return ((movesW.Count == 0 && !getCheck("white") || (movesB.Count == 0 && !getCheck("black"))));
         }
 
         public int getScore(string col)
@@ -443,21 +440,21 @@ namespace ChessForms.src
                 {
                     if (col == COLOUR_WHITE)
                     {
-                        score += (int)getSquareAt(i, j).getWhiteCover() - (int)getSquareAt(i, j).getBlackCover();
+                        score += ((int)getSquareAt(i, j).getWhiteCover() - (int)getSquareAt(i, j).getBlackCover()) * 10;
                         if (getSquareAt(i, j).getPiece() != null)
                             if (getSquareAt(i, j).getPiece().getColour() == col)
-                                score = score + (int)getSquareAt(i, j).getPiece().getScore() + reward[i, j];
+                                score = score + (int)getSquareAt(i, j).getPiece().getValue();
                             else
-                                score = score - (int)getSquareAt(i, j).getPiece().getScore() - reward[i, j];
+                                score = score - (int)getSquareAt(i, j).getPiece().getValue();
                     }
                     else
                     {
-                        score += (int)getSquareAt(i, j).getBlackCover() - (int)getSquareAt(i, j).getWhiteCover();
+                        score += ((int)getSquareAt(i, j).getBlackCover() - (int)getSquareAt(i, j).getWhiteCover()) * 10;
                         if (getSquareAt(i, j).getPiece() != null)
                             if (getSquareAt(i, j).getPiece().getColour() == col)
-                                score = score + (int)getSquareAt(i, j).getPiece().getScore() + reward[i, j];
+                                score = score + (int)getSquareAt(i, j).getPiece().getValue();
                             else
-                                score = score - (int)getSquareAt(i, j).getPiece().getScore() - reward[i, j];
+                                score = score - (int)getSquareAt(i, j).getPiece().getValue();
                     }
                 }
 
@@ -493,5 +490,21 @@ namespace ChessForms.src
                 }
             }
         }
+
+
+        public int getNumPieces()
+        {
+            int num = 0;
+            for (uint i = 0; i < BOARD_SIZE_X; i++)
+            {
+                for (uint j = 0; j < BOARD_SIZE_Y; j++)
+                {
+                    if (getPieceAt(i, j) != null)
+                        num++;
+                }
+            }
+            return num;
+        }
+
     }
 }
