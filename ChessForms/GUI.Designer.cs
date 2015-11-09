@@ -51,10 +51,16 @@
             this.blackPlayerLabel = new System.Windows.Forms.Label();
             this.whitePlayerLabel = new System.Windows.Forms.Label();
             this.playbackCheckBox = new System.Windows.Forms.CheckBox();
+            this.blackAiDiffTrackBar = new System.Windows.Forms.TrackBar();
+            this.blackAiDiffLabel = new System.Windows.Forms.Label();
+            this.whiteAiDiffLabel = new System.Windows.Forms.Label();
+            this.whiteAiDiffTrackBar = new System.Windows.Forms.TrackBar();
             this.graphicsTab.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingArea)).BeginInit();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.blackAiDiffTrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.whiteAiDiffTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // consoleInput
@@ -93,13 +99,12 @@
             this.whiteAgentDropDown.Items.AddRange(new object[] {
             "Terminal Agent",
             "Graphics Agent",
-            "AI Easy",
-            "AI Medium",
-            "AI Hard"});
-            this.whiteAgentDropDown.Location = new System.Drawing.Point(406, 511);
+            "AI"});
+            this.whiteAgentDropDown.Location = new System.Drawing.Point(406, 475);
             this.whiteAgentDropDown.Name = "whiteAgentDropDown";
             this.whiteAgentDropDown.Size = new System.Drawing.Size(175, 21);
             this.whiteAgentDropDown.TabIndex = 3;
+            this.whiteAgentDropDown.SelectedValueChanged += new System.EventHandler(this.onWhiteAgentChange);
             // 
             // chessTextBox
             // 
@@ -135,13 +140,12 @@
             this.blackAgentDropDown.Items.AddRange(new object[] {
             "Terminal Agent",
             "Graphics Agent",
-            "AI Easy",
-            "AI Medium",
-            "AI Hard"});
-            this.blackAgentDropDown.Location = new System.Drawing.Point(406, 70);
+            "AI"});
+            this.blackAgentDropDown.Location = new System.Drawing.Point(406, 54);
             this.blackAgentDropDown.Name = "blackAgentDropDown";
             this.blackAgentDropDown.Size = new System.Drawing.Size(175, 21);
             this.blackAgentDropDown.TabIndex = 7;
+            this.blackAgentDropDown.SelectedValueChanged += new System.EventHandler(this.onBlackAgentChange);
             // 
             // graphicsTab
             // 
@@ -232,7 +236,7 @@
             // label1
             // 
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label1.Location = new System.Drawing.Point(406, 128);
+            this.label1.Location = new System.Drawing.Point(406, 142);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(175, 2);
             this.label1.TabIndex = 14;
@@ -259,7 +263,7 @@
             // blackPlayerLabel
             // 
             this.blackPlayerLabel.AutoSize = true;
-            this.blackPlayerLabel.Location = new System.Drawing.Point(403, 40);
+            this.blackPlayerLabel.Location = new System.Drawing.Point(404, 35);
             this.blackPlayerLabel.Name = "blackPlayerLabel";
             this.blackPlayerLabel.Size = new System.Drawing.Size(107, 13);
             this.blackPlayerLabel.TabIndex = 17;
@@ -268,7 +272,7 @@
             // whitePlayerLabel
             // 
             this.whitePlayerLabel.AutoSize = true;
-            this.whitePlayerLabel.Location = new System.Drawing.Point(403, 481);
+            this.whitePlayerLabel.Location = new System.Drawing.Point(404, 459);
             this.whitePlayerLabel.Name = "whitePlayerLabel";
             this.whitePlayerLabel.Size = new System.Drawing.Size(108, 13);
             this.whitePlayerLabel.TabIndex = 18;
@@ -284,11 +288,59 @@
             this.playbackCheckBox.Text = "Enable continuous saving";
             this.playbackCheckBox.UseVisualStyleBackColor = true;
             // 
+            // blackAiDiffTrackBar
+            // 
+            this.blackAiDiffTrackBar.Location = new System.Drawing.Point(407, 81);
+            this.blackAiDiffTrackBar.Maximum = 6;
+            this.blackAiDiffTrackBar.Minimum = 2;
+            this.blackAiDiffTrackBar.Name = "blackAiDiffTrackBar";
+            this.blackAiDiffTrackBar.Size = new System.Drawing.Size(174, 45);
+            this.blackAiDiffTrackBar.TabIndex = 20;
+            this.blackAiDiffTrackBar.Value = 2;
+            this.blackAiDiffTrackBar.Visible = false;
+            this.blackAiDiffTrackBar.Scroll += new System.EventHandler(this.onBlackAiDiffChange);
+            // 
+            // blackAiDiffLabel
+            // 
+            this.blackAiDiffLabel.AutoSize = true;
+            this.blackAiDiffLabel.Location = new System.Drawing.Point(407, 112);
+            this.blackAiDiffLabel.Name = "blackAiDiffLabel";
+            this.blackAiDiffLabel.Size = new System.Drawing.Size(59, 13);
+            this.blackAiDiffLabel.TabIndex = 21;
+            this.blackAiDiffLabel.Text = "Difficulty: 2";
+            this.blackAiDiffLabel.Visible = false;
+            // 
+            // whiteAiDiffLabel
+            // 
+            this.whiteAiDiffLabel.AutoSize = true;
+            this.whiteAiDiffLabel.Location = new System.Drawing.Point(406, 533);
+            this.whiteAiDiffLabel.Name = "whiteAiDiffLabel";
+            this.whiteAiDiffLabel.Size = new System.Drawing.Size(59, 13);
+            this.whiteAiDiffLabel.TabIndex = 23;
+            this.whiteAiDiffLabel.Text = "Difficulty: 2";
+            this.whiteAiDiffLabel.Visible = false;
+            // 
+            // whiteAiDiffTrackBar
+            // 
+            this.whiteAiDiffTrackBar.Location = new System.Drawing.Point(406, 502);
+            this.whiteAiDiffTrackBar.Maximum = 6;
+            this.whiteAiDiffTrackBar.Minimum = 2;
+            this.whiteAiDiffTrackBar.Name = "whiteAiDiffTrackBar";
+            this.whiteAiDiffTrackBar.Size = new System.Drawing.Size(174, 45);
+            this.whiteAiDiffTrackBar.TabIndex = 22;
+            this.whiteAiDiffTrackBar.Value = 2;
+            this.whiteAiDiffTrackBar.Visible = false;
+            this.whiteAiDiffTrackBar.Scroll += new System.EventHandler(this.onWhiteAiDiffChange);
+            // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1158, 594);
+            this.Controls.Add(this.whiteAiDiffLabel);
+            this.Controls.Add(this.whiteAiDiffTrackBar);
+            this.Controls.Add(this.blackAiDiffLabel);
+            this.Controls.Add(this.blackAiDiffTrackBar);
             this.Controls.Add(this.playbackCheckBox);
             this.Controls.Add(this.whitePlayerLabel);
             this.Controls.Add(this.blackPlayerLabel);
@@ -318,6 +370,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.drawingArea)).EndInit();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.blackAiDiffTrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.whiteAiDiffTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -348,6 +402,10 @@
         private System.Windows.Forms.Label blackPlayerLabel;
         private System.Windows.Forms.Label whitePlayerLabel;
         private System.Windows.Forms.CheckBox playbackCheckBox;
+        private System.Windows.Forms.TrackBar blackAiDiffTrackBar;
+        private System.Windows.Forms.Label blackAiDiffLabel;
+        private System.Windows.Forms.Label whiteAiDiffLabel;
+        private System.Windows.Forms.TrackBar whiteAiDiffTrackBar;
     }
 }
 

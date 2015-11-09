@@ -83,14 +83,8 @@ namespace ChessForms.src
                 case "Graphics Agent":
                     white = new GraphicsAgent("white", gui.readSelectedMove);
                     break;
-                case "AI Easy":
-                    white = new AiAgent("white", 2, gui.putAiScore);
-                    break;
-                case "AI Medium":
-                    white = new AiAgent("white", 3, gui.putAiScore);
-                    break;
-                case "AI Hard":
-                    white = new AiAgent("white", 6, gui.putAiScore);
+                case "AI":
+                    white = new AiAgent("white", gui.getWhiteAIDiff(), gui.putAiScore);
                     break;
             }
 
@@ -103,14 +97,8 @@ namespace ChessForms.src
                 case "Graphics Agent":
                     black = new GraphicsAgent("black", gui.readSelectedMove);
                     break;
-                case "AI Easy":
-                    black = new AiAgent("black", 2, gui.putAiScore);
-                    break;
-                case "AI Medium":
-                    black = new AiAgent("black", 3, gui.putAiScore);
-                    break;
-                case "AI Hard":
-                    black = new AiAgent("black", 6, gui.putAiScore);
+                case "AI":
+                    black = new AiAgent("black", gui.getBlackAIDiff(), gui.putAiScore);
                     break;
             }
 
@@ -156,17 +144,9 @@ namespace ChessForms.src
                         if (!(white is GraphicsAgent))
                             white = new GraphicsAgent("white", gui.readSelectedMove);
                         break;
-                    case "AI Easy":
-                        if (!(white is AiAgent && ((AiAgent)white).getDifficulty() == 2))
-                            white = new AiAgent("white", 2, gui.putAiScore);
-                        break;
-                    case "AI Medium":
-                        if (!(white is AiAgent && ((AiAgent)white).getDifficulty() == 4))
-                            white = new AiAgent("white", 4, gui.putAiScore);
-                        break;
-                    case "AI Hard":
-                        if (!(white is AiAgent && ((AiAgent)white).getDifficulty() == 6))
-                            white = new AiAgent("white", 6, gui.putAiScore);
+                    case "AI":
+                        if (!(white is AiAgent && ((AiAgent)white).getDifficulty() == gui.getWhiteAIDiff()))
+                            white = new AiAgent("white", gui.getWhiteAIDiff(), gui.putAiScore);
                         break;
                 }
 
@@ -181,17 +161,9 @@ namespace ChessForms.src
                         if (!(black is TerminalAgent))
                         black = new GraphicsAgent("black", gui.readSelectedMove);
                         break;
-                    case "AI Easy":
-                        if (!(black is AiAgent && ((AiAgent)black).getDifficulty() == 2))
-                            black = new AiAgent("black", 2, gui.putAiScore);
-                        break;
-                    case "AI Medium":
-                        if (!(black is AiAgent && ((AiAgent)black).getDifficulty() == 4))
-                            black = new AiAgent("black", 4, gui.putAiScore);
-                        break;
-                    case "AI Hard":
-                        if (!(black is AiAgent && ((AiAgent)black).getDifficulty() == 6))
-                            black = new AiAgent("black", 6, gui.putAiScore);
+                    case "AI":
+                        if (!(black is AiAgent && ((AiAgent)black).getDifficulty() == gui.getBlackAIDiff()))
+                            black = new AiAgent("black", gui.getBlackAIDiff(), gui.putAiScore);
                         break;
                 }
             }
@@ -208,7 +180,6 @@ namespace ChessForms.src
             {
                 if (paused)
                 {
-                    gui.putString("Pause");
                     Thread.Sleep(100);
                 }
                 else
@@ -227,6 +198,8 @@ namespace ChessForms.src
                         //printPieceAt(tmp.Item1, tmp.Item2);
                         turnWhite = board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
                     }
+
+                    Application.DoEvents();
 
                     // New move accepted, update GUI and check for winner.
                     if (oldTurnWhite != turnWhite)

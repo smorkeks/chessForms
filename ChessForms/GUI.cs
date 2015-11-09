@@ -29,6 +29,9 @@ namespace ChessForms
 
         ImageHandler imageHandler;
 
+        int AIsearchDepth = 0;
+        int AIsearchDepthMax = 0;
+
         public GUI(gameInterfaceFunc start, gameInterfaceFunc pause, gameInterfaceFunc reset)
         {
             InitializeComponent();
@@ -86,6 +89,16 @@ namespace ChessForms
             return blackAgentDropDown.SelectedItem.ToString();
         }
 
+        public uint getWhiteAIDiff()
+        {
+            return (uint) whiteAiDiffTrackBar.Value;
+        }
+
+        public uint getBlackAIDiff()
+        {
+            return (uint)blackAiDiffTrackBar.Value;
+        }
+
         public bool getPlaybackEnabled()
         {
             return playbackCheckBox.Checked;
@@ -135,20 +148,18 @@ namespace ChessForms
 
             return tmp;
         }
-
-        int score = 0;
-        int max = 0;
+        
         public void putAiScore(int score)
         {
             if (score == 0)
             {
-                this.score = 0;
+                AIsearchDepth = 0;
             } else
             {
-                this.score++;
+                AIsearchDepth++;
             }
-            max = Math.Max(max, this.score);
-            AiScoreTextBox.Text = "Max: " + max + ", now: " + this.score;
+            AIsearchDepthMax = Math.Max(AIsearchDepthMax, AIsearchDepth);
+            AiScoreTextBox.Text = "Max: " + AIsearchDepthMax + ", now: " + AIsearchDepth;
         }
 
         // Graphics interface
@@ -349,6 +360,8 @@ namespace ChessForms
                 playbackCheckBox.Enabled = false;
                 whiteAgentDropDown.Enabled = false;
                 blackAgentDropDown.Enabled = false;
+                whiteAiDiffTrackBar.Enabled = false;
+                blackAiDiffTrackBar.Enabled = false;
 
                 // Clear console
                 consoleOutput.Clear();
@@ -376,7 +389,14 @@ namespace ChessForms
                 playbackCheckBox.Enabled = true;
                 whiteAgentDropDown.Enabled = true;
                 blackAgentDropDown.Enabled = true;
-                
+                whiteAiDiffTrackBar.Enabled = true;
+                blackAiDiffTrackBar.Enabled = true;
+
+                // Reset search depth print
+                AIsearchDepth = 0;
+                AIsearchDepthMax = 0;
+                putAiScore(0);
+
                 // Clear console
                 consoleOutput.Clear();
                 lastInput = "";
@@ -481,6 +501,8 @@ namespace ChessForms
                 loadButton.Enabled = true;
                 whiteAgentDropDown.Enabled = true;
                 blackAgentDropDown.Enabled = true;
+                whiteAiDiffTrackBar.Enabled = true;
+                blackAiDiffTrackBar.Enabled = true;
 
                 // Set button text
                 pauseButton.Text = "Unpause Game";
@@ -495,6 +517,8 @@ namespace ChessForms
                 loadButton.Enabled = false;
                 whiteAgentDropDown.Enabled = false;
                 blackAgentDropDown.Enabled = false;
+                whiteAiDiffTrackBar.Enabled = false;
+                blackAiDiffTrackBar.Enabled = false;
 
                 // Set button text
                 pauseButton.Text = "Pause Game";
@@ -502,6 +526,46 @@ namespace ChessForms
                 // Unpause game
                 pauseGameFunc();
             }
+        }
+
+        private void onBlackAgentChange(object sender, EventArgs e)
+        {
+            if (getBlackAgentType() == "AI")
+            {
+                blackAiDiffLabel.Visible = true;
+                blackAiDiffTrackBar.Visible = true;
+            }
+            else
+            {
+                blackAiDiffLabel.Visible = false;
+                blackAiDiffTrackBar.Visible = false;
+            }
+        }
+
+        private void onWhiteAgentChange(object sender, EventArgs e)
+        {
+            if (getWhiteAgentType() == "AI")
+            {
+                whiteAiDiffLabel.Visible = true;
+                whiteAiDiffTrackBar.Visible = true;
+            }
+            else
+            {
+                whiteAiDiffLabel.Visible = false;
+                whiteAiDiffTrackBar.Visible = false;
+            }
+        }
+
+        private void onBlackAiDiffChange(object sender, EventArgs e)
+        {
+            string s = blackAiDiffLabel.Text;
+            blackAiDiffLabel.Text = s.Substring(0, s.Length - 1) + getBlackAIDiff();
+        }
+
+        private void onWhiteAiDiffChange(object sender, EventArgs e)
+        {
+            string s = whiteAiDiffLabel.Text;
+            whiteAiDiffLabel.Text = s.Substring(0, s.Length - 1) + getWhiteAIDiff();
         }
     }
 }
