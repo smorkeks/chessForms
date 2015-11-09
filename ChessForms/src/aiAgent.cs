@@ -66,7 +66,7 @@ namespace ChessForms.src
             uint depth = difficulty;
             if (lateGameMod)
             {
-                depth += 2;
+                depth += 1;
             }
 
             depth += repetitionMod;

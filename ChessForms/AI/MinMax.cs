@@ -20,27 +20,35 @@ namespace ChessForms.AI
             // TODO: Test, remove when done
             put(1);
 
+            string nonActivePlayer = "";
+            if (activePlayer == "white")
+            {
+                nonActivePlayer = "black";
+            }
+            else
+            {
+                nonActivePlayer = "white";
+            }
+
             // First check if this is leaf node
             if (depth <= 0)
             {
-                return new Tuple<Tuple<uint, uint, uint, uint>, int>(null, board.getScore(activePlayer));
+                return new Tuple<Tuple<uint, uint, uint, uint>, int>(null, (max ? board.getScore(activePlayer) : board.getScore(nonActivePlayer)));
             }
 
             // Not a leaf node, branch out
 
             List<Tuple<uint, uint, uint, uint>> moves = new List<Tuple<uint, uint, uint, uint>>();
 
-            string nonActivePlayer = "";
+            
 
             // Get moves from active player
             if (activePlayer == "white")
             {
-                nonActivePlayer = "black";
                 moves = board.getWhiteMoves();
             }
             else
             {
-                nonActivePlayer = "white";
                 moves = board.getBlackMoves();
             }
 

@@ -87,7 +87,7 @@ namespace ChessForms.src
                     white = new AiAgent("white", 2, gui.putAiScore);
                     break;
                 case "AI Medium":
-                    white = new AiAgent("white", 4, gui.putAiScore);
+                    white = new AiAgent("white", 3, gui.putAiScore);
                     break;
                 case "AI Hard":
                     white = new AiAgent("white", 6, gui.putAiScore);
@@ -107,7 +107,7 @@ namespace ChessForms.src
                     black = new AiAgent("black", 2, gui.putAiScore);
                     break;
                 case "AI Medium":
-                    black = new AiAgent("black", 4, gui.putAiScore);
+                    black = new AiAgent("black", 3, gui.putAiScore);
                     break;
                 case "AI Hard":
                     black = new AiAgent("black", 6, gui.putAiScore);
