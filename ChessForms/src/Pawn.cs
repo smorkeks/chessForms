@@ -159,6 +159,12 @@ namespace ChessForms.src
             return didDoubleStepTurn;
         }
 
+        public void setDoubleStepTurn(uint turn)
+        {
+            didDoubleStepTurn = turn;
+        }
+
+
         public override Piece getCopyPiece()
         {
             return new Pawn();
