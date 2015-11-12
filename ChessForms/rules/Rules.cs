@@ -187,7 +187,7 @@ namespace ChessForms.rules
             return (kingSquare.getEnemyCover(col));
         }
 
-        // Check if remi
+        // Check if Remi
         public static bool remi(Board board)
         {
             List<Tuple<uint, uint, uint, uint>> movesW = getWhiteMoves(board);
