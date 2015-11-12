@@ -47,6 +47,7 @@
     <Compile Include="graphics\ImageHandler.cs" />
     <Compile Include="AI\MinMax.cs" />
     <Compile Include="rules\BishopRules.cs" />
+    <Compile Include="rules\KingRules.cs" />
     <Compile Include="rules\PawnRules.cs" />
     <Compile Include="rules\PieceRules.cs" />
     <Compile Include="rules\RookRules.cs" />
