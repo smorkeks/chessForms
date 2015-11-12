@@ -11,8 +11,8 @@ namespace ChessForms.src
         // --- Fields ---
 
         // Board [0,0] is at down, left.
-        private const uint BOARD_SIZE_X = 8;
-        private const uint BOARD_SIZE_Y = 8;
+        public const uint BOARD_SIZE_X = 8;
+        public const uint BOARD_SIZE_Y = 8;
 
         // Colours
         private const string COLOUR_WHITE = "white";
@@ -127,42 +127,42 @@ namespace ChessForms.src
             return (p != null && p.getColour() == COLOUR_BLACK);
         }
 
-        // Get all moves of a specific colour.
-        private List<Tuple<uint, uint, uint, uint>> getMoves(string col)
-        {
-            List<Tuple<uint, uint, uint, uint>> moves = new List<Tuple<uint, uint, uint, uint>>();
+        //// Get all moves of a specific colour.
+        //private List<Tuple<uint, uint, uint, uint>> getMoves(string col)
+        //{
+        //    List<Tuple<uint, uint, uint, uint>> moves = new List<Tuple<uint, uint, uint, uint>>();
 
-            for (uint y = 0; y < BOARD_SIZE_Y; y++)
-            {
-                for (uint x = 0; x < BOARD_SIZE_X; x++)
-                {
-                    Piece p = getPieceAt(x, y);
-                    if (p != null && p.getColour() == col)
-                    {
-                        List<Tuple<uint, uint>> newMoves = p.getPossibleMoves(getSquareAt, turn);
+        //    for (uint y = 0; y < BOARD_SIZE_Y; y++)
+        //    {
+        //        for (uint x = 0; x < BOARD_SIZE_X; x++)
+        //        {
+        //            Piece p = getPieceAt(x, y);
+        //            if (p != null && p.getColour() == col)
+        //            {
+        //                List<Tuple<uint, uint>> newMoves = p.getPossibleMoves(getSquareAt, turn);
 
-                        foreach (Tuple<uint, uint> t in newMoves)
-                        {
-                            moves.Add(new Tuple<uint, uint, uint, uint>(x, y, t.Item1, t.Item2));
-                        }
-                    }
-                }
-            }
+        //                foreach (Tuple<uint, uint> t in newMoves)
+        //                {
+        //                    moves.Add(new Tuple<uint, uint, uint, uint>(x, y, t.Item1, t.Item2));
+        //                }
+        //            }
+        //        }
+        //    }
 
-            return moves;
-        }
+        //    return moves;
+        //}
 
-        // Get all possible white moves, in the format x1,y1, x2,y2.
-        public List<Tuple<uint, uint, uint, uint>> getWhiteMoves()
-        {
-            return getMoves(COLOUR_WHITE);
-        }
+        //// Get all possible white moves, in the format x1,y1, x2,y2.
+        //public List<Tuple<uint, uint, uint, uint>> getWhiteMoves()
+        //{
+        //    return getMoves(COLOUR_WHITE);
+        //}
 
-        // Get all possible black moves, in the format x1,y1, x2,y2.
-        public List<Tuple<uint, uint, uint, uint>> getBlackMoves()
-        {
-            return getMoves(COLOUR_BLACK);
-        }
+        //// Get all possible black moves, in the format x1,y1, x2,y2.
+        //public List<Tuple<uint, uint, uint, uint>> getBlackMoves()
+        //{
+        //    return getMoves(COLOUR_BLACK);
+        //}
 
         public bool makeMove(string col, uint x1, uint y1, uint x2, uint y2)
         {
@@ -187,10 +187,10 @@ namespace ChessForms.src
             {
                 return false;
             }
-            if (!p.movePossible(x2, y2, getSquareAt, turn))
-            {
-                return false;
-            }
+            //if (!p.movePossible(x2, y2, getSquareAt, turn))
+            //{
+            //    return false;
+            //}
 
             // Move is legal
 
@@ -299,7 +299,7 @@ namespace ChessForms.src
                     else
                     {
                         // Update cover
-                        cover = p.getCover(getSquareAt);
+                        cover = ChessForms.rules.Rules.getCover(this, p);
                         if (p.getColour() == COLOUR_WHITE)
                         {
                             foreach (Tuple<uint, uint> t in cover)
@@ -321,7 +321,7 @@ namespace ChessForms.src
             // Cover from kings
             if (kingWhite != null)
             {
-                cover = kingWhite.getCover(getSquareAt);
+                cover = ChessForms.rules.Rules.getCover(this, kingWhite);
                 foreach (Tuple<uint, uint> t in cover)
                 {
                     getSquareAt(t.Item1, t.Item2).addWhiteCover();
@@ -329,7 +329,7 @@ namespace ChessForms.src
             }
             if (kingBlack != null)
             {
-                cover = kingBlack.getCover(getSquareAt);
+                cover = ChessForms.rules.Rules.getCover(this, kingBlack);
                 foreach (Tuple<uint, uint> t in cover)
                 {
                     getSquareAt(t.Item1, t.Item2).addBlackCover();
@@ -337,42 +337,42 @@ namespace ChessForms.src
             }
         }
 
-        //returns true if cover on black king
-        public bool getCheck(string col)
-        {
-            Square kingSquare = null;
-            for (uint j = 0; j < 8; j++)
-            {
-                for (uint i = 0; i < 8; i++)
-                {
-                    kingSquare = getSquareAt(i, j);
-                    if (kingSquare.getPiece() is King &&
-                        kingSquare.getPiece().getColour() == col)
-                    {
-                        break;
-                    }
-                }
-                if (kingSquare.getPiece() is King &&
-                        kingSquare.getPiece().getColour() == col)
-                {
-                    break;
-                }
-            }
-            return (kingSquare.getEnemyCover(col));
-        }
+        ////returns true if cover on black king
+        //public bool getCheck(string col)
+        //{
+        //    Square kingSquare = null;
+        //    for (uint j = 0; j < 8; j++)
+        //    {
+        //        for (uint i = 0; i < 8; i++)
+        //        {
+        //            kingSquare = getSquareAt(i, j);
+        //            if (kingSquare.getPiece() is King &&
+        //                kingSquare.getPiece().getColour() == col)
+        //            {
+        //                break;
+        //            }
+        //        }
+        //        if (kingSquare.getPiece() is King &&
+        //                kingSquare.getPiece().getColour() == col)
+        //        {
+        //            break;
+        //        }
+        //    }
+        //    return (kingSquare.getEnemyCover(col));
+        //}
 
-        public bool playerLost(string col)
-        {
-            List<Tuple<uint, uint, uint, uint>> moves = getMoves(col);
-            return (moves.Count == 0 && getCheck(col));
-        }
+        //public bool playerLost(string col)
+        //{
+        //    List<Tuple<uint, uint, uint, uint>> moves = getMoves(col);
+        //    return (moves.Count == 0 && getCheck(col));
+        //}
 
-        public bool remi()
-        {
-            List<Tuple<uint, uint, uint, uint>> movesW = getWhiteMoves();
-            List<Tuple<uint, uint, uint, uint>> movesB = getBlackMoves();
-            return ((movesW.Count == 0 && !getCheck("white") || (movesB.Count == 0 && !getCheck("black"))));
-        }
+        //public bool remi()
+        //{
+        //    List<Tuple<uint, uint, uint, uint>> movesW = getWhiteMoves();
+        //    List<Tuple<uint, uint, uint, uint>> movesB = getBlackMoves();
+        //    return ((movesW.Count == 0 && !getCheck("white") || (movesB.Count == 0 && !getCheck("black"))));
+        //}
 
         public int getScore(string col)
         {

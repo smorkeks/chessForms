@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using ChessForms.rules;
 
 namespace ChessForms.src
 {
@@ -39,7 +40,7 @@ namespace ChessForms.src
             P = board.getPieceAt(x, y);
             if (P != null)
             {
-                tmp = P.getPossibleMoves(board.getSquareAt, board.getTurn());
+                tmp = Rules.getPossibleMoves(board, P);
                 gui.putString("Prints all possible moves");
                 foreach (Tuple<uint, uint> item in tmp)
                 {
@@ -187,16 +188,26 @@ namespace ChessForms.src
                     if (turnWhite)
                     {
                         tmp = white.getInput(board);
+                        if (Rules.movePossible(board, tmp, "white"))
+                        {
+                            board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
+                            turnWhite = false;
+                        }
                         //printMoves(tmp.Item1, tmp.Item2);
                         //printPieceAt(tmp.Item1, tmp.Item2);
-                        turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
+                        //turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
                     }
                     else
                     {
                         tmp = black.getInput(board);
+                        if (Rules.movePossible(board, tmp, "black"))
+                        {
+                            board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
+                            turnWhite = true;
+                        }
                         //printMoves(tmp.Item1, tmp.Item2);
                         //printPieceAt(tmp.Item1, tmp.Item2);
-                        turnWhite = board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
+                        //turnWhite = board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
                     }
 
                     Application.DoEvents();
@@ -232,17 +243,17 @@ namespace ChessForms.src
         private bool checkGameOver()
         {
             // Check if win
-            if (board.playerLost("black"))
+            if (Rules.playerLost(board, "black"))
             {
                 gui.gameOver(true, false);
                 return true;
             }
-            if (board.playerLost("white"))
+            if (Rules.playerLost(board, "white"))
             {
                 gui.gameOver(false, false);
                 return true;
             }
-            if (board.remi())
+            if (Rules.remi(board))
             {
                 gui.gameOver(false, true);
                 return true;

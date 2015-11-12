@@ -7,9 +7,9 @@ using ChessForms.src;
 
 namespace ChessForms.rules
 {
-    class KingRules : PieceRules
+    class KingRules
     {
-        public override List<Tuple<uint, uint>> getPossibleMoves(src.Board board, src.Piece piece)
+        public static List<Tuple<uint, uint>> getPossibleMoves(src.Board board, src.Piece piece)
         {
             List<Tuple<uint, uint>> moves = new List<Tuple<uint, uint>>();
 
@@ -86,7 +86,7 @@ namespace ChessForms.rules
             return moves;
         }
 
-        public override List<Tuple<uint, uint>> getCover(src.Board board, src.Piece piece)
+        public static List<Tuple<uint, uint>> getCover(src.Board board, src.Piece piece)
         {
             // Get cover
             List<Tuple<uint, uint>> cover = new List<Tuple<uint, uint>>();
@@ -124,7 +124,7 @@ namespace ChessForms.rules
             return cover;
         }
 
-        private List<Tuple<uint, uint>> getEnemyKingReach(Board board, Piece piece)
+        private static List<Tuple<uint, uint>> getEnemyKingReach(Board board, Piece piece)
         {
             // Find enemy king
             List<Tuple<uint, uint>> enemyKingReach = new List<Tuple<uint, uint>>();
@@ -149,7 +149,7 @@ namespace ChessForms.rules
             return enemyKingReach;
         }
 
-        public List<Tuple<uint, uint>> getReach(Board board, Piece piece)
+        public static List<Tuple<uint, uint>> getReach(Board board, Piece piece)
         {
             List<Tuple<uint, uint>> reach = new List<Tuple<uint, uint>>();
 
@@ -176,5 +176,22 @@ namespace ChessForms.rules
 
             return reach;
         }
+
+        //Checks if move is possible
+        public static bool movePossible(Board board, Piece piece, Tuple<uint, uint, uint, uint> move)
+        {
+            List<Tuple<uint, uint>> tmp;
+            tmp = getPossibleMoves(board, piece);
+            foreach (Tuple<uint, uint> item in tmp)
+            {
+                if ((item.Item1 == move.Item3) &&
+                    (item.Item2 == move.Item4))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 }
