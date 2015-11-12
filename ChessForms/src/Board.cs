@@ -434,7 +434,7 @@ namespace ChessForms.src
 
         public bool withinBoard(int x, int y)
         {
-            return (0 < x && x < BOARD_SIZE_X && 0 < y && y < BOARD_SIZE_Y);
+            return (0 <= x && x < BOARD_SIZE_X && 0 <= y && y < BOARD_SIZE_Y);
         }
 
     }
