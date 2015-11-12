@@ -292,7 +292,7 @@
             // 
             this.blackAiDiffTrackBar.Location = new System.Drawing.Point(407, 81);
             this.blackAiDiffTrackBar.Maximum = 6;
-            this.blackAiDiffTrackBar.Minimum = 2;
+            this.blackAiDiffTrackBar.Minimum = 1;
             this.blackAiDiffTrackBar.Name = "blackAiDiffTrackBar";
             this.blackAiDiffTrackBar.Size = new System.Drawing.Size(174, 45);
             this.blackAiDiffTrackBar.TabIndex = 20;
@@ -324,7 +324,7 @@
             // 
             this.whiteAiDiffTrackBar.Location = new System.Drawing.Point(406, 502);
             this.whiteAiDiffTrackBar.Maximum = 6;
-            this.whiteAiDiffTrackBar.Minimum = 2;
+            this.whiteAiDiffTrackBar.Minimum = 1;
             this.whiteAiDiffTrackBar.Name = "whiteAiDiffTrackBar";
             this.whiteAiDiffTrackBar.Size = new System.Drawing.Size(174, 45);
             this.whiteAiDiffTrackBar.TabIndex = 22;
