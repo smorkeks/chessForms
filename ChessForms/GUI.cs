@@ -316,8 +316,8 @@ namespace ChessForms
             SolidBrush brushMoves = new SolidBrush(Color.Red);
             if (selectedSquareX != -1 && selectedSquareY != -1)
             {
-                src.Square s = board.getSquareAt((uint)selectedSquareX, (uint)selectedSquareY);
-                if (s.getPiece() != null)
+                src.Piece p = board.getPieceAt((uint)selectedSquareX, (uint)selectedSquareY);
+                if (p != null)
                 {
                     int drawX = (selectedSquareX + 1) * squareWidth;
                     int drawY = (7 - selectedSquareY + 1) * squareHeight;
@@ -325,7 +325,7 @@ namespace ChessForms
                     // Mark selected square
                     drawBorder(g, brushSelect, drawX, drawY, squareWidth, squareHeight, 5);
 
-                    foreach (Tuple<uint, uint> t in s.getPiece().getPossibleMoves(board.getSquareAt, turn))
+                    foreach (Tuple<uint, uint> t in ChessForms.rules.Rules.getPossibleMoves(board, p))
                     {
                         drawX = (int)(t.Item1 + 1) * squareWidth;
                         drawY = (int)(7 - t.Item2 + 1) * squareHeight;
@@ -447,7 +447,8 @@ namespace ChessForms
                 List<Tuple<uint, uint>> moves;
                 if (selectedSquareX != -1 && selectedSquareY != -1)
                 {
-                    moves = board.getSquareAt((uint)selectedSquareX, (uint)selectedSquareY).getPiece().getPossibleMoves(board.getSquareAt, turn);
+                    moves = ChessForms.rules.Rules.getPossibleMoves(board, board.getPieceAt((uint)selectedSquareX, (uint)selectedSquareY));
+                    //moves = board.getSquareAt((uint)selectedSquareX, (uint)selectedSquareY).getPiece().getPossibleMoves(board.getSquareAt, turn);
                 }
                 else
                 {

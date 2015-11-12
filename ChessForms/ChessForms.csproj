@@ -50,7 +50,6 @@
     <Compile Include="rules\KnightRules.cs" />
     <Compile Include="rules\KingRules.cs" />
     <Compile Include="rules\PawnRules.cs" />
-    <Compile Include="rules\PieceRules.cs" />
     <Compile Include="rules\QueenRules.cs" />
     <Compile Include="rules\RookRules.cs" />
     <Compile Include="rules\Rules.cs" />

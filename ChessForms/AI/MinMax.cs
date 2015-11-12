@@ -45,11 +45,11 @@ namespace ChessForms.AI
             // Get moves from active player
             if (activePlayer == "white")
             {
-                moves = board.getWhiteMoves();
+                moves = ChessForms.rules.Rules.getWhiteMoves(board);
             }
             else
             {
-                moves = board.getBlackMoves();
+                moves = ChessForms.rules.Rules.getBlackMoves(board);
             }
 
             // Check if no legal moves
