@@ -46,10 +46,12 @@
   <ItemGroup>
     <Compile Include="graphics\ImageHandler.cs" />
     <Compile Include="AI\MinMax.cs" />
+    <Compile Include="rules\BishopRules.cs" />
     <Compile Include="rules\KnightRules.cs" />
     <Compile Include="rules\PawnRules.cs" />
     <Compile Include="rules\PieceRules.cs" />
     <Compile Include="rules\QueenRules.cs" />
+    <Compile Include="rules\RookRules.cs" />
     <Compile Include="rules\Rules.cs" />
     <Compile Include="src\Agent.cs" />
     <Compile Include="src\AiAgent.cs" />
