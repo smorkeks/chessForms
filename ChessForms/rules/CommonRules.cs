@@ -162,35 +162,42 @@ namespace ChessForms.rules
                 }
             }
 
+
+
+
+            // ----------------------------------------------------------------------------------------
+
+
+
             // Make sure that no new check is created by a move
             if (board.getSquareAt(piece.getX(), piece.getY()).getEnemyCover(colour))
             {
                 // Empty list of squares with cover of this square
-                List<Square> threats = new List<Square>();
+                List<Piece> threats = new List<Piece>();
 
                 // Get all squares with cover of self
-                Square s;
-                for (uint j = 0; j < 8; j++)
+                Piece p;
+                for (uint j = 0; j < Board.BOARD_SIZE_X; j++)
                 {
-                    for (uint i = 0; i < 8; i++)
+                    for (uint i = 0; i < Board.BOARD_SIZE_Y; i++)
                     {
-                        s = board.getSquareAt(j, i);
-                        if (s.getPiece() != null && s.getPiece().getColour() != colour)
+                        p = board.getPieceAt(j, i);
+                        if (p != null && p.getColour() != colour)
                         {
                             // Remove impossible cases
-                            if (s.getPiece() is King || s.getPiece() is Knight || s.getPiece() is Pawn)
+                            if (p is King || p is Knight || p is Pawn)
                             {
                                 continue;
                             }
 
                             // Enemy piece, check if threat
-                            List<Tuple<uint, uint>> cover = Rules.getCover(board, s.getPiece());
+                            List<Tuple<uint, uint>> cover = Rules.getCover(board, p);
                             foreach (Tuple<uint, uint> t in cover)
                             {
                                 if (t.Item1 == piece.getX() && t.Item2 == piece.getY())
                                 {
                                     // Threat
-                                    threats.Add(s);
+                                    threats.Add(p);
                                 }
                             }
                         }
@@ -198,78 +205,153 @@ namespace ChessForms.rules
                 }
 
                 // Check each threat for possible new check
-                foreach (Square square in threats)
+                Piece realThreat = null;
+                int xMod = 0, yMod = 0;
+                int threatX;
+                int threatY;
+                int x = (int)piece.getX();
+                int y = (int)piece.getY();
+                foreach (Piece threat in threats)
                 {
-                    Piece p = square.getPiece();
+                    threatX = (int) threat.getX();
+                    threatY = (int) threat.getY();
 
-                    int xMod = 0, yMod = 0;
-
-                    if (p.getX() == xKing || p.getY() == yKing)
+                    // Find relative position of the threat
+                    if (threatX > x)
                     {
-                        // Not diagonal
-                        if ((int)p.getX() - (int)xKing > 0)
-                            xMod = 1;
-                        else if ((int)p.getX() - (int)xKing < 0)
-                            xMod = -1;
-
-                        if ((int)p.getY() - ((int)yKing) > 0)
-                            yMod = 1;
-                        else if ((int)p.getY() - ((int)yKing) < 0)
-                            yMod = -1;
+                        // Threat to the right
+                        xMod = -1;
+                    }
+                    else if (threatX == x)
+                    {
+                        // Threat at same x
+                        xMod = 0;
                     }
                     else
                     {
-                        // Diagonal
-                        xMod = (xKing > p.getX() ? -1 : 1);
-                        yMod = (yKing > p.getY() ? -1 : 1);
+                        // Treat to the left
+                        xMod = 1;
                     }
 
-                    int steps = (int)(xMod != 0 ? (Math.Abs(p.getX() - xKing)) : (Math.Abs(p.getY() - yKing)));
-                    int x = (int)xKing;
-                    int y = (int)yKing;
-                    int numBlocks = 0;
-                    bool foundSelf = false;
-                    bool foundThreat = false;
-                    bool oob = false;
-                    for (int i = 0; i < steps - 1; i++)
+                    if (threatY > y)
+                    {
+                        // Threat above
+                        yMod = -1;
+                    }
+                    else if (threatY == y)
+                    {
+                        // Threat at same y
+                        yMod = 0;
+                    }
+                    else
+                    {
+                        // Treat below
+                        yMod = 1;
+                    }
+
+                    // Step from self away from threat.
+                    // If king is the first piece found, this is the real threatening piece.
+                    int stepX = x;
+                    int stepY = y;
+                    Piece firstPiece;
+                    while (true)
                     {
                         x += xMod;
                         y += yMod;
 
-                        if (x == piece.getX() && y == piece.getY())
+                        if (!board.withinBoard(x, y))
                         {
-                            foundSelf = true;
-                            numBlocks++;
+                            break;
                         }
-                        else if (x == square.getX() && y == square.getY())
+
+                        firstPiece = board.getPieceAt((uint) x, (uint) y);
+                        if (firstPiece != null && firstPiece is King && firstPiece.getColour() == piece.getColour())
                         {
-                            foundThreat = true;
-                        }
-                        else
-                        {
-                            Square sq = board.getSquareAt((uint)x, (uint)y);
-                            if (sq == null)
-                            {
-                                oob = true;
-                                break;
-                            }
-                            if (sq.getPiece() != null)
-                            {
-                                numBlocks++;
-                            }
+                            // This is the friendly king.
+                            realThreat = threat;
+                            break;
                         }
                     }
 
-                    // Must have at least two blocks to be a possible move
-                    if (oob && !foundThreat)
+                    if (realThreat != null)
                     {
-                        // OK
-                        return;
+                        // Real threat found.
+                        break;
                     }
-                    if (foundSelf && numBlocks < 2)
-                    {
-                        moves.Clear();
-                    }
+                
+                    //if (threatX == xKing || threatY == yKing)
+                    //{
+                    //    // Not diagonal
+                    //    if (threatX - (int) xKing > 0)
+                    //        xMod = 1;
+                    //    else if ((int)p.getX() - (int)xKing < 0)
+                    //        xMod = -1;
+
+                    //    if ((int)p.getY() - ((int)yKing) > 0)
+                    //        yMod = 1;
+                    //    else if ((int)p.getY() - ((int)yKing) < 0)
+                    //        yMod = -1;
+                    //}
+                    //else
+                    //{
+                    //    // Diagonal
+                    //    xMod = (xKing > p.getX() ? -1 : 1);
+                    //    yMod = (yKing > p.getY() ? -1 : 1);
+                    //}
+
+                    //int steps = (int)(xMod != 0 ? (Math.Abs(p.getX() - xKing)) : (Math.Abs(p.getY() - yKing)));
+                    //int x = (int)xKing;
+                    //int y = (int)yKing;
+                    //int numBlocks = 0;
+                    //bool foundSelf = false;
+                    //bool foundThreat = false;
+                    //bool oob = false;
+                    //for (int i = 0; i < steps - 1; i++)
+                    //{
+                    //    x += xMod;
+                    //    y += yMod;
+
+                    //    if (x == piece.getX() && y == piece.getY())
+                    //    {
+                    //        foundSelf = true;
+                    //        numBlocks++;
+                    //    }
+                    //    else if (x == square.getX() && y == square.getY())
+                    //    {
+                    //        foundThreat = true;
+                    //    }
+                    //    else
+                    //    {
+                    //        Square sq = board.getSquareAt((uint)x, (uint)y);
+                    //        if (sq == null)
+                    //        {
+                    //            oob = true;
+                    //            break;
+                    //        }
+                    //        if (sq.getPiece() != null)
+                    //        {
+                    //            numBlocks++;
+                    //        }
+                    //    }
+                    //}
+                    //
+                    //// Must have at least two blocks to be a possible move
+                    //if (oob && !foundThreat)
+                    //{
+                    //    // OK
+                    //    return;
+                    //}
+                    //if (foundSelf && numBlocks < 2)
+                    //{
+                    //    moves.Clear();
+                    //}
+                }
+
+                // If a real new threat is found; remove any moves that do not end on the
+                // line between this and king
+                if (realThreat != null)
+                {
+                    // TODO: remove wrong moves
                 }
             }
         }
