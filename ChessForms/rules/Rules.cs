@@ -21,7 +21,7 @@ namespace ChessForms.rules
             pawnRules = new PawnRules();
             rookRules = new RookRules();
             knightRules = new KnightRules();
-            bishopRules = new bishopRules();
+            bishopRules = new BishopRules();
             queenRules = new QueenRules();
             kingRules = new KingRules();
         }
