@@ -9,6 +9,23 @@ namespace ChessForms.rules
 {
     class Rules
     {
+        PawnRules pawnRules;
+        RookRules rookRules;
+        KnightRules knightRules;
+        BishopRules bishopRules;
+        QueenRules queenRules;
+        KingRules kingRules;
+
+        public Rules()
+        {
+            pawnRules = new PawnRules();
+            rookRules = new RookRules();
+            knightRules = new KnightRules();
+            bishopRules = new bishopRules();
+            queenRules = new QueenRules();
+            kingRules = new KingRules();
+        }
+
 
         public bool movePossible(Board board, Tuple<uint,uint,uint,uint> move, string activePlayer)
         {
@@ -28,34 +45,30 @@ namespace ChessForms.rules
             // Check if move is possible
             if (p is Pawn)
             {
-
+                return pawnRules.movePossible(board, p, move);
             }
             else if (p is Rook)
             {
-
+                return rookRules.movePossible(board, p, move);
             }
             else if (p is Knight)
             {
-
+                return knightRules.movePossible(board, p, move);
             }
             else if (p is Bishop)
             {
-
+                return bishopRules.movePossible(board, p, move);
             }
             else if (p is Queen)
             {
-
+                return queenRules.movePossible(board, p, move);
             }
             else if (p is King)
             {
-
+                return kingRules.movePossible(board, p, move);
             }
-            else
-            {
-                // Should not get here ever...
-                return false;
-            }
-
+            
+            // Should not get here ever...
             return false;
         }
         
