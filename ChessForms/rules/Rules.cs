@@ -54,7 +54,7 @@ namespace ChessForms.rules
             // Should not get here ever...
             return false;
         }
-
+        
         // Get all possible moves for a piece.
         public static List<Tuple<uint, uint>> getPossibleMoves(Board board, Piece piece)
         {
