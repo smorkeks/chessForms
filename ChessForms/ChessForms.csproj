@@ -48,6 +48,7 @@
     <Compile Include="AI\MinMax.cs" />
     <Compile Include="rules\PawnRules.cs" />
     <Compile Include="rules\PieceRules.cs" />
+    <Compile Include="rules\RookRules.cs" />
     <Compile Include="rules\Rules.cs" />
     <Compile Include="src\Agent.cs" />
     <Compile Include="src\AiAgent.cs" />
