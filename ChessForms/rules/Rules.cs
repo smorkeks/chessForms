@@ -120,9 +120,9 @@ namespace ChessForms.rules
         }
 
         // Get all moves of a specific colour.
-        private static List<Tuple<uint, uint, uint, uint>> getMoves(Board board, string col)
+        private static List<Move> getMoves(Board board, string col)
         {
-            List<Tuple<uint, uint, uint, uint>> moves = new List<Tuple<uint, uint, uint, uint>>();
+            List<Move> moves = new List<Move>();
 
             for (uint y = 0; y < Board.BOARD_SIZE_Y; y++)
             {
@@ -135,7 +135,7 @@ namespace ChessForms.rules
 
                         foreach (Tuple<uint, uint> t in newMoves)
                         {
-                            moves.Add(new Tuple<uint, uint, uint, uint>(x, y, t.Item1, t.Item2));
+                            moves.Add(new Move(x, y, t.Item1, t.Item2));
                         }
                     }
                 }
@@ -145,13 +145,13 @@ namespace ChessForms.rules
         }
 
         // Get all possible white moves, in the format x1,y1, x2,y2.
-        public static List<Tuple<uint, uint, uint, uint>> getWhiteMoves(Board board)
+        public static List<Move> getWhiteMoves(Board board)
         {
             return getMoves(board, "white");
         }
 
         // Get all possible black moves, in the format x1,y1, x2,y2.
-        public static List<Tuple<uint, uint, uint, uint>> getBlackMoves(Board board)
+        public static List<Move> getBlackMoves(Board board)
         {
             return getMoves(board, "black");
         }
@@ -159,7 +159,7 @@ namespace ChessForms.rules
         // Check if a player has lost.
         public static bool playerLost(Board board, string col)
         {
-            List<Tuple<uint, uint, uint, uint>> moves = getMoves(board, col);
+            List<Move> moves = getMoves(board, col);
             return (moves.Count == 0 && getCheck(board, col));
         }
 
@@ -190,8 +190,8 @@ namespace ChessForms.rules
         // Check if Remi
         public static bool remi(Board board)
         {
-            List<Tuple<uint, uint, uint, uint>> movesW = getWhiteMoves(board);
-            List<Tuple<uint, uint, uint, uint>> movesB = getBlackMoves(board);
+            List<Move> movesW = getWhiteMoves(board);
+            List<Move> movesB = getBlackMoves(board);
             return ((movesW.Count == 0 && !getCheck(board, "white") || (movesB.Count == 0 && !getCheck(board, "black"))));
         }
     }

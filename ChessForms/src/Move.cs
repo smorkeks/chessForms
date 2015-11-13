@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChessForms.src
 {
-    class Move
+    public class Move
     {
         // --- Flags ---
         private bool giveUp;
@@ -21,7 +21,7 @@ namespace ChessForms.src
         public bool Illegal
         {
             get { return illegal; }
-            set { Illegal = value; }
+            set { illegal = value; }
         }
 
         // --- Coordinates from and to ---
@@ -55,18 +55,18 @@ namespace ChessForms.src
 
         public Move()
         {
-            fromX = 0;
-            fromY = 0;
-            toX = 0;
-            toY = 0;
+            fromX = 10000;
+            fromY = 10000;
+            toX = 10000;
+            toY = 10000;
             giveUp = false;
             illegal = true;
         }
 
         public Move(uint toX, uint toY)
         {
-            fromX = 0;
-            fromY = 0;
+            fromX = 10000;
+            fromY = 10000;
             this.toX = toX;
             this.toY = toY;
             giveUp = false;
@@ -115,6 +115,31 @@ namespace ChessForms.src
             copy.GiveUp = giveUp;
             copy.Illegal = illegal;
             return copy;
+        }
+
+        public bool Equals(Move m)
+        {
+            if (m == null)
+            {
+                return false;
+            }
+
+            return m.FromX == fromX &&
+                   m.FromY == fromY &&
+                   m.ToX == toX &&
+                   m.ToY == toY &&
+                   m.GiveUp == giveUp &&
+                   m.Illegal == illegal;
+        }
+
+        public bool hasFrom()
+        {
+            return fromX != 10000 && fromY != 10000;
+        }
+
+        public bool hasTo()
+        {
+            return toX != 10000 && toY != 10000;
         }
     }
 }

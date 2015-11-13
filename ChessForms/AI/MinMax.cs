@@ -68,7 +68,7 @@ namespace ChessForms.AI
             foreach (Move move in moves)
             {
                 nextBoard.Copy(board);
-                nextBoard.makeMove(activePlayer, move.FromX, move.FromY, move.ToX, move.ToY);
+                nextBoard.makeMove(activePlayer, move);
                 nextResult = runMinMax(nextBoard, nonActivePlayer, depth - 1, !max, alpha, beta, put);
 
                 // If new best result, then change bestResult.

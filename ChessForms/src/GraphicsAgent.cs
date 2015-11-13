@@ -19,18 +19,7 @@ namespace ChessForms.src
 
         public override Move getInput(Board B)
         {
-            Move move = read();
-            if (!move.Illegal)
-            {
-                return new Move((uint)move.ToX,
-                                                         (uint)move.ToY,
-                                                         (uint)move.FromX,
-                                                         (uint)move.FromY);
-            }
-            else
-            {
-                return new Move(10, 10, 10, 10);
-            }
+            return read();
         }
     }
 }

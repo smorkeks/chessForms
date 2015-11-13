@@ -309,7 +309,7 @@ namespace ChessForms
             // Selection, moves and cover
             SolidBrush brushSelect = new SolidBrush(Color.Green);
             SolidBrush brushMoves = new SolidBrush(Color.Red);
-            if (!selectedMove.Illegal)
+            if (selectedMove.hasFrom())
             {
                 src.Piece p = board.getPieceAt(selectedMove.FromX, selectedMove.FromY);
                 if (p != null)
@@ -438,8 +438,9 @@ namespace ChessForms
             }
             else
             {
+                // New square clicked
                 List<Tuple<uint, uint>> moves;
-                if (!selectedMove.Illegal)
+                if (selectedMove.hasFrom())
                 {
                     moves = ChessForms.rules.Rules.getPossibleMoves(board, board.getPieceAt(selectedMove.FromX, selectedMove.FromY));
                     //moves = board.getSquareAt((uint)selectedSquareX, (uint)selectedSquareY).getPiece().getPossibleMoves(board.getSquareAt, turn);
@@ -460,7 +461,7 @@ namespace ChessForms
                 else
                 {
                     // Move not selected, check if new piece clicked
-                    src.Piece p = board.getSquareAt((uint)newClickX, (uint)newClickY).getPiece();
+                    src.Piece p = board.getPieceAt((uint)newClickX, (uint)newClickY);
                     if (p != null)
                     {
                         selectedMove.FromX = (uint) newClickX;
@@ -474,7 +475,7 @@ namespace ChessForms
             }
             renderGraphicsGUI();
 
-            //putString(selectedSquareX + ", " + selectedSquareY);
+            //putString(selectedMove.FromX + ", " + selectedMove.FromY + ", " + selectedMove.ToX + ", " + selectedMove.ToY + ", " + selectedMove.Illegal);
         }
 
         private void consoleInputOnKeyDown(object sender, KeyEventArgs e)
