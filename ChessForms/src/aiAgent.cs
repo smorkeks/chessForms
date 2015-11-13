@@ -12,8 +12,8 @@ namespace ChessForms.src
         uint difficulty;
         uint repetitionMod = 0;
         bool lateGameMod = false;
-        Tuple<uint, uint, uint, uint> lastMove;
-        Tuple<uint, uint, uint, uint> secondToLastMove;
+        Move lastMove;
+        Move secondToLastMove;
 
         MinMax.putScore put;
 
@@ -24,10 +24,10 @@ namespace ChessForms.src
             difficulty = diff;
         }
 
-        public override Tuple<uint, uint, uint, uint> getInput(Board B)
+        public override Move getInput(Board B)
         {
             MinMax move = new MinMax();
-            Tuple<uint, uint, uint, uint> bestMove;
+            Move bestMove;
 
             put(0);
 
@@ -52,7 +52,7 @@ namespace ChessForms.src
             else
             {
                 repetitionMod += 1;
-                return new Tuple<uint, uint, uint, uint>(10, 10, 10, 10);
+                return new Move(10, 10, 10, 10);
             }
         }
 

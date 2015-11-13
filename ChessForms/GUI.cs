@@ -17,10 +17,11 @@ namespace ChessForms
         private src.Board board;
         private uint turn = 0;
 
-        int selectedSquareX = -1;
+        src.Move selectedMove;
+        /*int selectedSquareX = -1;
         int selectedSquareY = -1;
         int selectedMoveX = -1;
-        int selectedMoveY = -1;
+        int selectedMoveY = -1;*/
 
         public delegate void gameInterfaceFunc();
         gameInterfaceFunc startGameFunc;
@@ -131,19 +132,14 @@ namespace ChessForms
             return tmp;
         }
 
-        public Tuple<int, int, int, int> readSelectedMove()
+        public src.Move readSelectedMove()
         {
-            Tuple<int, int, int, int> tmp = new Tuple<int, int, int, int>(selectedSquareX,
-                                                                        selectedSquareY,
-                                                                        selectedMoveX,
-                                                                        selectedMoveY);
+            src.Move tmp = selectedMove.Copy();
+
             // If correct move, reset selection
-            if (selectedMoveX != -1 && selectedMoveY != -1)
+            if (!selectedMove.Illegal)
             {
-                selectedMoveX = -1;
-                selectedMoveY = -1;
-                selectedSquareX = -1;
-                selectedSquareY = -1;
+                selectedMove = new src.Move();
             }
 
             return tmp;
@@ -168,8 +164,7 @@ namespace ChessForms
         {
             this.board = board;
 
-            selectedSquareX = -1;
-            selectedSquareY = -1;
+            selectedMove = new src.Move();
 
             renderGUI();
         }
@@ -314,13 +309,13 @@ namespace ChessForms
             // Selection, moves and cover
             SolidBrush brushSelect = new SolidBrush(Color.Green);
             SolidBrush brushMoves = new SolidBrush(Color.Red);
-            if (selectedSquareX != -1 && selectedSquareY != -1)
+            if (!selectedMove.Illegal)
             {
-                src.Piece p = board.getPieceAt((uint)selectedSquareX, (uint)selectedSquareY);
+                src.Piece p = board.getPieceAt(selectedMove.FromX, selectedMove.FromY);
                 if (p != null)
                 {
-                    int drawX = (selectedSquareX + 1) * squareWidth;
-                    int drawY = (7 - selectedSquareY + 1) * squareHeight;
+                    int drawX = ((int) selectedMove.FromX + 1) * squareWidth;
+                    int drawY = (7 - (int) selectedMove.FromY + 1) * squareHeight;
 
                     // Mark selected square
                     drawBorder(g, brushSelect, drawX, drawY, squareWidth, squareHeight, 5);
@@ -422,7 +417,7 @@ namespace ChessForms
 
         private void onDrawingClick(object sender, MouseEventArgs e)
         {
-            if (selectedMoveX != -1 && selectedMoveY != -1)
+            if (!selectedMove.Illegal)
             {
                 // A move has already been selected.
                 return;
@@ -437,17 +432,16 @@ namespace ChessForms
                 return;
             }
 
-            if (newClickX == selectedSquareX && newClickY == selectedSquareY)
+            if (newClickX == selectedMove.FromX && newClickY == selectedMove.FromY)
             {
-                selectedSquareX = -1;
-                selectedSquareY = -1;
+                selectedMove = new src.Move();
             }
             else
             {
                 List<Tuple<uint, uint>> moves;
-                if (selectedSquareX != -1 && selectedSquareY != -1)
+                if (!selectedMove.Illegal)
                 {
-                    moves = ChessForms.rules.Rules.getPossibleMoves(board, board.getPieceAt((uint)selectedSquareX, (uint)selectedSquareY));
+                    moves = ChessForms.rules.Rules.getPossibleMoves(board, board.getPieceAt(selectedMove.FromX, selectedMove.FromY));
                     //moves = board.getSquareAt((uint)selectedSquareX, (uint)selectedSquareY).getPiece().getPossibleMoves(board.getSquareAt, turn);
                 }
                 else
@@ -459,8 +453,9 @@ namespace ChessForms
                 if (moves.Contains(new Tuple<uint, uint>((uint)newClickX, (uint)newClickY)))
                 {
                     // Move selected
-                    selectedMoveX = newClickX;
-                    selectedMoveY = newClickY;
+                    selectedMove.ToX = (uint) newClickX;
+                    selectedMove.ToY = (uint) newClickY;
+                    selectedMove.Illegal = false;
                 }
                 else
                 {
@@ -468,13 +463,12 @@ namespace ChessForms
                     src.Piece p = board.getSquareAt((uint)newClickX, (uint)newClickY).getPiece();
                     if (p != null)
                     {
-                        selectedSquareX = newClickX;
-                        selectedSquareY = newClickY;
+                        selectedMove.FromX = (uint) newClickX;
+                        selectedMove.FromY = (uint) newClickY;
                     }
                     else
                     {
-                        selectedSquareX = -1;
-                        selectedSquareY = -1;
+                        selectedMove = new src.Move();
                     }
                 }
             }

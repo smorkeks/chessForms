@@ -174,7 +174,7 @@ namespace ChessForms.src
 
         public void run()
         {
-            Tuple<uint, uint, uint, uint> tmp = null;
+            Move selectedMove = null;
             bool oldTurnWhite = turnWhite;
 
             while (running)
@@ -187,10 +187,10 @@ namespace ChessForms.src
                 {
                     if (turnWhite)
                     {
-                        tmp = white.getInput(board);
-                        if (Rules.movePossible(board, tmp, "white"))
+                        selectedMove = white.getInput(board);
+                        if (Rules.movePossible(board, selectedMove, "white"))
                         {
-                            board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
+                            board.makeMove("white", selectedMove);
                             turnWhite = false;
                         }
                         //printMoves(tmp.Item1, tmp.Item2);
@@ -199,10 +199,10 @@ namespace ChessForms.src
                     }
                     else
                     {
-                        tmp = black.getInput(board);
-                        if (Rules.movePossible(board, tmp, "black"))
+                        selectedMove = black.getInput(board);
+                        if (Rules.movePossible(board, selectedMove, "black"))
                         {
-                            board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
+                            board.makeMove("black", selectedMove);
                             turnWhite = true;
                         }
                         //printMoves(tmp.Item1, tmp.Item2);
@@ -216,7 +216,7 @@ namespace ChessForms.src
                     if (oldTurnWhite != turnWhite)
                     {
                         // Print accepted move
-                        gui.putString(tmp.ToString());
+                        gui.putString(selectedMove.ToString());
 
                         // Update graphics
                         gui.updateBoard(board);

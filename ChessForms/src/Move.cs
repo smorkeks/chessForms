@@ -8,13 +8,20 @@ namespace ChessForms.src
 {
     class Move
     {
-        // --- Flag for giving up ---
+        // --- Flags ---
         private bool giveUp;
-        
+        private bool illegal;
+
         public bool GiveUp
         {
             get { return giveUp; }
             set { giveUp = value; }
+        }
+
+        public bool Illegal
+        {
+            get { return illegal; }
+            set { Illegal = value; }
         }
 
         // --- Coordinates from and to ---
@@ -53,6 +60,7 @@ namespace ChessForms.src
             toX = 0;
             toY = 0;
             giveUp = false;
+            illegal = true;
         }
 
         public Move(uint toX, uint toY)
@@ -62,6 +70,7 @@ namespace ChessForms.src
             this.toX = toX;
             this.toY = toY;
             giveUp = false;
+            illegal = false;
         }
 
         public Move(uint fromX, uint fromY, uint toX, uint toY)
@@ -71,6 +80,7 @@ namespace ChessForms.src
             this.toX = toX;
             this.toY = toY;
             giveUp = false;
+            illegal = false;
         }
 
         // --- Other functions ---
@@ -87,5 +97,24 @@ namespace ChessForms.src
             fromY = y;
         }
 
+        public override string ToString()
+        {
+            if (giveUp)
+            {
+                return "Give Up";
+            }
+            else
+            {
+                return "(" + fromX + ", " + fromY + ", " + toX + ", " + toY + ")";
+            }
+        }
+
+        public Move Copy()
+        {
+            Move copy = new Move(fromX, fromY, toX, toY);
+            copy.GiveUp = giveUp;
+            copy.Illegal = illegal;
+            return copy;
+        }
     }
 }

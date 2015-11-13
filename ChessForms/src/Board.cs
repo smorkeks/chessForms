@@ -164,8 +164,13 @@ namespace ChessForms.src
         //    return getMoves(COLOUR_BLACK);
         //}
 
-        public bool makeMove(string col, uint x1, uint y1, uint x2, uint y2)
+        public bool makeMove(string col, Move move)
         {
+            uint x1 = move.FromX;
+            uint y1 = move.FromY;
+            uint x2 = move.ToX;
+            uint y2 = move.ToY;
+
             Piece p = getPieceAt(x1, y1);
             Square s1 = getSquareAt(x1, y1);
             Square s2 = getSquareAt(x2, y2);
