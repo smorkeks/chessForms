@@ -17,7 +17,7 @@ namespace ChessForms.src
             this.read = read;
         }
 
-        public override Tuple<uint, uint, uint, uint> getInput(Board B)
+        public override Move getInput(Board B)
         {
 
             string inp = "";
@@ -34,11 +34,11 @@ namespace ChessForms.src
                 uint xTo = decodeInput(inp[2]);
                 uint yTo = decodeInput(inp[3]);
 
-                return new Tuple<uint, uint, uint, uint>(xFrom, yFrom, xTo, yTo);
+                return new Move(xFrom, yFrom, xTo, yTo);
             }
             else
             {
-                return new Tuple<uint, uint, uint, uint>(10, 10, 10, 10);
+                return new Move(10, 10, 10, 10);
             }
         }
 
