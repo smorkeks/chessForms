@@ -15,7 +15,7 @@ namespace ChessForms.AI
         public const int MINIMUM = -10000000;
         public const int MAXIMUM = 10000000;
 
-        public Tuple<Tuple<uint, uint, uint, uint>, int> runMinMax(Board board, string activePlayer, uint depth, bool max, int alpha, int beta, putScore put)
+        public Tuple<Move, int> runMinMax(Board board, string activePlayer, uint depth, bool max, int alpha, int beta, putScore put)
         {
             // TODO: Test, remove when done
             put(1);
@@ -33,12 +33,12 @@ namespace ChessForms.AI
             // First check if this is leaf node
             if (depth <= 0)
             {
-                return new Tuple<Tuple<uint, uint, uint, uint>, int>(null, (max ? board.getScore(activePlayer) : board.getScore(nonActivePlayer)));
+                return new Tuple<Move, int>(null, (max ? board.getScore(activePlayer) : board.getScore(nonActivePlayer)));
             }
 
             // Not a leaf node, branch out
 
-            List<Tuple<uint, uint, uint, uint>> moves = new List<Tuple<uint, uint, uint, uint>>();
+            List<Move> moves = new List<Move>();
 
             
 
@@ -55,27 +55,27 @@ namespace ChessForms.AI
             // Check if no legal moves
             if (moves.Count == 0)
             {
-                return new Tuple<Tuple<uint, uint, uint, uint>, int>(null, (max ? MINIMUM : MAXIMUM));
+                return new Tuple<Move, int>(null, (max ? MINIMUM : MAXIMUM));
             }
 
             // Assume horrible best
             int bestScore = (max ? MINIMUM : MAXIMUM);
-            Tuple<Tuple<uint, uint, uint, uint>, int> bestResult = new Tuple<Tuple<uint, uint, uint, uint>, int>(null, bestScore);
+            Tuple<Move, int> bestResult = new Tuple<Move, int>(null, bestScore);
 
             // Loop through all moves and minmax them
             Board nextBoard = new Board(board.getTurn());
-            Tuple<Tuple<uint, uint, uint, uint>, int> nextResult;
-            foreach (Tuple<uint, uint, uint, uint> move in moves)
+            Tuple<Move, int> nextResult;
+            foreach (Move move in moves)
             {
                 nextBoard.Copy(board);
-                nextBoard.makeMove(activePlayer, move.Item1, move.Item2, move.Item3, move.Item4);
+                nextBoard.makeMove(activePlayer, move.FromX, move.FromY, move.ToX, move.ToY);
                 nextResult = runMinMax(nextBoard, nonActivePlayer, depth - 1, !max, alpha, beta, put);
 
                 // If new best result, then change bestResult.
                 if ((nextResult.Item2 > bestResult.Item2 && max) ||
                     (nextResult.Item2 < bestResult.Item2 && !max))
                 {
-                    bestResult = new Tuple<Tuple<uint, uint, uint, uint>, int>(move, nextResult.Item2);
+                    bestResult = new Tuple<Move, int>(move, nextResult.Item2);
                 }
 
                 // Alpha-Beta pruning
