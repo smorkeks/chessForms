@@ -18,27 +18,27 @@ namespace ChessForms.src
         }
 
         // --- Coordinates from and to ---
-        private int fromX, fromY, toX, toY;
+        private uint fromX, fromY, toX, toY;
         
-        public int FromX
+        public uint FromX
         {
             get { return fromX; }
             set { fromX = value; }
         }
 
-        public int FromY
+        public uint FromY
         {
             get { return fromY; }
             set { fromY = value; }
         }
 
-        public int ToX
+        public uint ToX
         {
             get { return toX; }
             set { toX = value; }
         }
 
-        public int ToY
+        public uint ToY
         {
             get { return toY; }
             set { toY = value; }
@@ -55,7 +55,7 @@ namespace ChessForms.src
             giveUp = false;
         }
 
-        public Move(int toX, int toY)
+        public Move(uint toX, uint toY)
         {
             fromX = 0;
             fromY = 0;
@@ -64,7 +64,7 @@ namespace ChessForms.src
             giveUp = false;
         }
 
-        public Move(int fromX, int fromY, int toX, int toY)
+        public Move(uint fromX, uint fromY, uint toX, uint toY)
         {
             this.fromX = fromX;
             this.fromY = fromY;
@@ -75,13 +75,13 @@ namespace ChessForms.src
 
         // --- Other functions ---
 
-        public void setTo(int x, int y)
+        public void setTo(uint x, uint y)
         {
             toX = x;
             toY = y;
         }
 
-        public void setFrom(int x, int y)
+        public void setFrom(uint x, uint y)
         {
             fromX = x;
             fromY = y;
