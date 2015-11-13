@@ -238,10 +238,13 @@ namespace ChessForms.rules
                         }
 
                         firstPiece = board.getPieceAt((uint)x, (uint)y);
-                        if (firstPiece != null && firstPiece is King && firstPiece.getColour() == piece.getColour())
+                        if (firstPiece != null)
                         {
-                            // This is the friendly king.
-                            realThreat = threat;
+                            if (firstPiece is King && firstPiece.getColour() == piece.getColour())
+                            {
+                                // This is the friendly king.
+                                realThreat = threat;
+                            }
                             break;
                         }
                     }
