@@ -8,7 +8,7 @@ namespace ChessForms.src
 {
     class GraphicsAgent : Agent
     {
-        public delegate Tuple<int,int,int,int> readMove();
+        public delegate Move readMove();
         readMove read;
 
         public GraphicsAgent(string col, readMove read)
@@ -17,19 +17,19 @@ namespace ChessForms.src
             this.read = read;
         }
 
-        public override Tuple<uint, uint, uint, uint> getInput(Board B)
+        public override Move getInput(Board B)
         {
-            Tuple<int, int, int, int> move = read();
-            if (move.Item1 != -1 && move.Item2 != -1 && move.Item3 != -1 && move.Item4 != -1)
+            Move move = read();
+            if (!move.Illegal)
             {
-                return new Tuple<uint, uint, uint, uint>((uint)move.Item1,
-                                                         (uint)move.Item2,
-                                                         (uint)move.Item3,
-                                                         (uint)move.Item4);
+                return new Move((uint)move.ToX,
+                                                         (uint)move.ToY,
+                                                         (uint)move.FromX,
+                                                         (uint)move.FromY);
             }
             else
             {
-                return new Tuple<uint, uint, uint, uint>(10, 10, 10, 10);
+                return new Move(10, 10, 10, 10);
             }
         }
     }

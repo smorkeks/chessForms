@@ -76,14 +76,14 @@ namespace ChessForms.rules
         }
 
         //Checks if move is possible
-        public static bool movePossible(Board board, Piece piece, Tuple<uint, uint, uint, uint> move)
+        public static bool movePossible(Board board, Piece piece, Move move)
         {
             List<Tuple<uint, uint>> tmp;
             tmp = getPossibleMoves(board, piece);
             foreach (Tuple<uint, uint> item in tmp)
             {
-                if ((item.Item1 == move.Item3) &&
-                    (item.Item2 == move.Item4))
+                if ((item.Item1 == move.ToX) &&
+                    (item.Item2 == move.ToY))
                 {
                     return true;
                 }

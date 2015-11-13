@@ -10,10 +10,10 @@ namespace ChessForms.rules
     class Rules
     {
         // Check if a move is possible on a specific board.
-        public static bool movePossible(Board board, Tuple<uint,uint,uint,uint> move, string activePlayer)
+        public static bool movePossible(Board board, Move move, string activePlayer)
         {
             // Check if piece at move.from
-            Piece p = board.getPieceAt(move.Item1, move.Item2);
+            Piece p = board.getPieceAt(move.FromX, move.FromY);
             if (p == null)
             {
                 return false;
