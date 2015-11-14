@@ -73,7 +73,7 @@ namespace ChessForms.rules
                     if (P == null && P2 == null)
                     {
                         tmpList.Add(new Tuple<uint, uint>(piece.getX(), (uint)(piece.getY() + 2 * yMod)));
-                        ((Pawn)piece).setDoubleStepTurn(board.getTurn());
+                        //((Pawn)piece).setDoubleStepTurn(board.getTurn());
                     }
                 }
             }

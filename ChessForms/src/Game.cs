@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using ChessForms.rules;
+using ChessForms.file;
 
 namespace ChessForms.src
 {
@@ -18,14 +19,14 @@ namespace ChessForms.src
 
         private bool running = false;
         private bool paused = false;
-        
+
         public Game()
         {
             board = new Board();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            gui = new ChessForms.GUI(start, pauseUnpause, reset);
+            gui = new ChessForms.GUI(start, pauseUnpause, reset, saveGame);
             gui.updateBoard(board);
             Application.Run(gui);
         }
@@ -87,6 +88,9 @@ namespace ChessForms.src
                 case "AI":
                     white = new AiAgent("white", gui.getWhiteAIDiff(), gui.putAiScore);
                     break;
+                case "Playback Agent":
+                    white = new PlaybackAgent("white", gui.getWhitePlaybackFileName(), gui.getWhitePlaybackSleepTime());
+                    break;
             }
 
             // Set black agent
@@ -100,6 +104,9 @@ namespace ChessForms.src
                     break;
                 case "AI":
                     black = new AiAgent("black", gui.getBlackAIDiff(), gui.putAiScore);
+                    break;
+                case "Playback Agent":
+                    black = new PlaybackAgent("black", gui.getBlackPlaybackFileName(), gui.getBlackPlaybackSleepTime());
                     break;
             }
 
@@ -149,6 +156,11 @@ namespace ChessForms.src
                         if (!(white is AiAgent && ((AiAgent)white).getDifficulty() == gui.getWhiteAIDiff()))
                             white = new AiAgent("white", gui.getWhiteAIDiff(), gui.putAiScore);
                         break;
+                    case "PlaybackAgent":
+                        int time = gui.getWhitePlaybackSleepTime();
+                        if (!(white is PlaybackAgent && ((PlaybackAgent) white).getSleepTime() == time))
+                            white = new PlaybackAgent("white", gui.getWhitePlaybackFileName(), time);
+                        break;
                 }
 
                 // Set black agent
@@ -166,7 +178,21 @@ namespace ChessForms.src
                         if (!(black is AiAgent && ((AiAgent)black).getDifficulty() == gui.getBlackAIDiff()))
                             black = new AiAgent("black", gui.getBlackAIDiff(), gui.putAiScore);
                         break;
+                    case "Playback Agent":
+                        int time = gui.getBlackPlaybackSleepTime();
+                        if (!(black is PlaybackAgent && ((PlaybackAgent)black).getSleepTime() == time))
+                            black = new PlaybackAgent("black", gui.getBlackPlaybackFileName(), time);
+                        break;
                 }
+            }
+        }
+
+        public void saveGame()
+        {
+            string name = gui.getFileName();
+            if (!name.Equals(""))
+            {
+                SaveManager.saveState(board, name);
             }
         }
 
@@ -217,6 +243,16 @@ namespace ChessForms.src
                     {
                         // Print accepted move
                         gui.putString(selectedMove.ToString());
+
+                        // Save move to file
+                        if (gui.getPlaybackEnabled())
+                        {
+                            string name = gui.getFileName();
+                            if (!name.Equals(""))
+                            {
+                                SaveManager.saveMove(selectedMove, name);
+                            }
+                        }
 
                         // Update graphics
                         gui.updateBoard(board);

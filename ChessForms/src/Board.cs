@@ -205,10 +205,20 @@ namespace ChessForms.src
                 castling = true;
             }
 
-            //Check if en passant
-            if ((p is Pawn) && (getSquareAt(x2, y2).getPiece() == null) && (x1 != x2))
+            // Special handling for pawns
+            if ((p is Pawn))
             {
-                enPassant = true;
+                // Check double step
+                if (Math.Abs((int) move.FromY - (int) move.ToY) == 2)
+                {
+                    ((Pawn)p).setDoubleStepTurn(getTurn());
+                }
+
+                //Check if en passant
+                if ((getSquareAt(x2, y2).getPiece() == null) && (x1 != x2))
+                {
+                    enPassant = true;
+                }
             }
 
             // Remove from old position
@@ -442,5 +452,14 @@ namespace ChessForms.src
             return (0 <= x && x < BOARD_SIZE_X && 0 <= y && y < BOARD_SIZE_Y);
         }
 
+        public List<Square> getAllSquares()
+        {
+            List<Square> list = new List<Square>();
+            foreach (Square s in squares)
+            {
+                list.Add(s);
+            }
+            return list;
+        }
     }
 }

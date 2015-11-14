@@ -27,18 +27,20 @@ namespace ChessForms
         gameInterfaceFunc startGameFunc;
         gameInterfaceFunc pauseGameFunc;
         gameInterfaceFunc resetGameFunc;
+        gameInterfaceFunc saveGameFunc;
 
         ImageHandler imageHandler;
 
         int AIsearchDepth = 0;
         int AIsearchDepthMax = 0;
 
-        public GUI(gameInterfaceFunc start, gameInterfaceFunc pause, gameInterfaceFunc reset)
+        public GUI(gameInterfaceFunc start, gameInterfaceFunc pause, gameInterfaceFunc reset, gameInterfaceFunc save)
         {
             InitializeComponent();
             startGameFunc = start;
             pauseGameFunc = pause;
             resetGameFunc = reset;
+            saveGameFunc = save;
             imageHandler = new ImageHandler(AppDomain.CurrentDomain.BaseDirectory + "../../resources/", "png");
         }
 
@@ -121,6 +123,31 @@ namespace ChessForms
             }
 
             pauseButton.Enabled = false;
+        }
+
+        public string getFileName()
+        {
+            return fileNameTextBox.Text;
+        }
+
+        public string getWhitePlaybackFileName()
+        {
+            return whitePlaybackFilenameTextBox.Text;
+        }
+
+        public string getBlackPlaybackFileName()
+        {
+            return blackPlaybackFilenameTextBox.Text;
+        }
+
+        public int getWhitePlaybackSleepTime()
+        {
+            return whitePlaybackSleepTime.Value;
+        }
+
+        public int getBlackPlaybackSleepTime()
+        {
+            return blackPlaybackSleepTime.Value;
         }
 
         // Agent interface
@@ -353,10 +380,13 @@ namespace ChessForms
                 loadButton.Enabled = false;
                 saveButton.Enabled = false;
                 playbackCheckBox.Enabled = false;
+                fileNameTextBox.Enabled = false;
                 whiteAgentDropDown.Enabled = false;
                 blackAgentDropDown.Enabled = false;
                 whiteAiDiffTrackBar.Enabled = false;
                 blackAiDiffTrackBar.Enabled = false;
+                whitePlaybackSleepTime.Enabled = false;
+                blackPlaybackSleepTime.Enabled = false;
 
                 // Clear console
                 consoleOutput.Clear();
@@ -382,10 +412,13 @@ namespace ChessForms
                 loadButton.Enabled = true;
                 saveButton.Enabled = true;
                 playbackCheckBox.Enabled = true;
+                fileNameTextBox.Enabled = true;
                 whiteAgentDropDown.Enabled = true;
                 blackAgentDropDown.Enabled = true;
                 whiteAiDiffTrackBar.Enabled = true;
                 blackAiDiffTrackBar.Enabled = true;
+                whitePlaybackSleepTime.Enabled = true;
+                blackPlaybackSleepTime.Enabled = true;
 
                 // Reset search depth print
                 AIsearchDepth = 0;
@@ -499,6 +532,8 @@ namespace ChessForms
                 blackAgentDropDown.Enabled = true;
                 whiteAiDiffTrackBar.Enabled = true;
                 blackAiDiffTrackBar.Enabled = true;
+                whitePlaybackSleepTime.Enabled = true;
+                blackPlaybackSleepTime.Enabled = true;
 
                 // Set button text
                 pauseButton.Text = "Unpause Game";
@@ -515,6 +550,8 @@ namespace ChessForms
                 blackAgentDropDown.Enabled = false;
                 whiteAiDiffTrackBar.Enabled = false;
                 blackAiDiffTrackBar.Enabled = false;
+                whitePlaybackSleepTime.Enabled = false;
+                blackPlaybackSleepTime.Enabled = false;
 
                 // Set button text
                 pauseButton.Text = "Pause Game";
@@ -536,6 +573,19 @@ namespace ChessForms
                 blackAiDiffLabel.Visible = false;
                 blackAiDiffTrackBar.Visible = false;
             }
+
+            if (getBlackAgentType() == "Playback Agent")
+            {
+                blackPlaybackFilenameTextBox.Visible = true;
+                blackPlaybackSleepTime.Visible = true;
+                blackSleepTimeLabel.Visible = true;
+            }
+            else
+            {
+                blackPlaybackFilenameTextBox.Visible = false;
+                blackPlaybackSleepTime.Visible = false;
+                blackSleepTimeLabel.Visible = false;
+            }
         }
 
         private void onWhiteAgentChange(object sender, EventArgs e)
@@ -550,6 +600,19 @@ namespace ChessForms
                 whiteAiDiffLabel.Visible = false;
                 whiteAiDiffTrackBar.Visible = false;
             }
+
+            if (getWhiteAgentType() == "Playback Agent")
+            {
+                whitePlaybackFilenameTextBox.Visible = true;
+                whitePlaybackSleepTime.Visible = true;
+                whiteSleepTimeLabel.Visible = true;
+            }
+            else
+            {
+                whitePlaybackFilenameTextBox.Visible = false;
+                whitePlaybackSleepTime.Visible = false;
+                whiteSleepTimeLabel.Visible = false;
+            }
         }
 
         private void onBlackAiDiffChange(object sender, EventArgs e)
@@ -562,6 +625,23 @@ namespace ChessForms
         {
             string s = whiteAiDiffLabel.Text;
             whiteAiDiffLabel.Text = s.Substring(0, s.Length - 1) + getWhiteAIDiff();
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            saveGameFunc();
+        }
+
+        private void onWhiteSleepTimeChange(object sender, EventArgs e)
+        {
+            string s = whiteSleepTimeLabel.Text;
+            whiteSleepTimeLabel.Text = s.Substring(0, s.IndexOf(':') + 1) + " " + getWhitePlaybackSleepTime();
+        }
+
+        private void onBlackSleepTimeChange(object sender, EventArgs e)
+        {
+            string s = blackSleepTimeLabel.Text;
+            blackSleepTimeLabel.Text = s.Substring(0, s.IndexOf(':') + 1) + " " + getBlackPlaybackSleepTime();
         }
     }
 }

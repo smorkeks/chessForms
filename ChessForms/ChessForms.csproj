@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="file\SaveManager.cs" />
     <Compile Include="graphics\ImageHandler.cs" />
     <Compile Include="AI\MinMax.cs" />
     <Compile Include="rules\BishopRules.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="src\Piece.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\PlaybackAgent.cs" />
     <Compile Include="src\Queen.cs" />
     <Compile Include="src\Rook.cs" />
     <Compile Include="src\Square.cs" />
