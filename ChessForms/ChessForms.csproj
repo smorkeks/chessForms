@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="file\FileMonitor.cs" />
     <Compile Include="file\SaveManager.cs" />
     <Compile Include="graphics\ImageHandler.cs" />
     <Compile Include="AI\MinMax.cs" />
