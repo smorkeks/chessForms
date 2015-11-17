@@ -209,7 +209,7 @@ namespace ChessForms.src
             if ((p is Pawn))
             {
                 // Check double step
-                if (Math.Abs((int) move.FromY - (int) move.ToY) == 2)
+                if (Math.Abs((int)move.FromY - (int)move.ToY) == 2)
                 {
                     ((Pawn)p).setDoubleStepTurn(getTurn());
                 }
@@ -274,6 +274,11 @@ namespace ChessForms.src
         public uint getTurn()
         {
             return turn;
+        }
+
+        public void setTurn(uint t)
+        {
+            turn = t;
         }
 
         public void updateTurn()
@@ -460,6 +465,22 @@ namespace ChessForms.src
                 list.Add(s);
             }
             return list;
+        }
+
+        public void clearBoard()
+        {
+            for (uint y = 0; y < BOARD_SIZE_Y; y++)
+            {
+                for (uint x = 0; x < BOARD_SIZE_X; x++)
+                {
+                    squares[x, y] = new Square(x, y);
+                }
+            }
+        }
+
+        public void setPiece(uint x, uint y, Piece piece)
+        {
+            squares[x, y].setPiece(piece);
         }
     }
 }
