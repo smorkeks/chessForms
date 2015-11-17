@@ -11,23 +11,26 @@ namespace ChessForms.file
     public class FileMonitor
     {
 
-        private string filePath = AppDomain.CurrentDomain.BaseDirectory + "../../saveFiles/current_state";
-        
+        private string filePath = AppDomain.CurrentDomain.BaseDirectory + "../../saveFiles/";
+        private const string FILE_NAME = "current_state.txt";
 
-        public delegate void monitorFunc();
-        monitorFunc change;
+        //public delegate void monitorFunc();
+        //monitorFunc change;
 
-        public FileMonitor(monitorFunc onChange)
+        private bool change = false;
+        private DateTime ignoreEnd;
+
+        public FileMonitor(/*monitorFunc onChange*/)
         {
-            change = onChange;
+            //change = onChange;
             //onChange = chan;
             // Create a new FileSystemWatcher and set its properties.
             // Create directory if not exists
-            bool exists = System.IO.Directory.Exists(filePath);
+            /*bool exists = Directory.Exists(filePath);
             if (!exists)
             {
-                System.IO.Directory.CreateDirectory(filePath);
-            }
+                Directory.CreateDirectory(filePath);
+            }*/
 
             FileSystemWatcher watcher = new FileSystemWatcher();
             watcher.Path = filePath;
@@ -35,7 +38,7 @@ namespace ChessForms.file
                the renaming of files or directories. */
             watcher.NotifyFilter = NotifyFilters.LastWrite;
             // Only watch text files.
-            watcher.Filter = "*.txt";
+            watcher.Filter = FILE_NAME;
 
             // Add event handlers.
             watcher.Changed += new FileSystemEventHandler(OnChange);
@@ -44,9 +47,30 @@ namespace ChessForms.file
             watcher.EnableRaisingEvents = true;
         }
 
+        // Called when file changed
         private void OnChange(object source, FileSystemEventArgs e)
         {
-            change();
+            if (DateTime.Now.CompareTo(ignoreEnd) > 0)
+            {
+                change = true;
+            }
+        }
+
+        // Check and reset change flag
+        public bool changeDetected()
+        {
+            if (change)
+            {
+                change = false;
+                return true;
+            }
+
+            return false;
+        }
+
+        public void ignoreFor(int millis)
+        {
+            ignoreEnd = DateTime.Now.AddMilliseconds(millis);
         }
     }
 }

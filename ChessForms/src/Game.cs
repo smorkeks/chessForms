@@ -12,7 +12,7 @@ namespace ChessForms.src
     public class Game
     {
         // Fields
-        FileMonitor filemon;
+        FileMonitor fileMonitor;
         Board board;
         Agent white;
         Agent black;
@@ -27,7 +27,7 @@ namespace ChessForms.src
         public Game()
         {
             board = new Board();
-            filemon = new FileMonitor(OnChange);
+            fileMonitor = new FileMonitor();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             gui = new ChessForms.GUI(start, pauseUnpause, reset, saveGame, loadGame);
@@ -233,30 +233,23 @@ namespace ChessForms.src
                     if (turnWhite)
                     {
                         selectedMove = white.getInput(board);
-                        if (Rules.movePossible(board, selectedMove, "white"))
-                        {
-                            board.makeMove("white", selectedMove);
-                            turnWhite = false;
-                            SaveManager.saveCurrent(board);
-                        }
-                        //printMoves(tmp.Item1, tmp.Item2);
-                        //printPieceAt(tmp.Item1, tmp.Item2);
-                        //turnWhite = !board.makeMove("white", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
                     }
                     else
                     {
                         selectedMove = black.getInput(board);
-                        if (Rules.movePossible(board, selectedMove, "black"))
-                        {
-                            board.makeMove("black", selectedMove);
-                            turnWhite = true;
-                            SaveManager.saveCurrent(board);
-                        }
-                        //printMoves(tmp.Item1, tmp.Item2);
-                        //printPieceAt(tmp.Item1, tmp.Item2);
-                        //turnWhite = board.makeMove("black", tmp.Item1, tmp.Item2, tmp.Item3, tmp.Item4);
                     }
 
+                    if (Rules.movePossible(board, selectedMove, (turnWhite ? "white" : "black")))
+                    {
+                        board.makeMove((turnWhite ? "white" : "black"), selectedMove);
+                        turnWhite = !turnWhite;
+
+                        // Save current state
+                        fileMonitor.ignoreFor(500);
+                        SaveManager.saveCurrent(board);
+                    }
+
+                    // Run everything else
                     Application.DoEvents();
 
                     // New move accepted, update GUI and check for winner.
@@ -290,6 +283,18 @@ namespace ChessForms.src
                         gui.putPlayerTurn(turnWhite);
                         gui.putTurn(board.getTurn());
                         gui.putScore(board.getScore("white"));
+                    }
+
+                    // Check file monitor
+                    if (fileMonitor.changeDetected())
+                    {
+                        bool ok = SaveManager.loadCurrent(ref board);
+                        gui.putString("Load");
+                        if (ok)
+                        {
+                            // Set GUI and other stuff
+                            updateOnLoad();
+                        }
                     }
                 }
 
