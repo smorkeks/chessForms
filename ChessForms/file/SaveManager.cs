@@ -15,7 +15,7 @@ namespace ChessForms.file
         private static string STATE = "state";
         private static string MOVES = "moves";
         private static string SNAPSHOT = "snapshot";
-        
+
         public static void saveState(src.Board b, string fileName)
         {
             // Create directory if not exists
@@ -32,7 +32,7 @@ namespace ChessForms.file
             // Create Xml tree root
             XElement tree = new XElement("Board");
             tree.Add(new XElement("Turn", b.getTurn()));
-            XElement pieces = new XElement("Pieces");
+            
 
             // Get all squares with a piece
             var saveSquares = from s in b.getAllSquares()
@@ -50,16 +50,80 @@ namespace ChessForms.file
                                               new XElement("Moved", p.movedFromInit()));
                 if (p is src.Pawn)
                 {
-                    piece.Add(new XElement("DoubleStepTurn", ((src.Pawn) p).getDoubleStepTurn()));
+                    piece.Add(new XElement("DoubleStepTurn", ((src.Pawn)p).getDoubleStepTurn()));
                 }
-                pieces.Add(piece);
+                tree.Add(piece);
             }
-            tree.Add(pieces);
-            
+
             using (StreamWriter sw = File.AppendText(fullName))
             {
                 sw.WriteLine(tree);
             }
+        }
+
+        public static void loadState(ref src.Board board, string fileName)
+        {
+            // Clear file, might be a better way
+            string fullName = savePath + fileName + "_" + STATE + "." + fileEnding;
+
+            // Clear the board
+            board.clearBoard();
+
+            // Read the savefile
+            var loadFile = XElement.Load(fullName);
+            IEnumerable<XElement> elements = from el in loadFile.Elements() select el;
+
+            // Insert in board
+            foreach (XElement el in elements)
+            {
+                if (el.Name == "Turn")
+                {
+                    board.setTurn(Convert.ToUInt32(el.Value));
+                }
+                else if (el.Name == "Piece")
+                {
+                    // The pieces values
+                    uint x = Convert.ToUInt32(el.Element("X-coordinate").Value);
+                    uint y = Convert.ToUInt32(el.Element("Y-coordinate").Value);
+                    string type = el.Element("Type").Value;
+                    string col = el.Element("Colour").Value;
+                    bool moved = Convert.ToBoolean(el.Element("Moved").Value);
+
+                    src.Piece piece;
+
+                    switch (type)
+                    {
+                        case "Pawn":
+                            piece = new src.Pawn(x, y, col);
+                            ((src.Pawn)piece).setDoubleStepTurn(Convert.ToUInt32(el.Element("DoubleStepTurn").Value));
+                            break;
+                        case "Rook":
+                            piece = new src.Rook(x, y, col);
+                            break;
+                        case "Knight":
+                            piece = new src.Knight(x, y, col);
+                            break;
+                        case "Bishop":
+                            piece = new src.Bishop(x, y, col);
+                            break;
+                        case "Queen":
+                            piece = new src.Queen(x, y, col);
+                            break;
+                        case "King":
+                            piece = new src.King(x, y, col);
+                            break;
+                        default:
+                            //Should not happen
+                            return;
+                    }
+
+                    // Update pieces
+                    piece.setHasMoved(moved);
+                    board.setPiece(x, y, piece);
+
+                }
+            }
+
         }
 
         public static void saveMove(src.Move m, string fileName)

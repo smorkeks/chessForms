@@ -384,5 +384,10 @@ namespace ChessForms.src
             else
                 return (int)score + reward[xCoord, 7 - yCoord];
         }
+
+        public void setHasMoved(bool mov)
+        {
+            hasMoved = mov;
+        }
     }
 }

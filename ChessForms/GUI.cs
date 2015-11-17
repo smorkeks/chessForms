@@ -28,19 +28,21 @@ namespace ChessForms
         gameInterfaceFunc pauseGameFunc;
         gameInterfaceFunc resetGameFunc;
         gameInterfaceFunc saveGameFunc;
+        gameInterfaceFunc loadGameFunc;
 
         ImageHandler imageHandler;
 
         int AIsearchDepth = 0;
         int AIsearchDepthMax = 0;
 
-        public GUI(gameInterfaceFunc start, gameInterfaceFunc pause, gameInterfaceFunc reset, gameInterfaceFunc save)
+        public GUI(gameInterfaceFunc start, gameInterfaceFunc pause, gameInterfaceFunc reset, gameInterfaceFunc save, gameInterfaceFunc load)
         {
             InitializeComponent();
             startGameFunc = start;
             pauseGameFunc = pause;
             resetGameFunc = reset;
             saveGameFunc = save;
+            loadGameFunc = load;
             imageHandler = new ImageHandler(AppDomain.CurrentDomain.BaseDirectory + "../../resources/", "png");
         }
 
@@ -642,6 +644,11 @@ namespace ChessForms
         {
             string s = blackSleepTimeLabel.Text;
             blackSleepTimeLabel.Text = s.Substring(0, s.IndexOf(':') + 1) + " " + getBlackPlaybackSleepTime();
+        }
+
+        private void loadClick(object sender, EventArgs e)
+        {
+            loadGameFunc();
         }
     }
 }

@@ -19,6 +19,7 @@ namespace ChessForms.src
 
         private bool running = false;
         private bool paused = false;
+        private bool loaded = false;
 
         public Game()
         {
@@ -26,7 +27,7 @@ namespace ChessForms.src
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            gui = new ChessForms.GUI(start, pauseUnpause, reset, saveGame);
+            gui = new ChessForms.GUI(start, pauseUnpause, reset, saveGame, loadGame);
             gui.updateBoard(board);
             Application.Run(gui);
         }
@@ -74,7 +75,8 @@ namespace ChessForms.src
             //gui.putString(p2);
 
             // Reset the game before starting
-            reset();
+            if (!loaded)
+                reset();
 
             // Set white agent
             switch (gui.getWhiteAgentType())
@@ -119,6 +121,7 @@ namespace ChessForms.src
         public void reset()
         {
             // Stop the game
+            loaded = false;
             running = false;
             paused = false;
 
@@ -158,7 +161,7 @@ namespace ChessForms.src
                         break;
                     case "PlaybackAgent":
                         int time = gui.getWhitePlaybackSleepTime();
-                        if (!(white is PlaybackAgent && ((PlaybackAgent) white).getSleepTime() == time))
+                        if (!(white is PlaybackAgent && ((PlaybackAgent)white).getSleepTime() == time))
                             white = new PlaybackAgent("white", gui.getWhitePlaybackFileName(), time);
                         break;
                 }
@@ -172,7 +175,7 @@ namespace ChessForms.src
                         break;
                     case "Graphics Agent":
                         if (!(black is TerminalAgent))
-                        black = new GraphicsAgent("black", gui.readSelectedMove);
+                            black = new GraphicsAgent("black", gui.readSelectedMove);
                         break;
                     case "AI":
                         if (!(black is AiAgent && ((AiAgent)black).getDifficulty() == gui.getBlackAIDiff()))
@@ -196,6 +199,19 @@ namespace ChessForms.src
             }
         }
 
+        public void loadGame()
+        {
+            string name = gui.getFileName();
+            if (!name.Equals(""))
+            {
+                SaveManager.loadState(ref board, name);
+                loaded = true;
+                if (board.getTurn() % 2 == 1)
+                    turnWhite = true;
+                else
+                    turnWhite = false;
+            }
+        }
         // --- The main game loop ---
 
         public void run()
