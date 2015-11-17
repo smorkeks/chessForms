@@ -5,12 +5,14 @@ using System.Threading;
 using System.Windows.Forms;
 using ChessForms.rules;
 using ChessForms.file;
+using System.IO;
 
 namespace ChessForms.src
 {
     public class Game
     {
         // Fields
+        FileMonitor filemon;
         Board board;
         Agent white;
         Agent black;
@@ -25,7 +27,7 @@ namespace ChessForms.src
         public Game()
         {
             board = new Board();
-
+            filemon = new FileMonitor(OnChange);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             gui = new ChessForms.GUI(start, pauseUnpause, reset, saveGame, loadGame);
@@ -315,6 +317,11 @@ namespace ChessForms.src
             }
 
             return false;
+        }
+
+        private void OnChange()
+        {
+            SaveManager.loadCurrent(ref board);
         }
     }
 }
