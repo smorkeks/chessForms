@@ -9,7 +9,7 @@ namespace ChessForms.rules
 {
     class KingRules
     {
-        public static List<Tuple<uint, uint>> getPossibleMoves(src.Board board, src.Piece piece)
+        public static List<Tuple<uint, uint>> getPossibleMoves(Board board, Piece piece)
         {
             List<Tuple<uint, uint>> moves = new List<Tuple<uint, uint>>();
 
@@ -82,8 +82,77 @@ namespace ChessForms.rules
                 moves.Remove(reach);
             }
 
+            // Remove any moves that create new checks
+            checkFilter(ref moves, board, piece);
+
             // Done, all moves found
             return moves;
+        }
+
+        private static void checkFilter(ref List<Tuple<uint,uint>> moves, Board board, Piece king)
+        {
+            uint kx = king.getX();
+            uint ky = king.getY();
+            
+            List<Piece> threats = new List<Piece>();
+
+            // Make sure no new checks are created by King moving.
+            if (board.getSquareAt(kx, ky).getEnemyCover(king.getColour()))
+            {    
+                // King is in check, get all threats
+                for (uint y = 0; y < Board.BOARD_SIZE_Y; y++)
+                {
+                    for (uint x = 0; x < Board.BOARD_SIZE_X; x++)
+                    {
+                        Piece p = board.getPieceAt(x, y);
+                        if (p != null && p.getColour() != king.getColour())
+                        {
+                            List<Tuple<uint,uint>> cover = Rules.getCover(board, p);
+                            if (cover.Contains(new Tuple<uint,uint>(kx, ky)))
+                            {
+                                threats.Add(p);
+                            }
+                        }
+                    }
+                } 
+            }
+
+            foreach (Piece threat in threats)
+            {
+                if (threat is Pawn || threat is King || threat is Knight)
+                {
+                    continue;
+                }
+
+                // Get relative position of threat
+                uint tx = threat.getX();
+                uint ty = threat.getY();
+                int xMod;
+                int yMod;
+                
+                if (tx > kx) xMod = -1;
+                else if (tx < kx) xMod = 1;
+                else xMod = 0;
+
+                if (ty > ky) yMod = -1;
+                else if (ty < ky) yMod = 1;
+                else yMod = 0;
+
+                // Get square on the other side of king relative to the threat.
+                int x = (int) kx + xMod;
+                int y = (int) ky + yMod;
+                if (board.withinBoard(x, y))
+                {
+                    List<Tuple<uint, uint>> tmp = new List<Tuple<uint, uint>>(moves);
+                    foreach (Tuple<uint,uint> move in tmp)
+                    {
+                        if (move.Item1 == x && move.Item2 == y)
+                        {
+                            moves.Remove(move);
+                        }
+                    }
+                }
+            }
         }
 
         public static List<Tuple<uint, uint>> getCover(src.Board board, src.Piece piece)
