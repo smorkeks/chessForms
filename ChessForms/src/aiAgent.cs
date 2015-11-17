@@ -26,12 +26,12 @@ namespace ChessForms.src
 
         public override Move getInput(Board B)
         {
-            MinMax move = new MinMax();
+            MinMax minMaxSearch = new MinMax();
             Move bestMove;
 
             put(0);
 
-            bestMove = move.runMinMax(B, colour, getSearchDepth(B), true, MinMax.MINIMUM, MinMax.MAXIMUM, put).Item1;
+            bestMove = minMaxSearch.runMinMax(B, colour, getSearchDepth(B), true, MinMax.MINIMUM, MinMax.MAXIMUM, put).Item1;
             
             if (bestMove != null)
             {

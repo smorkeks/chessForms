@@ -403,7 +403,7 @@ namespace ChessForms
 
                 // Change text of this button
                 startButton.Text = "Reset Game";
-
+                
                 // Start new game
                 startGameFunc();
             }
@@ -434,6 +434,9 @@ namespace ChessForms
                 
                 // Change text of this button
                 startButton.Text = "Start Game";
+
+                // Change text of pause button
+                pauseButton.Text = "Pause Game";
 
                 // Reset game
                 resetGameFunc();
@@ -530,6 +533,7 @@ namespace ChessForms
                 // Enable and disable controls
                 saveButton.Enabled = true;
                 loadButton.Enabled = true;
+                fileNameTextBox.Enabled = true;
                 whiteAgentDropDown.Enabled = true;
                 blackAgentDropDown.Enabled = true;
                 whiteAiDiffTrackBar.Enabled = true;
@@ -548,6 +552,7 @@ namespace ChessForms
                 // Enable and disable controls
                 saveButton.Enabled = false;
                 loadButton.Enabled = false;
+                fileNameTextBox.Enabled = false;
                 whiteAgentDropDown.Enabled = false;
                 blackAgentDropDown.Enabled = false;
                 whiteAiDiffTrackBar.Enabled = false;

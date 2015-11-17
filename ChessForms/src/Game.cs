@@ -16,7 +16,7 @@ namespace ChessForms.src
         Board board;
         Agent white;
         Agent black;
-        ChessForms.GUI gui;
+        GUI gui;
         private bool turnWhite;
 
         private bool running = false;
@@ -207,12 +207,12 @@ namespace ChessForms.src
             string name = gui.getFileName();
             if (!name.Equals(""))
             {
-                SaveManager.loadState(ref board, name);
-                loaded = true;
-                if (board.getTurn() % 2 == 1)
-                    turnWhite = true;
-                else
-                    turnWhite = false;
+                bool ok = SaveManager.loadState(ref board, name);
+                if (ok)
+                {
+                    loaded = true;
+                    updateOnLoad();
+                }
             }
         }
         // --- The main game loop ---
@@ -321,7 +321,27 @@ namespace ChessForms.src
 
         private void OnChange()
         {
-            SaveManager.loadCurrent(ref board);
+            bool ok = SaveManager.loadCurrent(ref board);
+            if (ok)
+            {
+                // Set GUI and other stuff
+                updateOnLoad();
+            }
+        }
+
+        private void updateOnLoad()
+        {
+            gui.putTurn(board.getTurn());
+            if (board.getTurn() % 2 == 1)
+            {
+                turnWhite = true;
+            }
+            else
+            {
+                turnWhite = false;
+            }
+            gui.putPlayerTurn(turnWhite);
+            gui.putScore(board.getScore("white"));
         }
     }
 }

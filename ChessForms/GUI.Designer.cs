@@ -203,8 +203,10 @@
             // 
             this.AiScoreTextBox.Location = new System.Drawing.Point(404, 292);
             this.AiScoreTextBox.Name = "AiScoreTextBox";
+            this.AiScoreTextBox.ReadOnly = true;
             this.AiScoreTextBox.Size = new System.Drawing.Size(175, 20);
             this.AiScoreTextBox.TabIndex = 9;
+            this.AiScoreTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // scoreBoard
             // 

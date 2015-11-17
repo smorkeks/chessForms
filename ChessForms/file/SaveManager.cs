@@ -66,10 +66,16 @@ namespace ChessForms.file
             SaveManager.saveState(board, CURRENT);
         }
 
-        public static void loadState(ref src.Board board, string fileName)
+        public static bool loadState(ref src.Board board, string fileName)
         {
             // Clear file, might be a better way
             string fullName = savePath + fileName + "_" + STATE + "." + fileEnding;
+
+            // Check if file exists
+            if (!File.Exists(fullName))
+            {
+                return false;
+            }
 
             // Clear the board
             board.clearBoard();
@@ -119,7 +125,7 @@ namespace ChessForms.file
                             break;
                         default:
                             //Should not happen
-                            return;
+                            return false;
                     }
 
                     // Update pieces
@@ -129,11 +135,13 @@ namespace ChessForms.file
                 }
             }
 
+            return true;
+
         }
 
-        public static void loadCurrent(ref src.Board board)
+        public static bool loadCurrent(ref src.Board board)
         {
-            SaveManager.loadState(ref board, CURRENT);
+            return SaveManager.loadState(ref board, CURRENT);
         }
 
         public static void saveMove(src.Move m, string fileName)
