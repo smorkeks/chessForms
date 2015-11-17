@@ -14,7 +14,7 @@ namespace ChessForms.file
         private static string fileEnding = "txt";
         private static string STATE = "state";
         private static string MOVES = "moves";
-        private static string SNAPSHOT = "snapshot";
+        private static string CURRENT = "current";
 
         public static void saveState(src.Board b, string fileName)
         {
@@ -59,6 +59,11 @@ namespace ChessForms.file
             {
                 sw.WriteLine(tree);
             }
+        }
+
+        public static void saveCurrent(src.Board board)
+        {
+            SaveManager.saveState(board, CURRENT);
         }
 
         public static void loadState(ref src.Board board, string fileName)
@@ -124,6 +129,11 @@ namespace ChessForms.file
                 }
             }
 
+        }
+
+        public static void loadCurrent(ref src.Board board)
+        {
+            SaveManager.loadState(ref board, CURRENT);
         }
 
         public static void saveMove(src.Move m, string fileName)

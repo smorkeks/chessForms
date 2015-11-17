@@ -20,6 +20,7 @@ namespace ChessForms.src
         private bool running = false;
         private bool paused = false;
         private bool loaded = false;
+        private string current_file = AppDomain.CurrentDomain.BaseDirectory + "../../saveFiles/current_game.txt";
 
         public Game()
         {
@@ -234,6 +235,7 @@ namespace ChessForms.src
                         {
                             board.makeMove("white", selectedMove);
                             turnWhite = false;
+                            SaveManager.saveCurrent(board);
                         }
                         //printMoves(tmp.Item1, tmp.Item2);
                         //printPieceAt(tmp.Item1, tmp.Item2);
@@ -246,6 +248,7 @@ namespace ChessForms.src
                         {
                             board.makeMove("black", selectedMove);
                             turnWhite = true;
+                            SaveManager.saveCurrent(board);
                         }
                         //printMoves(tmp.Item1, tmp.Item2);
                         //printPieceAt(tmp.Item1, tmp.Item2);
