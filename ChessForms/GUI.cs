@@ -30,10 +30,10 @@ namespace ChessForms
         gameInterfaceFunc saveGameFunc;
         gameInterfaceFunc loadGameFunc;
 
-        ImageHandler imageHandler;
-
         int AIsearchDepth = 0;
         int AIsearchDepthMax = 0;
+
+        DrawControl drawControl;
 
         public GUI(gameInterfaceFunc start, gameInterfaceFunc pause, gameInterfaceFunc reset, gameInterfaceFunc save, gameInterfaceFunc load)
         {
@@ -43,7 +43,8 @@ namespace ChessForms
             resetGameFunc = reset;
             saveGameFunc = save;
             loadGameFunc = load;
-            imageHandler = new ImageHandler(AppDomain.CurrentDomain.BaseDirectory + "../../resources/", "png");
+            
+            drawControl = new DrawControl(getSelectedMove);
         }
 
         private void GUI_Load(object sender, EventArgs e)
@@ -51,6 +52,18 @@ namespace ChessForms
             whiteAgentDropDown.SelectedIndex = 0;
             blackAgentDropDown.SelectedIndex = 0;
             consoleInput.KeyDown += consoleInputOnKeyDown;
+
+            // 
+            // drawControl
+            // 
+            this.drawControl.Location = new System.Drawing.Point(7, 7);
+            this.drawControl.Name = "drawControl";
+            this.drawControl.Size = new System.Drawing.Size(520, 520);
+            this.drawControl.TabIndex = 0;
+            this.drawControl.TabStop = false;
+            this.drawControl.MouseClick += new System.Windows.Forms.MouseEventHandler(this.onDrawingClick);
+            this.drawControl.Visible = true;
+            this.tabPage2.Controls.Add(drawControl);
         }
 
         // GUI I/O
@@ -189,9 +202,15 @@ namespace ChessForms
 
         // Graphics interface
 
+        public src.Move getSelectedMove()
+        {
+            return selectedMove;
+        }
+
         public void updateBoard(src.Board board)
         {
             this.board = board;
+            drawControl.setBoard(board);
 
             selectedMove = new src.Move();
 
@@ -273,104 +292,98 @@ namespace ChessForms
 
         private void renderGraphicsGUI()
         {
-            // Setup graphics objects
-            Graphics g = drawingArea.CreateGraphics();
+            drawControl.Invalidate();
 
-            // Calculate size parameters
-            int squareWidth = drawingArea.Width / 9;
-            int squareHeight = drawingArea.Height / 9;
+            //// Setup graphics objects
+            //Graphics g = drawControl.CreateGraphics();
 
-            // Draw numbers and letters
-            SolidBrush brushText = new SolidBrush(Color.Black);
-            for (int i = 1; i <= 8; i++)
-            {
-                g.DrawString((char)(i + 'A' - 1) + "", new Font("Arial", 20), brushText, new Point((int)((i + 0.25) * squareWidth), (int)(squareHeight * 0.3)));
-                g.DrawString((9 - i).ToString(), new Font("Arial", 20), brushText, new Point((int)(squareWidth * 0.3), (int)((i + 0.2) * squareHeight)));
-            }
+            //// Calculate size parameters
+            //int squareWidth = drawControl.Width / 9;
+            //int squareHeight = drawControl.Height / 9;
 
-            // Draw squares
-            SolidBrush brushWhite = new SolidBrush(Color.LightGray);
-            SolidBrush brushBlack = new SolidBrush(Color.Gray);
-            for (int y = 0; y <= 7; y++)
-            {
-                for (int x = 0; x <= 7; x++)
-                {
-                    int drawX = (x + 1) * squareWidth;
-                    int drawY = (y + 1) * squareHeight;
-                    Rectangle rect = new Rectangle(drawX, drawY, squareWidth, squareHeight);
+            //// Draw numbers and letters
+            //SolidBrush brushText = new SolidBrush(Color.Black);
+            //for (int i = 1; i <= 8; i++)
+            //{
+            //    g.DrawString((char)(i + 'A' - 1) + "", new Font("Arial", 20), brushText, new Point((int)((i + 0.25) * squareWidth), (int)(squareHeight * 0.3)));
+            //    g.DrawString((9 - i).ToString(), new Font("Arial", 20), brushText, new Point((int)(squareWidth * 0.3), (int)((i + 0.2) * squareHeight)));
+            //}
 
-                    // Draw square
-                    if ((y + x) % 2 == 0)
-                    {
-                        // White
-                        g.FillRectangle(brushWhite, rect);
-                    }
-                    else
-                    {
-                        // White
-                        g.FillRectangle(brushBlack, rect);
-                    }
+            //// Draw squares
+            //SolidBrush brushWhite = new SolidBrush(Color.LightGray);
+            //SolidBrush brushBlack = new SolidBrush(Color.Gray);
+            //for (int y = 0; y <= 7; y++)
+            //{
+            //    for (int x = 0; x <= 7; x++)
+            //    {
+            //        int drawX = (x + 1) * squareWidth;
+            //        int drawY = (y + 1) * squareHeight;
+            //        Rectangle rect = new Rectangle(drawX, drawY, squareWidth, squareHeight);
 
-                    src.Square square = board.getSquareAt((uint)x, (uint)(7 - y));
-                    if (square.getPiece() != null)
-                    {
-                        // Draw piece
-                        /*g.DrawString(square.getPiece().getColour().Replace('w', 'W').Replace('b', 'B'),
-                                     new Font("Arial", 10),
-                                     brushText,
-                                     new Point((int)(drawX + squareWidth * 0.2), (int)(drawY + squareHeight * 0.35)));
-                        g.DrawString(square.getPiece().GetType().ToString().Substring(15),
-                                     new Font("Arial", 10),
-                                     brushText,
-                                     new Point((int)(drawX + squareWidth * 0.2), (int)(drawY + squareHeight * 0.55)));*/
-                        src.Piece p = square.getPiece();
-                        string type = p.GetType().Name;
-                        string colour = p.getColour().Replace('w', 'W').Replace('b', 'B');
-                        string filename = type + "_" + colour;
-                        g.DrawImage(imageHandler.getImage(filename),
-                                    new Point[] {new Point(drawX + 8, drawY + 8),
-                                                 new Point(drawX + squareWidth - 8, drawY + 8),
-                                                 new Point(drawX + 8, drawY + squareHeight - 8)});
-                    }
-                }
-            }
+            //        // Draw square
+            //        if ((y + x) % 2 == 0)
+            //        {
+            //            // White
+            //            g.FillRectangle(brushWhite, rect);
+            //        }
+            //        else
+            //        {
+            //            // White
+            //            g.FillRectangle(brushBlack, rect);
+            //        }
 
-            // Selection, moves and cover
-            SolidBrush brushSelect = new SolidBrush(Color.Green);
-            SolidBrush brushMoves = new SolidBrush(Color.Red);
-            if (selectedMove.hasFrom())
-            {
-                src.Piece p = board.getPieceAt(selectedMove.FromX, selectedMove.FromY);
-                if (p != null)
-                {
-                    int drawX = ((int) selectedMove.FromX + 1) * squareWidth;
-                    int drawY = (7 - (int) selectedMove.FromY + 1) * squareHeight;
+            //        src.Square square = board.getSquareAt((uint)x, (uint)(7 - y));
+            //        if (square.getPiece() != null)
+            //        {
+            //            // Draw piece
+            //            /*g.DrawString(square.getPiece().getColour().Replace('w', 'W').Replace('b', 'B'),
+            //                         new Font("Arial", 10),
+            //                         brushText,
+            //                         new Point((int)(drawX + squareWidth * 0.2), (int)(drawY + squareHeight * 0.35)));
+            //            g.DrawString(square.getPiece().GetType().ToString().Substring(15),
+            //                         new Font("Arial", 10),
+            //                         brushText,
+            //                         new Point((int)(drawX + squareWidth * 0.2), (int)(drawY + squareHeight * 0.55)));*/
+            //            src.Piece p = square.getPiece();
+            //            string type = p.GetType().Name;
+            //            string colour = p.getColour().Replace('w', 'W').Replace('b', 'B');
+            //            string filename = type + "_" + colour;
+            //            g.DrawImage(imageHandler.getImage(filename),
+            //                        new Point[] {new Point(drawX + 8, drawY + 8),
+            //                                     new Point(drawX + squareWidth - 8, drawY + 8),
+            //                                     new Point(drawX + 8, drawY + squareHeight - 8)});
+            //        }
+            //    }
+            //}
 
-                    // Mark selected square
-                    drawBorder(g, brushSelect, drawX, drawY, squareWidth, squareHeight, 5);
+            //// Selection, moves and cover
+            //SolidBrush brushSelect = new SolidBrush(Color.Green);
+            //SolidBrush brushMoves = new SolidBrush(Color.Red);
+            //if (selectedMove.hasFrom())
+            //{
+            //    src.Piece p = board.getPieceAt(selectedMove.FromX, selectedMove.FromY);
+            //    if (p != null)
+            //    {
+            //        int drawX = ((int) selectedMove.FromX + 1) * squareWidth;
+            //        int drawY = (7 - (int) selectedMove.FromY + 1) * squareHeight;
 
-                    foreach (Tuple<uint, uint> t in ChessForms.rules.Rules.getPossibleMoves(board, p))
-                    {
-                        drawX = (int)(t.Item1 + 1) * squareWidth;
-                        drawY = (int)(7 - t.Item2 + 1) * squareHeight;
-                        drawBorder(g, brushMoves, drawX, drawY, squareWidth, squareHeight, 5);
-                    }
-                }
-            }
+            //        // Mark selected square
+            //        drawBorder(g, brushSelect, drawX, drawY, squareWidth, squareHeight, 5);
 
-            brushWhite.Dispose();
-            brushBlack.Dispose();
-            g.Dispose();
+            //        foreach (Tuple<uint, uint> t in ChessForms.rules.Rules.getPossibleMoves(board, p))
+            //        {
+            //            drawX = (int)(t.Item1 + 1) * squareWidth;
+            //            drawY = (int)(7 - t.Item2 + 1) * squareHeight;
+            //            drawBorder(g, brushMoves, drawX, drawY, squareWidth, squareHeight, 5);
+            //        }
+            //    }
+            //}
+
+            //brushWhite.Dispose();
+            //brushBlack.Dispose();
+            //g.Dispose();
         }
 
-        private void drawBorder(Graphics g, SolidBrush b, int x, int y, int w, int h, int t)
-        {
-            g.FillRectangle(b, x, y, w, t);
-            g.FillRectangle(b, x, y, t, h);
-            g.FillRectangle(b, x, y + h - t, w, t);
-            g.FillRectangle(b, x + w - t, y, t, h);
-        }
-        
         // Events
 
         private void startButton_Click(object sender, EventArgs e)
@@ -461,8 +474,8 @@ namespace ChessForms
                 return;
             }
 
-            int newClickX = e.X / (drawingArea.Width / 9) - 1;
-            int newClickY = 7 - (e.Y / (drawingArea.Height / 9) - 1);
+            int newClickX = e.X / (drawControl.Width / 9) - 1;
+            int newClickY = 7 - (e.Y / (drawControl.Height / 9) - 1);
 
             // Clicked outside of the board
             if (newClickX == -1 || newClickY == 8)

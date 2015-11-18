@@ -38,7 +38,6 @@
             this.blackAgentDropDown = new System.Windows.Forms.ComboBox();
             this.graphicsTab = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.drawingArea = new System.Windows.Forms.PictureBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.AiScoreTextBox = new System.Windows.Forms.TextBox();
             this.scoreBoard = new System.Windows.Forms.TextBox();
@@ -63,8 +62,6 @@
             this.blackSleepTimeLabel = new System.Windows.Forms.Label();
             this.whiteSleepTimeLabel = new System.Windows.Forms.Label();
             this.graphicsTab.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.drawingArea)).BeginInit();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.blackAiDiffTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.whiteAiDiffTrackBar)).BeginInit();
@@ -170,7 +167,6 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.drawingArea);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -178,15 +174,6 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Graphics GUI";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // drawingArea
-            // 
-            this.drawingArea.Location = new System.Drawing.Point(7, 7);
-            this.drawingArea.Name = "drawingArea";
-            this.drawingArea.Size = new System.Drawing.Size(520, 520);
-            this.drawingArea.TabIndex = 0;
-            this.drawingArea.TabStop = false;
-            this.drawingArea.MouseClick += new System.Windows.Forms.MouseEventHandler(this.onDrawingClick);
             // 
             // tabPage1
             // 
@@ -462,8 +449,6 @@
             this.Load += new System.EventHandler(this.GUI_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.onPaint);
             this.graphicsTab.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.drawingArea)).EndInit();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.blackAiDiffTrackBar)).EndInit();
@@ -488,7 +473,6 @@
         private System.Windows.Forms.TabControl graphicsTab;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.PictureBox drawingArea;
         private System.Windows.Forms.TextBox AiScoreTextBox;
         private System.Windows.Forms.TextBox scoreBoard;
         private System.Windows.Forms.Button pauseButton;
@@ -511,6 +495,7 @@
         private System.Windows.Forms.TrackBar whitePlaybackSleepTime;
         private System.Windows.Forms.Label blackSleepTimeLabel;
         private System.Windows.Forms.Label whiteSleepTimeLabel;
+        private System.Windows.Forms.PictureBox drawingArea;
     }
 }
 

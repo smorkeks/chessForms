@@ -46,6 +46,9 @@
   <ItemGroup>
     <Compile Include="file\FileMonitor.cs" />
     <Compile Include="file\SaveManager.cs" />
+    <Compile Include="graphics\DrawControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="graphics\ImageHandler.cs" />
     <Compile Include="AI\MinMax.cs" />
     <Compile Include="rules\BishopRules.cs" />
