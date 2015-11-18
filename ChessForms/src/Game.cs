@@ -9,6 +9,7 @@ using System.IO;
 
 namespace ChessForms.src
 {
+    // Contains the gameloop
     public class Game
     {
         // Fields

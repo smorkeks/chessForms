@@ -8,30 +8,19 @@ using ChessForms.src;
 
 namespace ChessForms.file
 {
+
+    // Class is used to update the board to the current savefile when it is changed on disk
     public class FileMonitor
     {
 
         private string filePath = AppDomain.CurrentDomain.BaseDirectory + "../../saveFiles/";
         private const string FILE_NAME = "current_state.txt";
 
-        //public delegate void monitorFunc();
-        //monitorFunc change;
-
         private bool change = false;
         private DateTime ignoreEnd;
 
-        public FileMonitor(/*monitorFunc onChange*/)
+        public FileMonitor()
         {
-            //change = onChange;
-            //onChange = chan;
-            // Create a new FileSystemWatcher and set its properties.
-            // Create directory if not exists
-            /*bool exists = Directory.Exists(filePath);
-            if (!exists)
-            {
-                Directory.CreateDirectory(filePath);
-            }*/
-
             FileSystemWatcher watcher = new FileSystemWatcher();
             watcher.Path = filePath;
             /* Watch for changes in LastAccess and LastWrite times, and

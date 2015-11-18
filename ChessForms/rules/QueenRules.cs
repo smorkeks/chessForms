@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using ChessForms.src;
 
 namespace ChessForms.rules
-{
+{   
+    // Contains Queen specific rules
     class QueenRules
     {
         public static List<Tuple<uint, uint>> getPossibleMoves(Board board, Piece piece)

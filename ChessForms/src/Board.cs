@@ -9,8 +9,6 @@ namespace ChessForms.src
     public class Board
     {
         // --- Fields ---
-
-        // Board [0,0] is at down, left.
         public const uint BOARD_SIZE_X = 8;
         public const uint BOARD_SIZE_Y = 8;
 
@@ -127,43 +125,6 @@ namespace ChessForms.src
             return (p != null && p.getColour() == COLOUR_BLACK);
         }
 
-        //// Get all moves of a specific colour.
-        //private List<Tuple<uint, uint, uint, uint>> getMoves(string col)
-        //{
-        //    List<Tuple<uint, uint, uint, uint>> moves = new List<Tuple<uint, uint, uint, uint>>();
-
-        //    for (uint y = 0; y < BOARD_SIZE_Y; y++)
-        //    {
-        //        for (uint x = 0; x < BOARD_SIZE_X; x++)
-        //        {
-        //            Piece p = getPieceAt(x, y);
-        //            if (p != null && p.getColour() == col)
-        //            {
-        //                List<Tuple<uint, uint>> newMoves = p.getPossibleMoves(getSquareAt, turn);
-
-        //                foreach (Tuple<uint, uint> t in newMoves)
-        //                {
-        //                    moves.Add(new Tuple<uint, uint, uint, uint>(x, y, t.Item1, t.Item2));
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return moves;
-        //}
-
-        //// Get all possible white moves, in the format x1,y1, x2,y2.
-        //public List<Tuple<uint, uint, uint, uint>> getWhiteMoves()
-        //{
-        //    return getMoves(COLOUR_WHITE);
-        //}
-
-        //// Get all possible black moves, in the format x1,y1, x2,y2.
-        //public List<Tuple<uint, uint, uint, uint>> getBlackMoves()
-        //{
-        //    return getMoves(COLOUR_BLACK);
-        //}
-
         public bool makeMove(string col, Move move)
         {
             uint x1 = move.FromX;
@@ -192,11 +153,6 @@ namespace ChessForms.src
             {
                 return false;
             }
-            //if (!p.movePossible(x2, y2, getSquareAt, turn))
-            //{
-            //    return false;
-            //}
-
             // Move is legal
 
             //Check if this is a castling
@@ -232,6 +188,7 @@ namespace ChessForms.src
             s2.setPiece(p);
             p.move(x2, y2);
 
+            // Handles the special castling case
             if (castling)
             {
                 uint x2rook;
@@ -255,6 +212,7 @@ namespace ChessForms.src
 
             }
 
+            // Handles the special en passant case
             if (enPassant)
             {
                 int yMod;
@@ -271,16 +229,19 @@ namespace ChessForms.src
             return true;
         }
 
+        // returns turn number
         public uint getTurn()
         {
             return turn;
         }
 
+        // sets what turn it is
         public void setTurn(uint t)
         {
             turn = t;
         }
 
+        // Increments turn by one
         public void updateTurn()
         {
             turn++;
@@ -357,43 +318,7 @@ namespace ChessForms.src
             }
         }
 
-        ////returns true if cover on black king
-        //public bool getCheck(string col)
-        //{
-        //    Square kingSquare = null;
-        //    for (uint j = 0; j < 8; j++)
-        //    {
-        //        for (uint i = 0; i < 8; i++)
-        //        {
-        //            kingSquare = getSquareAt(i, j);
-        //            if (kingSquare.getPiece() is King &&
-        //                kingSquare.getPiece().getColour() == col)
-        //            {
-        //                break;
-        //            }
-        //        }
-        //        if (kingSquare.getPiece() is King &&
-        //                kingSquare.getPiece().getColour() == col)
-        //        {
-        //            break;
-        //        }
-        //    }
-        //    return (kingSquare.getEnemyCover(col));
-        //}
-
-        //public bool playerLost(string col)
-        //{
-        //    List<Tuple<uint, uint, uint, uint>> moves = getMoves(col);
-        //    return (moves.Count == 0 && getCheck(col));
-        //}
-
-        //public bool remi()
-        //{
-        //    List<Tuple<uint, uint, uint, uint>> movesW = getWhiteMoves();
-        //    List<Tuple<uint, uint, uint, uint>> movesB = getBlackMoves();
-        //    return ((movesW.Count == 0 && !getCheck("white") || (movesB.Count == 0 && !getCheck("black"))));
-        //}
-
+        // Gets the total score of a gamestate
         public int getScore(string col)
         {
             int score = 0;
@@ -425,6 +350,7 @@ namespace ChessForms.src
             return score;
         }
 
+        // Deep copy of board
         public void Copy(Board oldBoard)
         {
             for (int i = 0; i < BOARD_SIZE_X; i++)
@@ -438,6 +364,7 @@ namespace ChessForms.src
         }
 
 
+        // returns the total number of remaining pieces on the board
         public int getNumPieces()
         {
             int num = 0;
@@ -452,11 +379,13 @@ namespace ChessForms.src
             return num;
         }
 
+        // Checks if coordinates are within the edges of the board
         public bool withinBoard(int x, int y)
         {
             return (0 <= x && x < BOARD_SIZE_X && 0 <= y && y < BOARD_SIZE_Y);
         }
 
+        // returns a list of all squares
         public List<Square> getAllSquares()
         {
             List<Square> list = new List<Square>();
@@ -467,6 +396,7 @@ namespace ChessForms.src
             return list;
         }
 
+        // Empties the board of pieces. Used in load
         public void clearBoard()
         {
             for (uint y = 0; y < BOARD_SIZE_Y; y++)
@@ -478,6 +408,7 @@ namespace ChessForms.src
             }
         }
 
+        // put a piece on square with coordinates x y
         public void setPiece(uint x, uint y, Piece piece)
         {
             squares[x, y].setPiece(piece);

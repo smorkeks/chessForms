@@ -9,7 +9,7 @@ namespace ChessForms.src
 {
     class AiAgent : Agent
     {
-        uint difficulty;
+        uint difficulty; // Search depth
         uint repetitionMod = 0;
         bool lateGameMod = false;
         Move lastMove;
@@ -24,6 +24,7 @@ namespace ChessForms.src
             difficulty = diff;
         }
 
+        // Searches for a new best move
         public override Move getInput(Board B)
         {
             MinMax minMaxSearch = new MinMax();
@@ -52,10 +53,11 @@ namespace ChessForms.src
             else
             {
                 repetitionMod += 1;
-                return new Move(10, 10, 10, 10);
+                return new Move();
             }
         }
 
+        // Returns the depth of the search
         private uint getSearchDepth(Board B)
         {
             if (!lateGameMod && B.getNumPieces() < 10)
@@ -74,6 +76,8 @@ namespace ChessForms.src
             return depth;
         }
 
+
+        // Returns search depth
         public uint getDifficulty()
         {
             return difficulty;

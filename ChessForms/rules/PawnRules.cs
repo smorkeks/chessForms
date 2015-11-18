@@ -7,6 +7,7 @@ using ChessForms.src;
 
 namespace ChessForms.rules
 {
+    // Contains Pawn specific rules
     class PawnRules
     {
 
@@ -81,7 +82,7 @@ namespace ChessForms.rules
             //En Passant
             if (piece.getY() == passantRow)
             {
-                if ((piece.getX() + 1) < 8)
+                if ((piece.getX() + 1) < Board.BOARD_SIZE_X)
                 {
                     Piece P1 = board.getPieceAt(piece.getX() + 1, piece.getY());
 

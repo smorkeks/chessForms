@@ -8,6 +8,7 @@ using System.Xml.Linq;
 
 namespace ChessForms.file
 {
+    // Class handling all save files
     public class SaveManager
     {
         private static string savePath = AppDomain.CurrentDomain.BaseDirectory + "../../saveFiles/";
@@ -16,6 +17,8 @@ namespace ChessForms.file
         private static string MOVES = "moves";
         private static string CURRENT = "current";
 
+
+        // Saves current save state. The filename is put in a textbox in the GUI
         public static void saveState(src.Board b, string fileName)
         {
             // Create directory if not exists
@@ -61,11 +64,14 @@ namespace ChessForms.file
             }
         }
 
+
+        // Savefile that is saved after every move and loaded at startup
         public static void saveCurrent(src.Board board)
         {
             SaveManager.saveState(board, CURRENT);
         }
 
+        //Loads the boardstate from the file written in the GUI textbox
         public static bool loadState(ref src.Board board, string fileName)
         {
             // Clear file, might be a better way
@@ -139,11 +145,13 @@ namespace ChessForms.file
 
         }
 
+        // Loads current game at startup
         public static bool loadCurrent(ref src.Board board)
         {
             return SaveManager.loadState(ref board, CURRENT);
         }
 
+        // Saves all moves done in a game
         public static void saveMove(src.Move m, string fileName)
         {
             // Create directory if not exists
@@ -159,7 +167,8 @@ namespace ChessForms.file
                 sw.WriteLine(m.ToString());
             }
         }
-
+        
+        //Loads a file containing the moves, used by playback agents
         public static List<src.Move> loadMoves(string fileName)
         {
             string fullName = savePath + fileName + "_" + MOVES + "." + fileEnding;

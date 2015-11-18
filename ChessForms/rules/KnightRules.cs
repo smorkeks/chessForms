@@ -7,6 +7,7 @@ using ChessForms.src;
 
 namespace ChessForms.rules
 {
+    // Contains Knight specific rules
     class KnightRules
     {
 

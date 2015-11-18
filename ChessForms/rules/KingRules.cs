@@ -7,6 +7,7 @@ using ChessForms.src;
 
 namespace ChessForms.rules
 {
+    //Handles King specific rules
     class KingRules
     {
         public static List<Tuple<uint, uint>> getPossibleMoves(Board board, Piece piece)
@@ -193,14 +194,15 @@ namespace ChessForms.rules
             return cover;
         }
 
+        // Special King function used to make sure the Kings can't move next to each other
         private static List<Tuple<uint, uint>> getEnemyKingReach(Board board, Piece piece)
         {
             // Find enemy king
             List<Tuple<uint, uint>> enemyKingReach = new List<Tuple<uint, uint>>();
             bool found = false;
-            for (uint j = 0; j < 8; j++)
+            for (uint j = 0; j < Board.BOARD_SIZE_Y; j++)
             {
-                for (uint i = 0; i < 8; i++)
+                for (uint i = 0; i < Board.BOARD_SIZE_X; i++)
                 {
                     Piece p = board.getPieceAt(i, j);
                     if (p != null && p is King && p.getColour() != piece.getColour())
@@ -218,6 +220,7 @@ namespace ChessForms.rules
             return enemyKingReach;
         }
 
+        // Special King function used to make sure the Kings can't move next to each other
         public static List<Tuple<uint, uint>> getReach(Board board, Piece piece)
         {
             List<Tuple<uint, uint>> reach = new List<Tuple<uint, uint>>();
