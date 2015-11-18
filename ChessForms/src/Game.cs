@@ -22,51 +22,31 @@ namespace ChessForms.src
         private bool running = false;
         private bool paused = false;
         private bool loaded = false;
-        private string current_file = AppDomain.CurrentDomain.BaseDirectory + "../../saveFiles/current_game.txt";
 
         public Game()
         {
             board = new Board();
             fileMonitor = new FileMonitor();
+            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             gui = new ChessForms.GUI(start, pauseUnpause, reset, saveGame, loadGame);
+
+            // Load last game
+            bool ok = SaveManager.loadCurrent(ref board);
+            if (ok)
+            {
+                // Set GUI and other stuff
+                gui.putString("Loading last game");
+                updateOnLoad();
+            }
+            else
+            {
+                reset();
+            }
+
             gui.updateBoard(board);
             Application.Run(gui);
-        }
-
-        // -- Debug ---
-
-        //D3bUG
-        public void printMoves(uint x, uint y)
-        {
-            Piece P;
-            List<Tuple<uint, uint>> tmp;
-            P = board.getPieceAt(x, y);
-            if (P != null)
-            {
-                tmp = Rules.getPossibleMoves(board, P);
-                gui.putString("Prints all possible moves");
-                foreach (Tuple<uint, uint> item in tmp)
-                {
-                    string s1 = item.Item1.ToString();
-                    string s2 = item.Item2.ToString();
-                    gui.putString(s1 + " " + s2);
-                }
-                gui.putString("End of possible moves output.");
-            }
-        }
-
-        //D3bUG
-        public void printPieceAt(uint x, uint y)
-        {
-            Piece P;
-            P = board.getPieceAt(x, y);
-            if (P != null)
-            {
-                gui.putString("Piece at " + x.ToString() + y.ToString());
-                gui.putString(P.GetType().ToString());
-            }
         }
 
         // --- Control functions ---
@@ -78,8 +58,8 @@ namespace ChessForms.src
             //gui.putString(p2);
 
             // Reset the game before starting
-            if (!loaded)
-                reset();
+            //if (!loaded)
+            //    reset();
 
             // Set white agent
             switch (gui.getWhiteAgentType())
@@ -193,6 +173,7 @@ namespace ChessForms.src
             }
         }
 
+        // Save the game state to a file
         public void saveGame()
         {
             string name = gui.getFileName();
@@ -202,6 +183,7 @@ namespace ChessForms.src
             }
         }
 
+        // Load the game state from a file
         public void loadGame()
         {
             string name = gui.getFileName();
@@ -215,6 +197,7 @@ namespace ChessForms.src
                 }
             }
         }
+
         // --- The main game loop ---
 
         public void run()
@@ -243,10 +226,6 @@ namespace ChessForms.src
                     {
                         board.makeMove((turnWhite ? "white" : "black"), selectedMove);
                         turnWhite = !turnWhite;
-
-                        // Save current state
-                        fileMonitor.ignoreFor(500);
-                        SaveManager.saveCurrent(board);
                     }
 
                     // Run everything else
@@ -283,6 +262,10 @@ namespace ChessForms.src
                         gui.putPlayerTurn(turnWhite);
                         gui.putTurn(board.getTurn());
                         gui.putScore(board.getScore("white"));
+
+                        // Save current state
+                        fileMonitor.ignoreFor(500);
+                        SaveManager.saveCurrent(board);
                     }
 
                     // Check file monitor
