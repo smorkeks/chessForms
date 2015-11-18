@@ -15,9 +15,6 @@ namespace ChessForms
         static void Main()
         {
             new src.Game();
-            //Application.EnableVisualStyles();
-            //Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new GUI());
         }
     }
 }

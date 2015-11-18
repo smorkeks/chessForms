@@ -38,24 +38,32 @@ namespace ChessForms
         public GUI(gameInterfaceFunc start, gameInterfaceFunc pause, gameInterfaceFunc reset, gameInterfaceFunc save, gameInterfaceFunc load)
         {
             InitializeComponent();
+
+            // Delegate functions from Game, called when different buttons are pressed.
             startGameFunc = start;
             pauseGameFunc = pause;
             resetGameFunc = reset;
             saveGameFunc = save;
             loadGameFunc = load;
             
-            drawControl = new DrawControl(getSelectedMove);
+            // Custom control for drawing the chess board
+            // Use a lambda expression that allows access to selectedMove.
+            drawControl = new DrawControl( () => { return selectedMove; });
         }
 
+        // Event raised when the window is loaded
         private void GUI_Load(object sender, EventArgs e)
         {
-            whiteAgentDropDown.SelectedIndex = 0;
-            blackAgentDropDown.SelectedIndex = 0;
+            // Select Graphics agents in the player selections,
+            // becuase they are usualy what we want.
+            whiteAgentDropDown.SelectedIndex = 1;
+            blackAgentDropDown.SelectedIndex = 1;
+
+            // Enable entering text commands with the "Enter" key.
             consoleInput.KeyDown += consoleInputOnKeyDown;
 
-            // 
-            // drawControl
-            // 
+            // Initialize the custom draw control,
+            // enable mouse click events, and add it to tab page 2.
             this.drawControl.Location = new System.Drawing.Point(7, 7);
             this.drawControl.Name = "drawControl";
             this.drawControl.Size = new System.Drawing.Size(520, 520);
@@ -66,13 +74,17 @@ namespace ChessForms
             this.tabPage2.Controls.Add(drawControl);
         }
 
-        // GUI I/O
+        // --- GUI I/O ---
+        // Functions that different parts of the program can call to get or set information
+        // in the different components in the GUI.
 
+        // Print a string in the console output window, end with new line.
         public void putString(string s)
         {
             consoleOutput.AppendText(s + "\r\n");
         }
 
+        // Set the text in the text-box indicating whose turn it is.
         public void putPlayerTurn(bool whiteTurn)
         {
             string s1;
@@ -84,6 +96,7 @@ namespace ChessForms
             playerTurn.Text = s1 + s2;
         }
 
+        // Set the text in the text-box indicating which turn it is.
         public void putTurn(uint turn)
         {
             this.turn = turn;
@@ -91,37 +104,52 @@ namespace ChessForms
             turnText.Text = s1 + turn.ToString();
         }
 
+        // Set the text in the text-box indicating which player is in the lead and by how much.
         public void putScore(int score)
         {
-            string s1 = "White leading by: ";
-            scoreBoard.Text = s1 + score.ToString();
+            if (score >= 0)
+            {
+                string s1 = "White leading by: ";
+                scoreBoard.Text = s1 + score.ToString();
+            } else
+            {
+                string s1 = "Black leading by: ";
+                scoreBoard.Text = s1 + (-score).ToString();
+            }
+
         }
 
+        // Get player type for white.
         public string getWhiteAgentType()
         {
             return whiteAgentDropDown.SelectedItem.ToString();
         }
 
+        // Get player type for black.
         public string getBlackAgentType()
         {
             return blackAgentDropDown.SelectedItem.ToString();
         }
 
+        // Get AI difficulty for white.
         public uint getWhiteAIDiff()
         {
             return (uint) whiteAiDiffTrackBar.Value;
         }
 
+        // Get AI difficulty for black.
         public uint getBlackAIDiff()
         {
             return (uint)blackAiDiffTrackBar.Value;
         }
 
+        // Returns true if all moves should be saved to a playback file that the Playback Agent can read.
         public bool getPlaybackEnabled()
         {
             return playbackCheckBox.Checked;
         }
 
+        // Dissable the pause button and print the relevant Game Over message.
         public void gameOver(bool whiteWon, bool remi)
         {
             if (remi)
@@ -140,33 +168,42 @@ namespace ChessForms
             pauseButton.Enabled = false;
         }
 
+        // Get the file name typed in the file name text box.
         public string getFileName()
         {
             return fileNameTextBox.Text;
         }
 
+        // Get the file name for the white player Playback Agent.
         public string getWhitePlaybackFileName()
         {
             return whitePlaybackFilenameTextBox.Text;
         }
 
+        // Get the file name for the black player Playback Agent.
         public string getBlackPlaybackFileName()
         {
             return blackPlaybackFilenameTextBox.Text;
         }
 
+        // Get the sleep time for the white player Playback Agent.
         public int getWhitePlaybackSleepTime()
         {
             return whitePlaybackSleepTime.Value;
         }
 
+        // Get the sleep time for the white player Playback Agent.
         public int getBlackPlaybackSleepTime()
         {
             return blackPlaybackSleepTime.Value;
         }
 
-        // Agent interface
+        // --- Agent interface ---
+        // Called by different agents to get relevant information about selected moves.
+        // The selected moves are stored after the relevant Events happen, and will
+        // be reset when read. This is to prevent the agents from executing a move several times.
 
+        // Reads and resets the last string entered in the console input box.
         public string readString()
         {
             string tmp = lastInput;
@@ -174,6 +211,7 @@ namespace ChessForms
             return tmp;
         }
 
+        // Returns and resets the last move selected via click input.
         public src.Move readSelectedMove()
         {
             src.Move tmp = selectedMove.Copy();
@@ -187,6 +225,10 @@ namespace ChessForms
             return tmp;
         }
         
+        // Updates the text in the AI score text box.
+        // This function has mostly been used for debug purposes, but the current
+        // use is to print the nuber of searched moves in the MinMax algorithm,
+        // which is very interesting to look at, so we decided to keep this.
         public void putAiScore(int score)
         {
             if (score == 0)
@@ -200,13 +242,10 @@ namespace ChessForms
             AiScoreTextBox.Text = "Max: " + AIsearchDepthMax + ", now: " + AIsearchDepth;
         }
 
-        // Graphics interface
+        // --- Graphics interface ---
+        // Functions for printing the text and image versions of the board.
 
-        public src.Move getSelectedMove()
-        {
-            return selectedMove;
-        }
-
+        // Update the board and render the GUI. Also reset the selected move.
         public void updateBoard(src.Board board)
         {
             this.board = board;
@@ -217,21 +256,27 @@ namespace ChessForms
             renderGUI();
         }
 
+        // Render both the text and image GUI.
         public void renderGUI()
         {
             renderTextGUI();
             renderGraphicsGUI();
         }
 
+        // Print a text version of the board state in tab 1 of the tab control.
         private void renderTextGUI()
         {
+            // Clear all text
             chessTextBox.Clear();
 
+            // Start by printing the column names
             chessTextBox.Text = "    A   B   C   D   E   F   G   H\r\n";
 
+            // Print the board.
             src.Piece P;
             for (int i = 7; i >= 0; i--)
             {
+                // Create string for a single row of the board, and the row number.
                 string tmp = (i + 1) + "   ";
                 for (uint j = 0; j < 8; j++)
                 {
@@ -260,7 +305,6 @@ namespace ChessForms
                             tmp = tmp + "k  ";
                         else
                             tmp = tmp + "ERORR ERROR ERROR";
-
                     }
                 }
 
@@ -268,11 +312,11 @@ namespace ChessForms
                 chessTextBox.Text += tmp + "\r\n";
             }
 
+            // Print column names again
             chessTextBox.Text += "\r\n\r\n";
             chessTextBox.Text += "    A   B   C   D   E   F   G   H\r\n";
 
-
-            // Cover
+            // Print cover
             for (int i = 7; i >= 0; i--)
             {
                 string tmp = (i + 1) + "   ";
@@ -290,102 +334,19 @@ namespace ChessForms
             }
         }
 
+        // Render the image based GUI.
         private void renderGraphicsGUI()
         {
+            // Simply invalidate the custom drawing control to force repaint.
             drawControl.Invalidate();
-
-            //// Setup graphics objects
-            //Graphics g = drawControl.CreateGraphics();
-
-            //// Calculate size parameters
-            //int squareWidth = drawControl.Width / 9;
-            //int squareHeight = drawControl.Height / 9;
-
-            //// Draw numbers and letters
-            //SolidBrush brushText = new SolidBrush(Color.Black);
-            //for (int i = 1; i <= 8; i++)
-            //{
-            //    g.DrawString((char)(i + 'A' - 1) + "", new Font("Arial", 20), brushText, new Point((int)((i + 0.25) * squareWidth), (int)(squareHeight * 0.3)));
-            //    g.DrawString((9 - i).ToString(), new Font("Arial", 20), brushText, new Point((int)(squareWidth * 0.3), (int)((i + 0.2) * squareHeight)));
-            //}
-
-            //// Draw squares
-            //SolidBrush brushWhite = new SolidBrush(Color.LightGray);
-            //SolidBrush brushBlack = new SolidBrush(Color.Gray);
-            //for (int y = 0; y <= 7; y++)
-            //{
-            //    for (int x = 0; x <= 7; x++)
-            //    {
-            //        int drawX = (x + 1) * squareWidth;
-            //        int drawY = (y + 1) * squareHeight;
-            //        Rectangle rect = new Rectangle(drawX, drawY, squareWidth, squareHeight);
-
-            //        // Draw square
-            //        if ((y + x) % 2 == 0)
-            //        {
-            //            // White
-            //            g.FillRectangle(brushWhite, rect);
-            //        }
-            //        else
-            //        {
-            //            // White
-            //            g.FillRectangle(brushBlack, rect);
-            //        }
-
-            //        src.Square square = board.getSquareAt((uint)x, (uint)(7 - y));
-            //        if (square.getPiece() != null)
-            //        {
-            //            // Draw piece
-            //            /*g.DrawString(square.getPiece().getColour().Replace('w', 'W').Replace('b', 'B'),
-            //                         new Font("Arial", 10),
-            //                         brushText,
-            //                         new Point((int)(drawX + squareWidth * 0.2), (int)(drawY + squareHeight * 0.35)));
-            //            g.DrawString(square.getPiece().GetType().ToString().Substring(15),
-            //                         new Font("Arial", 10),
-            //                         brushText,
-            //                         new Point((int)(drawX + squareWidth * 0.2), (int)(drawY + squareHeight * 0.55)));*/
-            //            src.Piece p = square.getPiece();
-            //            string type = p.GetType().Name;
-            //            string colour = p.getColour().Replace('w', 'W').Replace('b', 'B');
-            //            string filename = type + "_" + colour;
-            //            g.DrawImage(imageHandler.getImage(filename),
-            //                        new Point[] {new Point(drawX + 8, drawY + 8),
-            //                                     new Point(drawX + squareWidth - 8, drawY + 8),
-            //                                     new Point(drawX + 8, drawY + squareHeight - 8)});
-            //        }
-            //    }
-            //}
-
-            //// Selection, moves and cover
-            //SolidBrush brushSelect = new SolidBrush(Color.Green);
-            //SolidBrush brushMoves = new SolidBrush(Color.Red);
-            //if (selectedMove.hasFrom())
-            //{
-            //    src.Piece p = board.getPieceAt(selectedMove.FromX, selectedMove.FromY);
-            //    if (p != null)
-            //    {
-            //        int drawX = ((int) selectedMove.FromX + 1) * squareWidth;
-            //        int drawY = (7 - (int) selectedMove.FromY + 1) * squareHeight;
-
-            //        // Mark selected square
-            //        drawBorder(g, brushSelect, drawX, drawY, squareWidth, squareHeight, 5);
-
-            //        foreach (Tuple<uint, uint> t in ChessForms.rules.Rules.getPossibleMoves(board, p))
-            //        {
-            //            drawX = (int)(t.Item1 + 1) * squareWidth;
-            //            drawY = (int)(7 - t.Item2 + 1) * squareHeight;
-            //            drawBorder(g, brushMoves, drawX, drawY, squareWidth, squareHeight, 5);
-            //        }
-            //    }
-            //}
-
-            //brushWhite.Dispose();
-            //brushBlack.Dispose();
-            //g.Dispose();
         }
 
-        // Events
+        // --- Events ---
+        // Event functions, called by the OS (?) when the user interacts with the program.
 
+        // Called when the "start game" button is clicked.
+        // Toggles between "start" and "reset" game.
+        // Sets the state of the GUI by enabling and disabling different components.
         private void startButton_Click(object sender, EventArgs e)
         {
             if (startButton.Text == "Start Game")
@@ -407,6 +368,7 @@ namespace ChessForms
                 consoleOutput.Clear();
                 lastInput = "";
 
+                // Auto focus console input box if there is a Terminal Agent in use.
                 if (getWhiteAgentType() == "Terminal Agent" ||
                     getBlackAgentType() == "Terminal Agent")
                 {
@@ -456,24 +418,33 @@ namespace ChessForms
             }
         }
 
+        // Called when the window is closed.
         private void onFormClosing(object sender, FormClosingEventArgs e)
         {
+            // Close the application when the window is closed.
             Application.Exit();
         }
 
+        // Called when the window needs to be repainted.
         private void onPaint(object sender, PaintEventArgs e)
         {
+            // Render the image based GUI.
             renderGraphicsGUI();
         }
 
+        // Called when the custom Drawing Control is clicked.
+        // Will calculate the square clicked and save this move for Graphics Agents to use in the future.
         private void onDrawingClick(object sender, MouseEventArgs e)
         {
             if (!selectedMove.Illegal)
             {
                 // A move has already been selected.
+                // Wait for a Graphics Agent to read the selected move before accepting new clicks in the window.
                 return;
             }
 
+            // Calculate the square coordinates of the click.
+            // TODO: use Board size.
             int newClickX = e.X / (drawControl.Width / 9) - 1;
             int newClickY = 7 - (e.Y / (drawControl.Height / 9) - 1);
 
