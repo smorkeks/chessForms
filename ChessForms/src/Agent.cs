@@ -24,6 +24,7 @@ namespace ChessForms.src
         //Promts the agent to make a move
         public abstract Move getInput(Board B);
 
+        // Returns agent colour
         public string getColour()
         {
             return colour;

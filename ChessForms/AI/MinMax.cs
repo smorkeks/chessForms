@@ -17,7 +17,7 @@ namespace ChessForms.AI
 
         public Tuple<Move, int> runMinMax(Board board, string activePlayer, uint depth, bool max, int alpha, int beta, putScore put)
         {
-            // TODO: Test, remove when done
+            // Prints number of searched moves
             put(1);
 
             string nonActivePlayer = "";
@@ -96,9 +96,6 @@ namespace ChessForms.AI
                 // Run events to not stall the entire application while searching.
                 Application.DoEvents();
             }
-
-            //put(bestResult.Item2);
-
             return bestResult;
         }
 

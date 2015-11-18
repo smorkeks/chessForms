@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ChessForms.src;
 
+// Contains the Bishop specific rules
 namespace ChessForms.rules
 {
     class BishopRules

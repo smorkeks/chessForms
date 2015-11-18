@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
+// Handles printouts of the piece pictures
 namespace ChessForms.graphics
 {
     class ImageHandler

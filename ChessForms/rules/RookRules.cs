@@ -7,6 +7,7 @@ using ChessForms.src;
 
 namespace ChessForms.rules
 {
+    // Rook specific rules
     class RookRules
     {
         public static List<Tuple<uint, uint>> getPossibleMoves(Board board, Piece piece)
