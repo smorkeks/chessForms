@@ -8,6 +8,10 @@ namespace ChessForms.src
 {
     public class Move
     {
+        // --- Constant ---
+        // Use 10000 as an illegal value for the coordinates.
+        private const uint NO_COORDINATE = 10000;
+
         // --- Flags ---
         private bool giveUp;
         private bool illegal;
@@ -55,18 +59,18 @@ namespace ChessForms.src
 
         public Move()
         {
-            fromX = 10000;
-            fromY = 10000;
-            toX = 10000;
-            toY = 10000;
+            fromX = NO_COORDINATE;
+            fromY = NO_COORDINATE;
+            toX = NO_COORDINATE;
+            toY = NO_COORDINATE;
             giveUp = false;
             illegal = true;
         }
 
         public Move(uint toX, uint toY)
         {
-            fromX = 10000;
-            fromY = 10000;
+            fromX = NO_COORDINATE;
+            fromY = NO_COORDINATE;
             this.toX = toX;
             this.toY = toY;
             giveUp = false;
@@ -85,18 +89,21 @@ namespace ChessForms.src
 
         // --- Other functions ---
 
+        // Set the destination coordinates of the move.
         public void setTo(uint x, uint y)
         {
             toX = x;
             toY = y;
         }
 
+        // Set the source coordinates of the move.
         public void setFrom(uint x, uint y)
         {
             fromX = x;
             fromY = y;
         }
 
+        // Convert the move coordinates to a string with a good format.
         public override string ToString()
         {
             if (giveUp)
@@ -109,6 +116,7 @@ namespace ChessForms.src
             }
         }
 
+        // Return an exact copy of the move.
         public Move Copy()
         {
             Move copy = new Move(fromX, fromY, toX, toY);
@@ -117,6 +125,7 @@ namespace ChessForms.src
             return copy;
         }
 
+        // Compare this move to another.
         public bool Equals(Move m)
         {
             if (m == null)
@@ -132,14 +141,16 @@ namespace ChessForms.src
                    m.Illegal == illegal;
         }
 
+        // Return true if the move has source coordinates.
         public bool hasFrom()
         {
-            return fromX != 10000 && fromY != 10000;
+            return fromX != NO_COORDINATE && fromY != NO_COORDINATE;
         }
 
+        // Return true if the move has desitnation coordinates.
         public bool hasTo()
         {
-            return toX != 10000 && toY != 10000;
+            return toX != NO_COORDINATE && toY != NO_COORDINATE;
         }
     }
 }

@@ -495,7 +495,6 @@
         private System.Windows.Forms.TrackBar whitePlaybackSleepTime;
         private System.Windows.Forms.Label blackSleepTimeLabel;
         private System.Windows.Forms.Label whiteSleepTimeLabel;
-        private System.Windows.Forms.PictureBox drawingArea;
     }
 }
 
