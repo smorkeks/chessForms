@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace ChessForms.src
 {
+    // Special agent that loads a file containing moves and makes these moves.
     class PlaybackAgent : Agent
     {
         string fileName;
         List<Move> moves;
-        int sleepTime;
+        int sleepTime; // delay between moves
 
         public PlaybackAgent(string col, string fileName, int sleepTime) : base(col)
         {
@@ -19,6 +20,7 @@ namespace ChessForms.src
             moves = ChessForms.file.SaveManager.loadMoves(fileName);
         }
 
+        // Gets move at row turn in file and makes it
         public override Move getInput(Board B)
         {
             System.Threading.Thread.Sleep(sleepTime);

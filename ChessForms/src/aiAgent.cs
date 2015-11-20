@@ -7,10 +7,11 @@ using ChessForms.AI;
 
 namespace ChessForms.src
 {
+    // AI agent, does an alpha-beta search of the board and returns the best possible move
     class AiAgent : Agent
     {
         uint difficulty; // Search depth
-        uint repetitionMod = 0;
+        uint repetitionMod = 0; // Used in late game to break out of repeated moves
         bool lateGameMod = false;
         Move lastMove;
         Move secondToLastMove;

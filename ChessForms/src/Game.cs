@@ -24,11 +24,13 @@ namespace ChessForms.src
         private bool paused = false;
         private bool loaded = false;
 
+
+        // Constructor for Game
         public Game()
         {
             board = new Board();
             fileMonitor = new FileMonitor();
-            
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             gui = new ChessForms.GUI(start, pauseUnpause, reset, saveGame, loadGame);
@@ -55,13 +57,6 @@ namespace ChessForms.src
         // Start a new game
         public void start()
         {
-            //gui.putString(p1);
-            //gui.putString(p2);
-
-            // Reset the game before starting
-            //if (!loaded)
-            //    reset();
-
             // Set white agent
             switch (gui.getWhiteAgentType())
             {
@@ -200,7 +195,6 @@ namespace ChessForms.src
         }
 
         // --- The main game loop ---
-
         public void run()
         {
             Move selectedMove = null;
@@ -214,6 +208,7 @@ namespace ChessForms.src
                 }
                 else
                 {
+                    // gets a new move from the active player
                     if (turnWhite)
                     {
                         selectedMove = white.getInput(board);
@@ -223,6 +218,7 @@ namespace ChessForms.src
                         selectedMove = black.getInput(board);
                     }
 
+                    // Makes the move and switches player if it was a legal move
                     if (Rules.movePossible(board, selectedMove, (turnWhite ? "white" : "black")))
                     {
                         board.makeMove((turnWhite ? "white" : "black"), selectedMove);
@@ -270,22 +266,13 @@ namespace ChessForms.src
                     }
 
                     // Check file monitor
-                    if (fileMonitor.changeDetected())
-                    {
-                        bool ok = SaveManager.loadCurrent(ref board);
-                        gui.putString("Load");
-                        if (ok)
-                        {
-                            // Set GUI and other stuff
-                            updateOnLoad();
-                        }
-                    }
+                    checkFileChanged();
                 }
-
                 Application.DoEvents();
             }
         }
 
+        // Checks if any player has won or remi
         private bool checkGameOver()
         {
             // Check if win
@@ -308,16 +295,22 @@ namespace ChessForms.src
             return false;
         }
 
-        private void OnChange()
+
+        private void checkFileChanged()
         {
-            bool ok = SaveManager.loadCurrent(ref board);
-            if (ok)
+            if (fileMonitor.changeDetected())
             {
-                // Set GUI and other stuff
-                updateOnLoad();
+                bool ok = SaveManager.loadCurrent(ref board);
+                if (ok)
+                {
+                    gui.putString("Load");
+                    // Set GUI and other stuff
+                    updateOnLoad();
+                }
             }
         }
 
+        // Sets the player turn and calculates score at load.
         private void updateOnLoad()
         {
             gui.putTurn(board.getTurn());

@@ -377,6 +377,7 @@ namespace ChessForms.src
 
         public abstract Piece getCopyPiece();
 
+        // Returns the value of the piece added to the score of the square it's standing on
         public int getValue()
         {
             if (colour == "white")
@@ -385,6 +386,7 @@ namespace ChessForms.src
                 return (int)score + reward[xCoord, 7 - yCoord];
         }
 
+        // Used by load.
         public void setHasMoved(bool mov)
         {
             hasMoved = mov;

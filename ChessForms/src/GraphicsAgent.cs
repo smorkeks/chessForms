@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChessForms.src
 {
+    // The agent used by human players playing with a graphical interface
     class GraphicsAgent : Agent
     {
         public delegate Move readMove();

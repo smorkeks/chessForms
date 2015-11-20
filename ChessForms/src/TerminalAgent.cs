@@ -5,6 +5,7 @@ using System.Web;
 
 namespace ChessForms.src
 {
+    // Agent used to get text input from human player
     public class TerminalAgent : Agent
     {
         //Methods
@@ -17,6 +18,7 @@ namespace ChessForms.src
             this.read = read;
         }
 
+        // Takes input from textbox converts it to correctly formatted move
         public override Move getInput(Board B)
         {
 
@@ -24,11 +26,6 @@ namespace ChessForms.src
             inp = read();
             if (inp.Length > 3)
             {
-                //uint xFrom = (uint)inp[0] - 48 - 1;
-                //uint yFrom = (uint)inp[1] - 48 - 1;
-                //uint xTo = (uint)inp[2] - 48 - 1;
-                //uint yTo = (uint)inp[3] - 48 - 1;
-
                 uint xFrom = decodeInput(inp[0]);
                 uint yFrom = decodeInput(inp[1]);
                 uint xTo = decodeInput(inp[2]);
@@ -38,10 +35,11 @@ namespace ChessForms.src
             }
             else
             {
-                return new Move(10, 10, 10, 10);
+                return new Move(100, 100, 100, 100);
             }
         }
 
+        // Gets input on form "A2A4" and converts it to the form "0103"
         private uint decodeInput(char input)
         {
             if ('1' <= input && input <= '8')

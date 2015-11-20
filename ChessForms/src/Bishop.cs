@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 
 namespace ChessForms.src
-{
+{    // The Bishop piece class. It knows it's position, value and score matrix used by the AI
     public class Bishop : Piece
     {
         public Bishop(uint x, uint y, string c) : base(x, y, 330, c)
