@@ -16,13 +16,9 @@ namespace ChessForms
         private string lastInput = "";
         private src.Board board;
         private uint turn = 0;
+        private src.Move selectedMove;
 
-        src.Move selectedMove;
-        /*int selectedSquareX = -1;
-        int selectedSquareY = -1;
-        int selectedMoveX = -1;
-        int selectedMoveY = -1;*/
-
+        // Functions that the GUI can call in Game to notify it of events.
         public delegate void gameInterfaceFunc();
         gameInterfaceFunc startGameFunc;
         gameInterfaceFunc pauseGameFunc;
@@ -30,9 +26,11 @@ namespace ChessForms
         gameInterfaceFunc saveGameFunc;
         gameInterfaceFunc loadGameFunc;
 
+        // Used to show the number of MinMax calls done in each search.
         int AIsearchDepth = 0;
         int AIsearchDepthMax = 0;
 
+        // Custom control with double buffering used for drawing the board.
         DrawControl drawControl;
 
         public GUI(gameInterfaceFunc start, gameInterfaceFunc pause, gameInterfaceFunc reset, gameInterfaceFunc save, gameInterfaceFunc load)
@@ -231,6 +229,11 @@ namespace ChessForms
         // which is very interesting to look at, so we decided to keep this.
         public void putAiScore(int score)
         {
+            // If the input is 0, reset the current search number.
+            // If the input is 1, increment the current search number.
+            // Never reset the maximum search from this function, only from reset event.
+            // We put the increment and max calculations here instead of the MinMax to avoid
+            // sending unnecessary information in the search, to speed it up.
             if (score == 0)
             {
                 AIsearchDepth = 0;
@@ -496,10 +499,10 @@ namespace ChessForms
                 }
             }
             renderGraphicsGUI();
-
-            //putString(selectedMove.FromX + ", " + selectedMove.FromY + ", " + selectedMove.ToX + ", " + selectedMove.ToY + ", " + selectedMove.Illegal);
         }
 
+        // Called when a key is pressed and the console input has focus.
+        // Filters for Enter key presses.
         private void consoleInputOnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -510,6 +513,9 @@ namespace ChessForms
             }
         }
 
+        // Called when the pause/unpause button is clicked.
+        // Toggles the state of the GUI and notifies Game that the game
+        // should be paused when possible.
         private void pauseButton_Click(object sender, EventArgs e)
         {
             if (pauseButton.Text == "Pause Game")
@@ -552,8 +558,12 @@ namespace ChessForms
             }
         }
 
+        // Called when the drop down menu for the black player Agent selection is changed.
+        // Updates the GUI to only have the controls that are relevant for the selected
+        // agent type.
         private void onBlackAgentChange(object sender, EventArgs e)
         {
+            // AI, add (or remove) difficulty slider.
             if (getBlackAgentType() == "AI")
             {
                 blackAiDiffLabel.Visible = true;
@@ -565,6 +575,7 @@ namespace ChessForms
                 blackAiDiffTrackBar.Visible = false;
             }
 
+            // Playback Agent, add (or remove) file name box and speed slider.
             if (getBlackAgentType() == "Playback Agent")
             {
                 blackPlaybackFilenameTextBox.Visible = true;
@@ -579,8 +590,12 @@ namespace ChessForms
             }
         }
 
+        // Called when the drop down menu for the white player Agent selection is changed.
+        // Updates the GUI to only have the controls that are relevant for the selected
+        // agent type.
         private void onWhiteAgentChange(object sender, EventArgs e)
         {
+            // AI, add (or remove) difficulty slider.
             if (getWhiteAgentType() == "AI")
             {
                 whiteAiDiffLabel.Visible = true;
@@ -592,6 +607,7 @@ namespace ChessForms
                 whiteAiDiffTrackBar.Visible = false;
             }
 
+            // Playback Agent, add (or remove) file name box and speed slider.
             if (getWhiteAgentType() == "Playback Agent")
             {
                 whitePlaybackFilenameTextBox.Visible = true;
@@ -606,37 +622,49 @@ namespace ChessForms
             }
         }
 
+        // Called when the Difficulty slider for the black AI is changed.
+        // Updates the Difficulty label to show selected difficulty.
         private void onBlackAiDiffChange(object sender, EventArgs e)
         {
             string s = blackAiDiffLabel.Text;
             blackAiDiffLabel.Text = s.Substring(0, s.Length - 1) + getBlackAIDiff();
         }
 
+        // Called when the Difficulty slider for the white AI is changed.
+        // Updates the Difficulty label to show selected difficulty.
         private void onWhiteAiDiffChange(object sender, EventArgs e)
         {
             string s = whiteAiDiffLabel.Text;
             whiteAiDiffLabel.Text = s.Substring(0, s.Length - 1) + getWhiteAIDiff();
         }
 
+        // Called when the "Save Game" button is clicked.
         private void saveButton_Click(object sender, EventArgs e)
         {
+            // Notify Game
             saveGameFunc();
         }
 
+        // Called when the sleep time slider for the white Playback Agent is changed.
+        // Updates the associated label with the new sleep time.
         private void onWhiteSleepTimeChange(object sender, EventArgs e)
         {
             string s = whiteSleepTimeLabel.Text;
             whiteSleepTimeLabel.Text = s.Substring(0, s.IndexOf(':') + 1) + " " + getWhitePlaybackSleepTime();
         }
 
+        // Called when the sleep time slider for the black Playback Agent is changed.
+        // Updates the associated label with the new sleep time.
         private void onBlackSleepTimeChange(object sender, EventArgs e)
         {
             string s = blackSleepTimeLabel.Text;
             blackSleepTimeLabel.Text = s.Substring(0, s.IndexOf(':') + 1) + " " + getBlackPlaybackSleepTime();
         }
 
+        // Called when the "Load Game" button is clicked.
         private void loadClick(object sender, EventArgs e)
         {
+            // Notify Game
             loadGameFunc();
         }
     }

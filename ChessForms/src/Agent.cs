@@ -21,7 +21,7 @@ namespace ChessForms.src
                 myTurn = false;
         }
 
-        //Promts the agent to make a move
+        // Promts the agent to make a move
         public abstract Move getInput(Board B);
 
         // Returns agent colour

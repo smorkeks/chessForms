@@ -20,7 +20,7 @@ namespace ChessForms.src
             blackCover = 0;
         }
 
-        // Getters
+        // Coordinate getters
         public uint getX()
         {
             return posX;
@@ -30,6 +30,7 @@ namespace ChessForms.src
             return posY;
         }
 
+        // Cover getters
         public uint getWhiteCover()
         {
             return whiteCover;
@@ -39,14 +40,16 @@ namespace ChessForms.src
             return blackCover;
         }
 
-        //returns true if enemy of piece on square has cover there
-        public bool getEnemyCover(string col)
-        {
-            return (((col == "black") && (getWhiteCover() > 0)) || ((col == "white") && (getBlackCover() > 0)));
-        }
+        // Get piece (or null)
         public Piece getPiece()
         {
             return piece;
+        }
+
+        // Return true if there is enemy cover on the square.
+        public bool getEnemyCover(string col)
+        {
+            return (((col == "black") && (getWhiteCover() > 0)) || ((col == "white") && (getBlackCover() > 0)));
         }
 
         // Cover modifiers
@@ -71,7 +74,7 @@ namespace ChessForms.src
             blackCover = 0;
         }
 
-        // Piece
+        // Set or remove Piece
         public void setPiece(Piece p)
         {
             piece = p;
@@ -81,8 +84,7 @@ namespace ChessForms.src
             piece = null;
         }
 
-        
-
+        // Set the input square to an exact copy of this square.
         public void Copy(Square oldSquare)
         {
             posX = oldSquare.posX;

@@ -22,7 +22,6 @@ namespace ChessForms.src
 
         private bool running = false;
         private bool paused = false;
-        private bool loaded = false;
 
 
         // Constructor for Game
@@ -100,7 +99,6 @@ namespace ChessForms.src
         public void reset()
         {
             // Stop the game
-            loaded = false;
             running = false;
             paused = false;
 
@@ -188,7 +186,6 @@ namespace ChessForms.src
                 bool ok = SaveManager.loadState(ref board, name);
                 if (ok)
                 {
-                    loaded = true;
                     updateOnLoad();
                 }
             }
