@@ -195,6 +195,7 @@ namespace ChessForms.src
         }
 
         // --- The main game loop ---
+        // Lord Vader is KINGEN
         public void run()
         {
             Move selectedMove = null;
