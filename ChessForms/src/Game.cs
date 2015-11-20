@@ -192,7 +192,30 @@ namespace ChessForms.src
         }
 
         // --- The main game loop ---
-        // Lord Vader is KINGEN
+
+        // The game is powered by an infinite loop that works as this:
+        // 1) Get move from active player.
+        // 2) Check validity of move, and make move if valid.
+        // 3) Allow the GUI to run all events as to not freeze the program.
+        // 4) If the move was legal:
+        //    * Save move if playback saving is enabled.
+        //    * Update the GUI with the new board state.
+        //    * Check if the game is over, either by a win or remi.
+        //    * Update the GUI with new turn, score, etc.
+        //    * Save the current state to a file.
+        // 5) Check if the current state file has been manualy changed.
+        // 6) Allow the GUI to run all events (again) as to not freeze the program.
+        //
+        // The reason we use a loop to control the game instead of a compleatly event
+        // driven design is the we do not want the game to know the differens between
+        // a human player and an AI (which is a requirement of the program).
+        // In an event driven design the AI would either have to be activated be a
+        // human player each turn, or be activated by a very fast timer event, or the
+        // AI would have to run in a different thread. The first two options are not
+        // very nice, and the last would prevent the AI from interacting with the GUI,
+        // because WinForms controls can only be accessed from the thread that created them.
+        // With our loop solutions, none of these issues exist, which is why we feel it is
+        // the best option.
         public void run()
         {
             Move selectedMove = null;
@@ -202,6 +225,7 @@ namespace ChessForms.src
             {
                 if (paused)
                 {
+                    // Run the program at 10 fps if it is paused.
                     Thread.Sleep(100);
                 }
                 else
@@ -293,7 +317,8 @@ namespace ChessForms.src
             return false;
         }
 
-
+        // Check if there has been a manual change in the current state file.
+        // If so, load the new change.
         private void checkFileChanged()
         {
             if (fileMonitor.changeDetected())
